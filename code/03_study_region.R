@@ -51,7 +51,7 @@ pacman::p_load(renv,
 
 # set directories
 ## define data directory (as this is an R Project, pathnames are simplified)
-data_dir <- <- "11_Stellwagen_Cable_Routing/Model Runs/StellwagenCableRoute/03_CableRouteModel/model_2/model_2.gdb"
+data_dir <- "11_Stellwagen_Cable_Routing/Model Runs/StellwagenCableRoute/03_CableRouteModel/model_2/model_2.gdb"
 
 ## export directory
 export_dir <- "data/a_raw_data/stellwagen.gpkg"
@@ -65,7 +65,9 @@ sf::st_layers(dsn = data_dir,
 #####################################
 #####################################
 
-grid <- sf::st_read(dsn = data_dir, layer = "SW_NMS_AOI_model2_Selected")
+grid <- sf::st_read(dsn = data_dir, layer = "SW_NMS_AOI_model2_Selected") %>%
+  dplyr::mutate(index = row_number()) %>%
+  dplyr::select(index)
 
 blank_grid <- grid %>%
   dplyr::mutate(region = "stellwagen") %>%

@@ -13,7 +13,7 @@ start <- Sys.time()
 
 # set parameters
 ## designate region name
-region <- "stellwagen"
+region_name <- "stellwagen"
 
 ## layer names
 data_name <- "conmapsg"
@@ -25,9 +25,6 @@ crs <- "EPSG:6492"
 
 ## designate date
 date <- format(Sys.Date(), "%Y%m%d")
-
-## types
-sand_mud <- list("M", "Ms", "S", "Sm")
 
 #####################################
 #####################################
@@ -54,7 +51,7 @@ pacman::p_load(renv,
 # set directories
 ## define data directory (as this is an R Project, pathnames are simplified)
 ### input directories
-#### military operating areas
+#### CONMAPSG
 data_dir <- "data/a_raw_data/state_costs.gpkg"
 
 #### study area grid
@@ -78,12 +75,14 @@ sf::st_layers(dsn = study_region_gpkg,
 
 # read data
 ## CONMAPSG
-data <- sf::st_read(dsn = data_dir, layer = "conmapsg") %>%
+data <- sf::st_read(dsn = data_dir,
+                    layer = stringr::str_glue("{data_name}")) %>%
   sf::st_transform(x = .,
                    crs = crs)
 
 ## Stellwagen region
-region <- sf::st_read(dsn = study_region_gpkg, layer = stringr::str_glue("{region}_region")) %>%
+region <- sf::st_read(dsn = study_region_gpkg,
+                      layer = stringr::str_glue("{region}_region")) %>%
   sf::st_transform(x = .,
                    crs = crs)
 

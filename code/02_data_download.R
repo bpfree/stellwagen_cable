@@ -125,7 +125,23 @@ download_list <- c(
   ### metadata (text): https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg-metadata.txt
   ### FAQ: https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg-faq.htm
   
-  "https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg.zip"
+  "https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg.zip",
+  
+  ## eelgrass meadows (source: https://www.northeastoceandata.org/files/metadata/Themes/Habitat.zip)
+  ### Northeast Ocean Data portal: https://www.northeastoceandata.org/data-download/
+  ### metadata: https://www.northeastoceandata.org/files/metadata/Themes/Habitat/EelgrassMeadows.pdf
+  
+  "https://www.northeastoceandata.org/files/metadata/Themes/Habitat.zip",
+  
+  ## submarine cable areas (source: https://www.northeastoceandata.org/files/metadata/Themes/EnergyAndInfrastructure.zip)
+  ### Northeast Ocean Data portal: https://www.northeastoceandata.org/data-download/
+  ### metadata: https://www.northeastoceandata.org/files/metadata/Themes/EnergyAndInfrastructure/SubmarineCables.htm
+  
+  ## cable and pipelines areas (source: https://www.northeastoceandata.org/files/metadata/Themes/EnergyAndInfrastructure.zip)
+  ### Northeast Ocean Data portal: https://www.northeastoceandata.org/data-download/
+  ### metadata: https://www.northeastoceandata.org/files/metadata/Themes/EnergyAndInfrastructure/CableAndPipelineAreas.htm
+  
+  "https://www.northeastoceandata.org/files/metadata/Themes/EnergyAndInfrastructure.zip"
 )
 
 #####################################

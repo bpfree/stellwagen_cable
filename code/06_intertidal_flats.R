@@ -113,9 +113,9 @@ data_region <- data %>%
 #####################################
 #####################################
 
-# disposal sites hex grids
-data_region_hex <- grid[data_region, ] %>%
-  # spatially join disposal sites to Gulf of Mexico hex cells
+# disposal sites grid
+data_region_grid <- grid[data_region, ] %>%
+  # spatially join disposal sites to Stellwagen grid
   sf::st_join(x = .,
               y = data_region,
               join = st_intersects) %>%
@@ -127,7 +127,7 @@ data_region_hex <- grid[data_region, ] %>%
 
 # export data
 ## costs geopackage
-sf::st_write(obj = data_region_hex, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_{data_name}_hex"), append = FALSE)
+sf::st_write(obj = data_region_grid, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_{data_name}_grid"), append = FALSE)
 
 ## intermediate geopackage
 

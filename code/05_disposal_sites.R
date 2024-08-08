@@ -116,9 +116,9 @@ data_region <- data %>%
 #####################################
 #####################################
 
-# disposal sites hex grids
-region_data_hex <- grid[region_data, ] %>%
-  # spatially join disposal sites to Gulf of Mexico hex cells
+# disposal sites grid
+region_data_grid <- grid[region_data, ] %>%
+  # spatially join disposal sites to Stellwagen cells
   sf::st_join(x = .,
               y = region_data,
               join = st_intersects) %>%

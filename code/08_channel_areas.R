@@ -55,7 +55,7 @@ pacman::p_load(renv,
 ## define data directory (as this is an R Project, pathnames are simplified)
 ### input directories
 #### channel areas
-data_dir <- "data/a_raw_data/state_costs.gpkg"
+data_dir <- "data/a_raw_data/National_Channel_Framework"
 
 #### study area grid
 study_region_gpkg <- stringr::str_glue("data/a_raw_data/{region_name}.gpkg")
@@ -78,8 +78,7 @@ sf::st_layers(dsn = study_region_gpkg,
 
 # read data
 ## channel areas
-data <- sf::st_read(dsn = data_dir,
-                    layer = stringr::str_glue("{data_name}")) %>%
+data <- sf::st_read(dsn = data_dir) %>%
   sf::st_transform(x = .,
                    crs = crs)
 
@@ -91,10 +90,10 @@ any(na.omit(st_is_valid(data)) == FALSE) # check for invalid data
 any(is.na(st_is_valid(data))) # check for corrupt data
 list(unique(sf::st_is_valid(data, reason = TRUE))) # list reasons for invalid data
 
-data <- data %>%
-  sf::st_buffer(dist = 0.0) %>%
-  sf::st_cast(x = .,
-              to = "MULTIPOLYGON")
+# data <- data %>%
+#   sf::st_buffer(dist = 0.0) %>%
+#   sf::st_cast(x = .,
+#               to = "MULTIPOLYGON")
 
 list(unique(sf::st_is_valid(data, reason = TRUE)))
 
@@ -117,9 +116,6 @@ grid <- sf::st_read(dsn = study_region_gpkg,
 data_region <- data %>%
   sf::st_buffer(x = .,
                 dist = setback) %>%
-  # sf::st_intersection(x = .,
-  #                     y = region)
-  # rmapshaper::ms_simplify() %>%
   rmapshaper::ms_clip(target = .,
                       clip = region) %>%
   dplyr::mutate(layer = stringr::str_glue("{data_name}")) %>%
@@ -129,9 +125,9 @@ data_region <- data %>%
 #####################################
 #####################################
 
-# disposal sites hex grids
-data_region_hex <- grid[data_region, ] %>%
-  # spatially join disposal sites to Gulf of Mexico hex cells
+# disposal sites grid
+data_region_grid <- grid[data_region, ] %>%
+  # spatially join disposal sites to Stellwagen grid
   sf::st_join(x = .,
               y = data_region,
               join = st_intersects) %>%
@@ -143,7 +139,7 @@ data_region_hex <- grid[data_region, ] %>%
 
 # export data
 ## costs geopackage
-sf::st_write(obj = data_region_hex, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_{data_name}_hex"), append = FALSE)
+sf::st_write(obj = data_region_grid, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_{data_name}_grid"), append = FALSE)
 
 ## intermediate geopackage
 

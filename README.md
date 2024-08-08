@@ -19,8 +19,7 @@ Cable routing analysis for Stellwagen National Marine Sanctuary
 | CONMAPSG | USGS | [CONMAPSG](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg.zip) | [Metadata](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg.htm), [text](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg-metadata.txt) | [FAQ](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg-faq.htm) |
 
 ## Documented issues
-7 August 2024
-
+7 August 2024 
 1. 
 
 8 August 2024

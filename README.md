@@ -19,7 +19,11 @@ Cable routing analysis for Stellwagen National Marine Sanctuary
 | CONMAPSG | USGS | [CONMAPSG](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg.zip) | [Metadata](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg.htm), [text](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg-metadata.txt) | [FAQ](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg-faq.htm) |
 
 ## Documented issues
-7 August 2024 
+7 August 2024
+
 1. 
 
 8 August 2024
+
+1. [Submarine cable area data](https://www.northeastoceandata.org/files/metadata/Themes/EnergyAndInfrastructure.zip) by [Northeast Ocean Data](https://www.northeastoceandata.org/data-download/) differ than the [data](https://hub.marinecadastre.gov/datasets/noaa::submarine-cable-areas/) provided by [MarineCadastre](https://hub.marinecadastre.gov/). Northeast Ocean Data provided data got integrated due to past use in previous model iterations. However, the [metadata document](https://www.northeastoceandata.org/files/metadata/Themes/EnergyAndInfrastructure/SubmarineCables.htm) suggest they are originally from ENC Direct (see [map services](https://nauticalcharts.noaa.gov/learn/encdirect/#map-services)). When comparing data between the two providers there exist differences and discrepancies between the datasets. The document does not detail in enough detail why these discrepancies exist or how to reconcile them.
+2. [Northeast Ocean Data](https://www.northeastoceandata.org/data-download/) [cable and pipeline data](https://www.northeastoceandata.org/files/metadata/Themes/EnergyAndInfrastructure.zip) differ from [data](https://marinecadastre.gov/downloads/data/mc/PipelineArea.zip) hosted on [MarineCadastre](https://hub.marinecadastre.gov/). The [metadata document](https://www.northeastoceandata.org/files/metadata/Themes/EnergyAndInfrastructure/CableAndPipelineAreas.htm) suggests the Northeast Ocean Data data got created by combining ENC Direct data at the approach and harbor data for the submarine cable areas and the pipelines. Still unclear why and how differences exist across the datasets.

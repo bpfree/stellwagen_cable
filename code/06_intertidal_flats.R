@@ -106,7 +106,7 @@ data_region <- data %>%
                 dist = setback) %>%
   rmapshaper::ms_clip(target = .,
                       clip = region) %>%
-  dplyr::mutate(layer = "intertidal_flats") %>%
+  dplyr::mutate(layer = stringr::str_glue("{data_name}")) %>%
   dplyr::group_by(layer) %>%
   dplyr::summarise()
 

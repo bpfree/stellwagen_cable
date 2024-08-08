@@ -55,7 +55,7 @@ pacman::p_load(renv,
 ## define data directory (as this is an R Project, pathnames are simplified)
 ### input directories
 #### sand patches
-data_dir <- "data/a_raw_data/Intertidal_Flats"
+data_dir <- "data/a_raw_data/state_costs.gpkg"
 
 #### study area grid
 study_region_gpkg <- stringr::str_glue("data/a_raw_data/{region_name}.gpkg")
@@ -77,8 +77,9 @@ sf::st_layers(dsn = study_region_gpkg,
 #####################################
 
 # read data
-## active and inactive ocean disposal sites
-data <- sf::st_read(dsn = data_dir) %>%
+## sand patches
+data <- sf::st_read(dsn = data_dir,
+                    layer = stringr::str_glue("{data_name}")) %>%
   sf::st_transform(x = .,
                    crs = crs)
 
@@ -106,7 +107,7 @@ data_region <- data %>%
                 dist = setback) %>%
   rmapshaper::ms_clip(target = .,
                       clip = region) %>%
-  dplyr::mutate(layer = "intertidal_flats") %>%
+  dplyr::mutate(layer = stringr::str_glue("{data_name}")) %>%
   dplyr::group_by(layer) %>%
   dplyr::summarise()
 

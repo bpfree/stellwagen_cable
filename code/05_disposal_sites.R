@@ -109,7 +109,7 @@ data_region <- data %>%
                 dist = setback) %>%
   rmapshaper::ms_clip(target = .,
                       clip = region) %>%
-  dplyr::mutate(layer = "disposal_sites") %>%
+  dplyr::mutate(layer = stringr::str_glue("{data_name}")) %>%
   dplyr::group_by(layer) %>%
   dplyr::summarise()
 

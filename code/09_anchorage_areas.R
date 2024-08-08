@@ -1,5 +1,5 @@
 ###########################
-### 08. anchorage areas ###
+### 09. anchorage areas ###
 ###########################
 
 # clear environment
@@ -17,6 +17,7 @@ region_name <- "stellwagen"
 
 ## layer names
 data_name <- "anchorage_areas"
+layer_name <- "Anchorage"
 
 ## coordinate reference system
 ### set the coordinate reference system that data should become (NAD83(2011) / Massachusetts Mainland: https://epsg.io/6492)
@@ -55,7 +56,7 @@ pacman::p_load(renv,
 ## define data directory (as this is an R Project, pathnames are simplified)
 ### input directories
 #### anchorage areas
-data_dir <- "data/a_raw_data/state_costs.gpkg"
+data_dir <- "data/a_raw_data/Anchorage/Anchorage.gpkg"
 
 #### study area grid
 study_region_gpkg <- stringr::str_glue("data/a_raw_data/{region_name}.gpkg")
@@ -79,7 +80,7 @@ sf::st_layers(dsn = study_region_gpkg,
 # read data
 ## anchorage areas
 data <- sf::st_read(dsn = data_dir,
-                    layer = stringr::str_glue("{data_name}")) %>%
+                    layer = stringr::str_glue("{layer_name}")) %>%
   sf::st_transform(x = .,
                    crs = crs)
 
@@ -114,9 +115,9 @@ data_region <- data %>%
 #####################################
 #####################################
 
-# disposal sites hex grids
-data_region_hex <- grid[data_region, ] %>%
-  # spatially join disposal sites to Gulf of Mexico hex cells
+# disposal sites grid
+data_region_grid <- grid[data_region, ] %>%
+  # spatially join disposal sites to Stellwagen grid
   sf::st_join(x = .,
               y = data_region,
               join = st_intersects) %>%
@@ -128,7 +129,7 @@ data_region_hex <- grid[data_region, ] %>%
 
 # export data
 ## costs geopackage
-sf::st_write(obj = data_region_hex, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_{data_name}_hex"), append = FALSE)
+sf::st_write(obj = data_region_grid, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_{data_name}_grid"), append = FALSE)
 
 ## intermediate geopackage
 

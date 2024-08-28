@@ -17,6 +17,25 @@ Cable routing analysis for Stellwagen National Marine Sanctuary
 | Algonquin Hubline LNC Pipeline | Massachusetts CZM | [Liquid natural gas](https://czm-moris-mass-eoeea.hub.arcgis.com/datasets/Mass-EOEEA::algonquin-hubline-lnc-pipeline) | [Metadata](https://www.arcgis.com/sharing/rest/content/items/8cbe1bdd72a443a5bf04c2d50c78df10/info/metadata/metadata.xml?format=default&output=html) | [RESTService](https://services1.arcgis.com/7iJyYTjCtKsZS1LR/arcgis/rest/services/Algonquin_Hubline_LNC_Pipeline/FeatureServer/1) |
 | CONMAPSG | USGS | [CONMAPSG](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg.zip) | [Metadata](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg.htm)  ([text](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg-metadata.txt)) | [FAQ](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg-faq.htm), Data provided for the analysis are more expansive than this dataset |
 
+## Methods
+| **Layer** | **Setback (m)** | **Score** | **Notes** |
+|---------------|---------------|---------------|---------------|
+| Sediment (CONMAPSG) - Sand/Mud | None | 0.2 | |
+| Sediment (CONMAPSG) - Mix | None | 0.4 | |
+| Sediment (CONMAPSG) - Gravel | None | 0.6 | |
+| Sediment (CONMAPSG) - Rock | None | 1.0 | |
+| Cod Spawning IBS (High)/Telemetry (UD 50) | None | 0.8 | |
+| Cod Spawning IBS (Low)/Telemetry (UD 90) | None | 0.2 | |
+| Active and Inactive Disposal Sites | 500 | 0.8 | |
+| Intertidal Flats | 500 | 0.2 | |
+| Sand Patches | 500 | 1.0 | |
+| Channel Areas | 600 | 1.0 | |
+| Anchorage Areas | 600 | 0.8 | |
+| Eelgrass Meadows | 675 | 0.4 | |
+| Cable and Pipeline Areas | 675 | 0.4 | |
+| Submarine Cables | 675 | 0.4 | |
+| LNG Pipelines | 675 | 0.4 | |
+
 ## Documented issues
 7 August 2024
 

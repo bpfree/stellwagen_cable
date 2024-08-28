@@ -20,9 +20,9 @@ Cable routing analysis for Stellwagen National Marine Sanctuary
 ## Methods
 | **Layer** | **Setback (m)** | **Score** | **Notes** |
 |---------------|---------------|---------------|---------------|
-| Sediment (CONMAPSG) - Sand/Mud | None | 0.2 | |
-| Sediment (CONMAPSG) - Mix | None | 0.4 | |
-| Sediment (CONMAPSG) - Gravel | None | 0.6 | |
+| Sediment (CONMAPSG) - Sand/Mud | --------------- | 0.2 | |
+| Sediment (CONMAPSG) - Mix | --------------- | 0.4 | |
+| Sediment (CONMAPSG) - Gravel | --------------- | 0.6 | |
 | Sediment (CONMAPSG) - Rock | None | 1.0 | |
 | Cod Spawning IBS (High)/Telemetry (UD 50) | None | 0.8 | |
 | Cod Spawning IBS (Low)/Telemetry (UD 90) | None | 0.2 | |

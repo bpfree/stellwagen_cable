@@ -55,7 +55,7 @@ pacman::p_load(renv,
 # set directories
 ## define data directory (as this is an R Project, pathnames are simplified)
 ### input directories
-#### anchorage areas
+#### eelgrass meadows
 data_dir <- "data/a_raw_data/Habitat/Habitat/Habitat.gdb"
 
 #### study area grid

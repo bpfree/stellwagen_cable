@@ -18,14 +18,14 @@ Cable routing analysis for Stellwagen National Marine Sanctuary
 | CONMAPSG | USGS | [CONMAPSG](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg.zip) | [Metadata](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg.htm)  ([text](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg-metadata.txt)) | [FAQ](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg-faq.htm), Data provided for the analysis are more expansive than this dataset |
 
 ## Methods
-| **Layer** | **Setback (m)** | **Score** | **Notes** |
+| **Layer** | **Buffer distance (m)** | **Score** | **Notes** |
 |---------------|---------------|---------------|---------------|
 | Sediment (CONMAPSG) - Sand/Mud | --------------- | 0.2 | |
 | Sediment (CONMAPSG) - Mix | --------------- | 0.4 | |
 | Sediment (CONMAPSG) - Gravel | --------------- | 0.6 | |
-| Sediment (CONMAPSG) - Rock | None | 1.0 | |
-| Cod Spawning IBS (High)/Telemetry (UD 50) | None | 0.8 | |
-| Cod Spawning IBS (Low)/Telemetry (UD 90) | None | 0.2 | |
+| Sediment (CONMAPSG) - Rock | --------------- | 1.0 | |
+| Cod Spawning IBS (High)/Telemetry (UD 50) | --------------- | 0.8 | |
+| Cod Spawning IBS (Low)/Telemetry (UD 90) | --------------- | 0.2 | |
 | Active and Inactive Disposal Sites | 500 | 0.8 | |
 | Intertidal Flats | 500 | 0.2 | |
 | Sand Patches | 500 | 1.0 | |

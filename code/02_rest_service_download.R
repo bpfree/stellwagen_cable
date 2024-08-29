@@ -162,6 +162,10 @@ rest_services_function <- function(url_list, base_url, data_dir){
 
 #####################################
 
+# submarine cable and pipeline data
+## https://nauticalcharts.noaa.gov/data/gis-data-and-services.html
+## https://nauticalcharts.noaa.gov/learn/encdirect/#map-services
+
 url_list <- c(
   "encdirect/enc_overview/MapServer/61",
   "encdirect/enc_general/MapServer/69",

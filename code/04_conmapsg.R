@@ -55,7 +55,7 @@ pacman::p_load(renv,
 data_dir <- "data/a_raw_data/state_costs.gpkg"
 
 #### study area grid
-study_region_gpkg <- stringr::str_glue("data/a_raw_data/{region}.gpkg")
+study_region_gpkg <- stringr::str_glue("data/a_raw_data/{region_name}.gpkg")
 
 ### output directories
 #### costs geopackage
@@ -82,7 +82,7 @@ data <- sf::st_read(dsn = data_dir,
 
 ## Stellwagen region
 region <- sf::st_read(dsn = study_region_gpkg,
-                      layer = stringr::str_glue("{region}_region")) %>%
+                      layer = stringr::str_glue("{region_name}_region")) %>%
   sf::st_transform(x = .,
                    crs = crs)
 
@@ -111,6 +111,8 @@ data_region <- data_region %>%
                                         BARNHARDT == "Gs" ~ "gravel",
                                         BARNHARDT == "Gs*" ~ "gravel",
                                         BARNHARDT == "Sg or Gs" ~ "gravel",
+                                        BARNHARDT == "G or R" ~ "rock",
+                                        BARNHARDT == "R" ~ "rock",
                                         BARNHARDT == "R**" ~ "rock",
                                         BARNHARDT == "Rf" ~ "rock",
                                         BARNHARDT == "Rg" ~ "rock",

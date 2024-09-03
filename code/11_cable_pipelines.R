@@ -1,6 +1,6 @@
-###############################
-### 11. cable and pipelines ###
-###############################
+#########################################
+### 11. submarine cable and pipelines ###
+#########################################
 
 # clear environment
 rm(list = ls())
@@ -55,7 +55,7 @@ pacman::p_load(renv,
 # set directories
 ## define data directory (as this is an R Project, pathnames are simplified)
 ### input directories
-#### anchorage areas
+#### cable and pipelines
 data_dir <- "data/a_raw_data/EnergyandInfrastructure/EnergyandInfrastructure/EnergyandInfrastructure.gdb"
 
 #### study area grid

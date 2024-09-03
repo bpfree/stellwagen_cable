@@ -61,6 +61,7 @@ Put simply, the previously shared data lack some of the deep-sea coral dataset p
 
 9 August 2024
 1. Past analysis had a coordinate reference system that has units in US survey foot. (NAD83(2011) / Massachusetts Mainland). According to NIST, US survey feet one should avoid using US survey foot units. This seems to make instinctive sense to me given all the setbacks are in meters not imperial units. [**Update 7 August 2024:** per [Daniel Sampson](daniel.sampson@mass.gov) the preferred coordinate reference system is NAD83 with a EPSG code of 26986; **Update 12 August 2024:** per [Brooke Hodge](brooke.hodge@mass.gov), a coordinate system for UTM19N would likely be fine to use]
+2. No active nor inactive disposal sites were located within the study region. The previous analysis seems to not have limited to only the active nor inactive disposal sites, but all disposal sites. Is this okay?
 
 3 September 2024
 1. Shoreline limit for Cape Cod seems to come from the USGS global islands dataset. Is this dataset preferable to the Massachusetts [Coastal Zone Management dataset on shorelines between 1800 - 2014](https://czm-moris-mass-eoeea.hub.arcgis.com/datasets/783773f353f846a4ae0d5f4dcbcb9919_3)? The USGS global islands dataset got published in 2019 -- data were from 2014 as well. Which is the more authoritative data source?

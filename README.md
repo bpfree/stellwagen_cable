@@ -48,7 +48,9 @@ Cable routing analysis for Stellwagen National Marine Sanctuary
 ## Documented issues
 7 August 2024
 
-1. 
+1. What is happening with the coral points data? Data source is unknown and data shared seem to have a 175-meter buffer already applied, yet the analysis details a 675-meter buffer. [Update on 30 August 2024: per Brooke Hodge's response on the data source being from NOAA's deep-sea coral dataset and supplemented from another data source, strangely there are instance where some data from the deep-sea coral dataset do not get included in the previously shared coral point data, but also there exist data in the dataset that do not appear in the previously shared data.
+
+Put simply, the previously shared data lack some of the deep-sea coral dataset provided by NOAA but also have additional supplemental data. How are these two conditions reconciled?]
 
 8 August 2024
 

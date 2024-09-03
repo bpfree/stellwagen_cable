@@ -59,7 +59,7 @@ pacman::p_load(renv,
 data_dir <- "data/a_raw_data/OceanDisposalSite/OceanDisposalSite.gpkg"
 
 #### study area grid
-study_region_gpkg <- stringr::str_glue("data/a_raw_data/{region}.gpkg")
+study_region_gpkg <- stringr::str_glue("data/a_raw_data/{region_name}.gpkg")
 
 ### output directories
 #### costs geopackage

@@ -7,13 +7,10 @@
 ### **Repository Structure**
 
 -   **data**
-    -   **raw_data:** the raw data integrated in the analysis (**Note:** original data name and structure were kept except when either name was not descriptive or similar data were put in same directory to simplify input directories)
-    -   **intermediate_data:** disaggregated processed data
-    -   **submodel_data:** processed data for analyzing in the wind siting submodel
-    -   **suitability_data:** final suitability data for offshore wind area region
-    -   **rank_data:**
-    -   **sensitivity_data:**
-    -   **uncertainty_data:**
+    -   **a_raw_data:** the raw data integrated in the analysis (**Note:** original data name and structure were kept except when either name was not descriptive or similar data were put in same directory to simplify input directories)
+    -   **b_intermediate_data:** disaggregated processed data
+    -   **c_analysis_data:** processed data for analyzing in the wind siting submodel
+    -   **d_raster_data:** final suitability data for offshore wind area region
 -   **code:** scripts for cleaning, processing, and analyzing data
 -   **figures:** figures generated to visualize analysis
 -   **methodology:** detailed [methods]() for the data and analysis

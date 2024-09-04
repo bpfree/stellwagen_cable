@@ -46,8 +46,6 @@ Please contact Brian Free ([brian.free@noaa.gov](mailto:brian.free@noaa.gov)) wi
 | Sediment (CONMAPSG) - Mix | --------------- | 0.4 | |
 | Sediment (CONMAPSG) - Gravel | --------------- | 0.6 | |
 | Sediment (CONMAPSG) - Rock | --------------- | 1.0 | |
-| Cod Spawning IBS (High)/Telemetry (UD 50) | --------------- | 0.8 | |
-| Cod Spawning IBS (Low)/Telemetry (UD 90) | --------------- | 0.2 | |
 | Active and Inactive Disposal Sites | 500 | 0.8 | |
 | Intertidal Flats | 500 | 0.2 | |
 | Sand Patches | 500 | 1.0 | |

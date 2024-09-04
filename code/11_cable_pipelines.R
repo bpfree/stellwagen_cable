@@ -21,7 +21,6 @@ layer_name <- "CableAndPipelineAreas"
 
 ## coordinate reference system
 ### set the coordinate reference system that data should become (NAD83 UTM 19N: https://epsg.io/26919)
-
 crs <- "EPSG:26919"
 
 ## setback distance

@@ -20,9 +20,8 @@ data_name <- "disposal_sites"
 layer_name <- "OceanDisposalSite"
 
 ## coordinate reference system
-### set the coordinate reference system that data should become (NAD83(2011) / Massachusetts Mainland: https://epsg.io/6492)
-#### ***note: units are in feet (not meters)
-crs <- "EPSG:6492"
+### set the coordinate reference system that data should become (NAD83 UTM 19N: https://epsg.io/26919)
+crs <- "EPSG:26919"
 
 ## setback distance
 setback <- 500
@@ -89,7 +88,7 @@ sf::st_crs(data, parameters = TRUE)$units_gdal
 
 ## Stellwagen region
 region <- sf::st_read(dsn = study_region_gpkg,
-                      layer = stringr::str_glue("{region}_region")) %>%
+                      layer = stringr::str_glue("{region_name}_region")) %>%
   sf::st_transform(x = .,
                    crs = crs)
 
@@ -104,7 +103,6 @@ grid <- sf::st_read(dsn = study_region_gpkg,
 
 # limit data to study region
 data_region <- data %>%
-  dplyr::filter(status == "Active" | status == "Inactive") %>%
   sf::st_buffer(x = .,
                 dist = setback) %>%
   rmapshaper::ms_clip(target = .,

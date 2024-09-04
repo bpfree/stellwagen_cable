@@ -16,9 +16,8 @@ start <- Sys.time()
 region <- "sw"
 
 ## coordinate reference system
-### set the coordinate reference system that data should become (NAD83(2011) / Massachusetts Mainland: https://epsg.io/6492)
-#### ***note: units are in feet (not meters)
-crs <- "EPSG:6492"
+### set the coordinate reference system that data should become (NAD83 UTM 19N: https://epsg.io/26919)
+crs <- "EPSG:26919"
 
 ## designate date
 date <- format(Sys.Date(), "%Y%m%d")
@@ -109,7 +108,7 @@ sf::st_layers(dsn = stellwagen_dir,
 # # load data
 # ## state costs
 # conmapsg <- sf::st_read(dsn = conmapsg_coral_dir, layer = "CONMAPSSG") %>%
-#   # change to correct coordinate reference system (EPSG:6492 -- NAD83(2011) / Massachusetts Mainland)
+#   # change to correct coordinate reference system (EPSG:6492 -- NAD83 UTM 19N)
 #   sf::st_transform(x = .,
 #                    crs = crs)
 # 
@@ -125,7 +124,7 @@ sf::st_layers(dsn = stellwagen_dir,
 # disposal_sites <- sf::st_read(dsn = disposal_dir,
 #                               layer = sf::st_layers(dsn = disposal_dir)[[1]][grep(pattern = "Disposal",
 #                                                                                   x = sf::st_layers(dsn = disposal_dir)[[1]])]) %>%
-#   # change to correct coordinate reference system (EPSG:6492 -- NAD83(2011) / Massachusetts Mainland)
+#   # change to correct coordinate reference system (EPSG:6492 -- NAD83 UTM 19N)
 #   sf::st_transform(x = .,
 #                    crs = crs)
 # 
@@ -137,7 +136,7 @@ sf::st_layers(dsn = stellwagen_dir,
 # 
 # ### sand patches
 # sand_patches <- sf::st_read(dsn = file.path(data_dir, "sand_patches.shp")) %>%
-#   # change to correct coordinate reference system (EPSG:6492 -- NAD83(2011) / Massachusetts Mainland)
+#   # change to correct coordinate reference system (EPSG:6492 -- NAD83 UTM 19N)
 #   sf::st_transform(x = .,
 #                    crs = crs)
 # 
@@ -151,7 +150,7 @@ sf::st_layers(dsn = stellwagen_dir,
 # channel_areas <- sf::st_read(dsn = channel_dir,
 #                              layer = sf::st_layers(dsn = channel_dir)[[1]][grep(pattern = "Channel",
 #                                                                                 x = sf::st_layers(dsn = channel_dir)[[1]])]) %>%
-#   # change to correct coordinate reference system (EPSG:6492 -- NAD83(2011) / Massachusetts Mainland)
+#   # change to correct coordinate reference system (EPSG:6492 -- NAD83 UTM 19N)
 #   sf::st_transform(x = .,
 #                    crs = crs)
 # 
@@ -167,7 +166,7 @@ sf::st_layers(dsn = stellwagen_dir,
 # anchorage_areas <- sf::st_read(dsn = anchorage_dir,
 #                                layer = sf::st_layers(dsn = anchorage_dir)[[1]][grep(pattern = "Anchorage",
 #                                                                                     x = sf::st_layers(dsn = anchorage_dir)[[1]])]) %>%
-#   # change to correct coordinate reference system (EPSG:6492 -- NAD83(2011) / Massachusetts Mainland)
+#   # change to correct coordinate reference system (EPSG:6492 -- NAD83 UTM 19N)
 #   sf::st_transform(x = .,
 #                    crs = crs)
 # 
@@ -181,7 +180,7 @@ sf::st_layers(dsn = stellwagen_dir,
 # eelgrass <- sf::st_read(dsn = habitat_dir,
 #                         layer = sf::st_layers(dsn = habitat_dir)[[1]][grep(pattern = "Eelgrass",
 #                                                                            x = sf::st_layers(dsn = habitat_dir)[[1]])]) %>%
-#   # change to correct coordinate reference system (EPSG:6492 -- NAD83(2011) / Massachusetts Mainland)
+#   # change to correct coordinate reference system (EPSG:6492 -- NAD83 UTM 19N)
 #   sf::st_transform(x = .,
 #                    crs = crs)
 # 
@@ -195,7 +194,7 @@ sf::st_layers(dsn = stellwagen_dir,
 # cable_pipelines <- sf::st_read(dsn = energy_dir,
 #                                layer = sf::st_layers(dsn = energy_dir)[[1]][grep(pattern = "CableAndPipeline",
 #                                                                                  x = sf::st_layers(dsn = energy_dir)[[1]])]) %>%
-#   # change to correct coordinate reference system (EPSG:6492 -- NAD83(2011) / Massachusetts Mainland)
+#   # change to correct coordinate reference system (EPSG:6492 -- NAD83 UTM 19N)
 #   sf::st_transform(x = .,
 #                    crs = crs)
 # 
@@ -209,7 +208,7 @@ sf::st_layers(dsn = stellwagen_dir,
 # submarine_cables <- sf::st_read(dsn = energy_dir,
 #                                 layer = sf::st_layers(dsn = energy_dir)[[1]][grep(pattern = "Submarine",
 #                                                                                   x = sf::st_layers(dsn = energy_dir)[[1]])]) %>%
-#   # change to correct coordinate reference system (EPSG:6492 -- NAD83(2011) / Massachusetts Mainland)
+#   # change to correct coordinate reference system (EPSG:6492 -- NAD83 UTM 19N)
 #   sf::st_transform(x = .,
 #                    crs = crs)
 # 
@@ -223,7 +222,7 @@ sf::st_layers(dsn = stellwagen_dir,
 # lng_sites <- sf::st_read(dsn = energy_dir,
 #                              layer = sf::st_layers(dsn = energy_dir)[[1]][grep(pattern = "LNGsites",
 #                                                                                x = sf::st_layers(dsn = energy_dir)[[1]])]) %>%
-#   # change to correct coordinate reference system (EPSG:6492 -- NAD83(2011) / Massachusetts Mainland)
+#   # change to correct coordinate reference system (EPSG:6492 -- NAD83 UTM 19N)
 #   sf::st_transform(x = .,
 #                    crs = crs)
 # 
@@ -237,7 +236,7 @@ sf::st_layers(dsn = stellwagen_dir,
 # lng_pipelines <- sf::st_read(dsn = energy_dir,
 #                              layer = sf::st_layers(dsn = energy_dir)[[1]][grep(pattern = "LNGpipelines",
 #                                                                                x = sf::st_layers(dsn = energy_dir)[[1]])]) %>%
-#   # change to correct coordinate reference system (EPSG:6492 -- NAD83(2011) / Massachusetts Mainland)
+#   # change to correct coordinate reference system (EPSG:6492 -- NAD83 UTM 19N)
 #   sf::st_transform(x = .,
 #                    crs = crs)
 # 
@@ -259,7 +258,7 @@ sf::st_layers(dsn = stellwagen_dir,
 coral <- sf::st_read(dsn = conmapsg_coral_dir,
                      layer = sf::st_layers(dsn = conmapsg_coral_dir)[[1]][grep(pattern = "Coral",
                                                                       x = sf::st_layers(dsn = conmapsg_coral_dir)[[1]])]) %>%
-  # change to correct coordinate reference system (EPSG:6492 -- NAD83(2011) / Massachusetts Mainland)
+  # change to correct coordinate reference system (EPSG:6492 -- NAD83 UTM 19N)
   sf::st_transform(x = .,
                    crs = crs)
 
@@ -267,7 +266,7 @@ coral <- sf::st_read(dsn = conmapsg_coral_dir,
 avoided_sites <-sf::st_read(dsn = federal_dir,
                             layer = sf::st_layers(dsn = federal_dir)[[1]][grep(pattern = "Avoid",
                                                                                x = sf::st_layers(dsn = federal_dir)[[1]])]) %>%
-  # change to correct coordinate reference system (EPSG:6492 -- NAD83(2011) / Massachusetts Mainland)
+  # change to correct coordinate reference system (EPSG:6492 -- NAD83 UTM 19N)
   sf::st_transform(x = .,
                    crs = crs)
 
@@ -275,7 +274,7 @@ avoided_sites <-sf::st_read(dsn = federal_dir,
 boulder <- sf::st_read(dsn = federal_dir,
                        layer = sf::st_layers(dsn = federal_dir)[[1]][grep(pattern = "Boulder",
                                                                           x = sf::st_layers(dsn = federal_dir)[[1]])]) %>%
-  # change to correct coordinate reference system (EPSG:6492 -- NAD83(2011) / Massachusetts Mainland)
+  # change to correct coordinate reference system (EPSG:6492 -- NAD83 UTM 19N)
   sf::st_transform(x = .,
                    crs = crs)
 
@@ -283,7 +282,7 @@ boulder <- sf::st_read(dsn = federal_dir,
 cape <- sf::st_read(dsn = cape_dir,
                     layer = sf::st_layers(dsn = cape_dir)[[1]][grep(pattern = "CapeoftheCod_line",
                                                                     x = sf::st_layers(dsn = cape_dir)[[1]])]) %>%
-  # change to correct coordinate reference system (EPSG:6492 -- NAD83(2011) / Massachusetts Mainland)
+  # change to correct coordinate reference system (EPSG:6492 -- NAD83 UTM 19N)
   sf::st_transform(x = .,
                    crs = crs) %>%
   # drop z-dimension

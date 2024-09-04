@@ -20,9 +20,9 @@ data_name <- "sand_patches"
 layer_name <- "sand"
 
 ## coordinate reference system
-### set the coordinate reference system that data should become (NAD83(2011) / Massachusetts Mainland: https://epsg.io/6492)
-#### ***note: units are in feet (not meters)
-crs <- "EPSG:6492"
+### set the coordinate reference system that data should become (NAD83 UTM 19N: https://epsg.io/26919)
+
+crs <- "EPSG:26919"
 
 ## setback distance
 setback <- 500

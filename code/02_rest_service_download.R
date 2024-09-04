@@ -203,10 +203,10 @@ for (i in 1:length(cables)){
   # rename the folder to match the ENC level
   file.rename(from = file.path(data_dir, cables[i]),
               # new name
-              to = file.path(data_dir, stringr::str_glue("cable_{enc_levels[i]}")))
+              to = file.path(data_dir, stringr::str_glue("cable_submarine_{enc_levels[i]}")))
   
   # grab the files within the folder that has the proper ENC level
-  files <- list.files(path = file.path(data_dir, stringr::str_glue("cable_{enc_levels[i]}")),
+  files <- list.files(path = file.path(data_dir, stringr::str_glue("cable_submarine_{enc_levels[i]}")),
                       # pattern will be the generic cable number (the layer number in the REST Service)
                       pattern = cables[i],
                       # obtain the full pathname
@@ -214,7 +214,7 @@ for (i in 1:length(cables)){
   # replace old generic files (the REST Service number) with the proper ENC level name
   new_names <- sub(pattern = cables[i],
                    # replacement name
-                   replacement = stringr::str_glue("cable_{enc_levels[i]}"),
+                   replacement = stringr::str_glue("cable_submarine_{enc_levels[i]}"),
                    # files to apply to
                    x = files)
   # rename identified files

@@ -166,12 +166,18 @@ rest_services_function <- function(url_list, base_url, data_dir){
 ## https://nauticalcharts.noaa.gov/data/gis-data-and-services.html
 ## https://nauticalcharts.noaa.gov/learn/encdirect/#map-services
 
+### 61: Cable and submarine line (ENC overview)
+### 69: Cable and submarine line (ENC general)
+### 88: Cable and submarine line (ENC coastal)
+### 118: Cable and submarine line (ENC approach)
+### 114: Cable and submarine line (ENC harbor)
+### 54: Cable and submarine line (ENC berthing)
+
 url_list <- c(
   "encdirect/enc_overview/MapServer/61",
   "encdirect/enc_general/MapServer/69",
   "encdirect/enc_coastal/MapServer/88",
   "encdirect/enc_approach/MapServer/118",
-  "encdirect/enc_approach/MapServer/119",
   "encdirect/enc_harbour/MapServer/114",
   "encdirect/enc_berthing/MapServer/54"
 )
@@ -184,6 +190,119 @@ work <- parallel::parLapply(cl = cl, X = url_list, fun = rest_services_function,
                             base_url = "https://encdirect.noaa.gov/arcgis/rest/services", data_dir = data_dir)
 
 parallel::stopCluster(cl = cl)
+
+#####################################
+
+cables <- c("61", "69", "88", "118", "114", "54")
+enc_levels <- c("overview", "general", "coastal", "approach", "harbour", "berthing")
+
+# loop through the ENC levels and change all the generic names to match the ENC level along with files for the shapefile
+for (i in 1:length(cables)){
+  # grab the folder path for the level of interest
+  folder <- file.path(data_dir, cables[i])
+  # rename the folder to match the ENC level
+  file.rename(from = file.path(data_dir, cables[i]),
+              # new name
+              to = file.path(data_dir, stringr::str_glue("cable_{enc_levels[i]}")))
+  
+  # grab the files within the folder that has the proper ENC level
+  files <- list.files(path = file.path(data_dir, stringr::str_glue("cable_{enc_levels[i]}")),
+                      # pattern will be the generic cable number (the layer number in the REST Service)
+                      pattern = cables[i],
+                      # obtain the full pathname
+                      full.names = T)
+  # replace old generic files (the REST Service number) with the proper ENC level name
+  new_names <- sub(pattern = cables[i],
+                   # replacement name
+                   replacement = stringr::str_glue("cable_{enc_levels[i]}"),
+                   # files to apply to
+                   x = files)
+  # rename identified files
+  file.rename(from = files,
+              # to the new names
+              to = new_names)
+  
+  # delete old data directories
+  unlink(file.path(data_dir, cables[i]), recursive = T)
+}
+
+#####################################
+#####################################
+
+rest_services_function <- function(url_list, base_url, data_dir){
+  # define base URL (the service path)
+  base_url <- base_url
+  
+  # define the unique dataset URL ending
+  full_url <- url_list
+  
+  # combine the base with the dataset URL to create the entire data URL
+  data_url <- file.path(base_url, full_url)
+  
+  # pull the spatial layer from the REST server
+  data <- arcpullr::get_spatial_layer(data_url)
+  
+  # get the unique data name (when applicable)
+  dir_name <- stringr::str_split(url_list, pattern = "/")[[1]][1]
+  
+  # create new directory for data
+  dir_create <- dir.create(file.path(data_dir, dir_name))
+  
+  # set the new pathname to export the data
+  new_dir <- file.path(data_dir, dir_name)
+  
+  # export the dataset
+  sf::st_write(obj = data, dsn = file.path(new_dir, paste0(dir_name, ".shp")), delete_layer = F)
+}
+
+#####################################
+
+# USGS global islands data
+## continental mainlands: https://rmgsc.cr.usgs.gov/ArcGIS/rest/services/gieVector/MapServer/0
+## big islands (>1km2): https://rmgsc.cr.usgs.gov/ArcGIS/rest/services/gieVector/MapServer/1
+## small islands (>= 0.0036km2 and <=1km2): https://rmgsc.cr.usgs.gov/ArcGIS/rest/services/gieVector/MapServer/2
+## very small islands (<0.0036km2): https://rmgsc.cr.usgs.gov/ArcGIS/rest/services/gieVector/MapServer/3
+
+## map: https://rmgsc.cr.usgs.gov/gie/gie.shtml
+
+url_list <- c(
+  "gieVector/MapServer/1"
+)
+
+parallel::detectCores()[1]
+cl <- parallel::makeCluster(spec = parallel::detectCores(), # number of clusters wanting to create
+                            type = 'PSOCK')
+
+work <- parallel::parLapply(cl = cl, X = url_list, fun = rest_services_function,
+                            base_url = "https://rmgsc.cr.usgs.gov/ArcGIS/rest/services", data_dir = data_dir)
+
+parallel::stopCluster(cl = cl)
+
+#####################################
+
+# grab the folder path for the level of interest
+folder <- file.path(data_dir, "gieVector")
+
+file.rename(from = folder,
+            # new name
+            to = file.path(data_dir, "usgs_big_islands"))
+
+# grab the files within the folder that has the proper ENC level
+files <- list.files(path = file.path(data_dir, "usgs_big_islands"),
+                    # pattern will be the generic cable number (the layer number in the REST Service)
+                    pattern = "gieVector",
+                    # obtain the full pathname
+                    full.names = T)
+# replace old generic files (the REST Service number) with the proper ENC level name
+new_names <- sub(pattern = "gieVector",
+                 # replacement name
+                 replacement = "usgs_big_islands",
+                 # files to apply to
+                 x = files)
+# rename identified files
+file.rename(from = files,
+            # to the new names
+            to = new_names)
 
 #####################################
 #####################################

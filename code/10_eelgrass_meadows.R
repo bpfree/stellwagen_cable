@@ -114,9 +114,9 @@ data_region <- data %>%
 #####################################
 #####################################
 
-# disposal sites grid
+# eelgrass meadows grid
 data_region_grid <- grid[data_region, ] %>%
-  # spatially join disposal sites to Stellwagen grid
+  # spatially join eelgrass meadows to Stellwagen grid
   sf::st_join(x = .,
               y = data_region,
               join = st_intersects) %>%

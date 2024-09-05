@@ -115,9 +115,9 @@ data_region <- data %>%
 #####################################
 #####################################
 
-# disposal sites grid
+# sand patches grid
 data_region_grid <- grid[data_region, ] %>%
-  # spatially join disposal sites to Stellwagen grid
+  # spatially join sand patches to Stellwagen grid
   sf::st_join(x = .,
               y = data_region,
               join = st_intersects) %>%

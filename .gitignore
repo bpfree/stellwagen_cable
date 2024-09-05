@@ -24,8 +24,6 @@
 11_Stellwagen_Cable_Routing/Model Runs/StellwagenCableRoute/03_CableRouteModel/model_2_345/model_2_3.gdb
 11_Stellwagen_Cable_Routing/Model Runs/StellwagenCableRoute/03_CableRouteModel/model_3/SW_LCP_model_3_345.gdb
 
-
-
 ### created geopackages from previously shared data
 data/a_raw_data/stellwagen.gpkg
 data/a_raw_data/state_costs.gpkg

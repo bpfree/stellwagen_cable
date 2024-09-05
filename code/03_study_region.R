@@ -65,13 +65,20 @@ sf::st_layers(dsn = data_dir,
 #####################################
 #####################################
 
+# create simplified grid
 grid <- sf::st_read(dsn = data_dir, layer = "SW_NMS_AOI_model2_Selected") %>%
+  # create an index based on row number
   dplyr::mutate(index = row_number()) %>%
+  # simplify to the index
   dplyr::select(index)
 
+# create a dissolved grid
 blank_grid <- grid %>%
+  # create new field to designate region
   dplyr::mutate(region = "stellwagen") %>%
+  # group by region
   dplyr::group_by(region) %>%
+  # summarise by region to dissolve to one polygon
   dplyr::summarise()
 
 #####################################

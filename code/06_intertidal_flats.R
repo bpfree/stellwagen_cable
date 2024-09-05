@@ -76,7 +76,7 @@ sf::st_layers(dsn = study_region_gpkg,
 #####################################
 
 # read data
-## active and inactive ocean disposal sites
+## intertidal flats
 data <- sf::st_read(dsn = data_dir) %>%
   sf::st_transform(x = .,
                    crs = crs)
@@ -112,9 +112,9 @@ data_region <- data %>%
 #####################################
 #####################################
 
-# disposal sites grid
+# intertidal flats grid
 data_region_grid <- grid[data_region, ] %>%
-  # spatially join disposal sites to Stellwagen grid
+  # spatially join intertidal flats to Stellwagen grid
   sf::st_join(x = .,
               y = data_region,
               join = st_intersects) %>%

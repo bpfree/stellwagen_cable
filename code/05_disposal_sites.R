@@ -115,10 +115,10 @@ data_region <- data %>%
 #####################################
 
 # disposal sites grid
-region_data_grid <- grid[region_data, ] %>%
+data_region_grid <- grid[data_region, ] %>%
   # spatially join disposal sites to Stellwagen cells
   sf::st_join(x = .,
-              y = region_data,
+              y = data_region,
               join = st_intersects) %>%
   # select fields of importance
   dplyr::select(index, layer)
@@ -128,6 +128,7 @@ region_data_grid <- grid[region_data, ] %>%
 
 # export data
 ## costs geopackage
+sf::st_write(obj = data_region_grid, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_{data_name}_grid"), append = FALSE)
 
 ## intermediate geopackage
 

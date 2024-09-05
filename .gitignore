@@ -1,4 +1,39 @@
+# Ignore R-specific files
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
+.DS_Store
+
+# Ignore data too large for GitHub (>100MB)
+## Original analysis
+### data
+11_Stellwagen_Cable_Routing/Data/Stellwagen_FGDB_2024_01_02nd_v01.gdb
+
+### model runs
+11_Stellwagen_Cable_Routing/Model Runs/Stellwagen_Model2_06252024.gdb
+
+11_Stellwagen_Cable_Routing/Model Runs/StellwagenCableRoute/02_data/Stellwagen_bathymetry.gdb
+11_Stellwagen_Cable_Routing/Model Runs/StellwagenCableRoute/02_data/Stellwagen_FGDB_2024_01_02nd_v01.gdb
+11_Stellwagen_Cable_Routing/Model Runs/StellwagenCableRoute/02_data/StellwagenCableRoute_data.gdb
+
+11_Stellwagen_Cable_Routing/Model Runs/StellwagenCableRoute/02_data/SW_NMS_data_20240424.gdb
+
+11_Stellwagen_Cable_Routing/Model Runs/StellwagenCableRoute/03_CableRouteModel/model_1/CableRouteModel.gdb
+11_Stellwagen_Cable_Routing/Model Runs/StellwagenCableRoute/03_CableRouteModel/model_2/model_2.gdb
+11_Stellwagen_Cable_Routing/Model Runs/StellwagenCableRoute/03_CableRouteModel/model_2_345/model_2_3.gdb
+11_Stellwagen_Cable_Routing/Model Runs/StellwagenCableRoute/03_CableRouteModel/model_3/SW_LCP_model_3_345.gdb
+
+
+
+### created geopackages from previously shared data
+data/a_raw_data/stellwagen.gpkg
+data/a_raw_data/state_costs.gpkg
+
+## Raw data
+### USGS global islands
+data/a_raw_data/usgs_big_islands
+
+#####################################
+
+## Intermediate data

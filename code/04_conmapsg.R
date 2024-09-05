@@ -85,15 +85,19 @@ region <- sf::st_read(dsn = study_region_gpkg,
   sf::st_transform(x = .,
                    crs = crs)
 
+## Stellwagen grid
+grid <- sf::st_read(dsn = study_region_gpkg,
+                    layer = stringr::str_glue("{region}_grid")) %>%
+  sf::st_transform(x = .,
+                   crs = crs)
+
 #####################################
 #####################################
 
 # limit data to study region
 data_region <- data %>%
   rmapshaper::ms_clip(target = .,
-                      clip = region)
-
-data_region <- data_region %>%
+                      clip = region) %>%
   dplyr::mutate(type = dplyr::case_when(BARNHARDT == "M" ~ "sand_mud",
                                         BARNHARDT == "Ms" ~ "sand_mud",
                                         BARNHARDT == "S" ~ "sand_mud",
@@ -116,9 +120,72 @@ data_region <- data_region %>%
                                         BARNHARDT == "Rf" ~ "rock",
                                         BARNHARDT == "Rg" ~ "rock",
                                         BARNHARDT == "Rm" ~ "rock",
-                                        BARNHARDT == "Rs" ~ "rock"))
+                                        BARNHARDT == "Rs" ~ "rock")) %>%
+  dplyr::mutate(layer = stringr::str_glue("{data_name}"))
+
+data_region_sand <- data_region %>%
+  dplyr::filter(type == "sand_mud")
+
+data_region_mix <- data_region %>%
+  dplyr::filter(type == "mix")
+
+data_region_gravel <- data_region %>%
+  dplyr::filter(type == "gravel")
+
+data_region_rock <- data_region %>%
+  dplyr::filter(type == "rock")
+
+# data_region <- data_region %>%
+#   dplyr::mutate(type = dplyr::case_when(BARNHARDT == "M" ~ "sand_mud",
+#                                         BARNHARDT == "Ms" ~ "sand_mud",
+#                                         BARNHARDT == "S" ~ "sand_mud",
+#                                         BARNHARDT == "Sm" ~ "sand_mud",
+#                                         BARNHARDT == "Mg" ~ "mix",
+#                                         BARNHARDT == "Mr" ~ "mix",
+#                                         BARNHARDT == "Sg" ~ "mix",
+#                                         BARNHARDT == "Sr" ~ "mix",
+#                                         BARNHARDT == "G" ~ "gravel",
+#                                         BARNHARDT == "G" ~ "gravel",
+#                                         BARNHARDT == "G*" ~ "gravel",
+#                                         BARNHARDT == "Gm" ~ "gravel",
+#                                         BARNHARDT == "Gr" ~ "gravel",
+#                                         BARNHARDT == "Gs" ~ "gravel",
+#                                         BARNHARDT == "Gs*" ~ "gravel",
+#                                         BARNHARDT == "Sg or Gs" ~ "gravel",
+#                                         BARNHARDT == "G or R" ~ "rock",
+#                                         BARNHARDT == "R" ~ "rock",
+#                                         BARNHARDT == "R**" ~ "rock",
+#                                         BARNHARDT == "Rf" ~ "rock",
+#                                         BARNHARDT == "Rg" ~ "rock",
+#                                         BARNHARDT == "Rm" ~ "rock",
+#                                         BARNHARDT == "Rs" ~ "rock"))
   
 
 #####################################
 #####################################
+
+# CONMAPSG grid
+data_region_grid <- grid[data_region, ] %>%
+  # spatially join CONMAPSG to Stellwagen grid
+  sf::st_join(x = .,
+              y = data_region,
+              join = st_intersects) %>%
+  # select fields of importance
+  dplyr::select(index, layer, type)
+
+#####################################
+#####################################
+
+# export data
+## costs geopackage
+sf::st_write(obj = data_region_grid, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_{data_name}_grid"), append = FALSE)
+
+## intermediate geopackage
+
+
+#####################################
+#####################################
+
+# calculate end time and print time difference
+print(Sys.time() - start) # print how long it takes to calculate
 

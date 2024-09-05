@@ -110,9 +110,9 @@ data_region <- data %>%
 #####################################
 #####################################
 
-# disposal sites grid
+# coral points grid
 data_region_grid <- grid[data_region, ] %>%
-  # spatially join disposal sites to Stellwagen grid
+  # spatially join coral points to Stellwagen grid
   sf::st_join(x = .,
               y = data_region,
               join = st_intersects) %>%
@@ -123,7 +123,7 @@ data_region_grid <- grid[data_region, ] %>%
 #####################################
 
 # export data
-## costs geopackage
+## barriers geopackage
 sf::st_write(obj = data_region_grid, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_{data_name}_grid"), append = FALSE)
 
 ## intermediate geopackage

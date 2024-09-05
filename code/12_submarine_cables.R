@@ -114,9 +114,9 @@ data_region <- data %>%
 #####################################
 #####################################
 
-# disposal sites grid
+# submarine cables grid
 data_region_grid <- grid[data_region, ] %>%
-  # spatially join disposal sites to Stellwagen grid
+  # spatially join submarine cables to Stellwagen grid
   sf::st_join(x = .,
               y = data_region,
               join = st_intersects) %>%

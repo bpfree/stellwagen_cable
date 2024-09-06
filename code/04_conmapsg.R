@@ -18,6 +18,17 @@ region_name <- "stellwagen"
 ## layer names
 data_name <- "conmapsg"
 
+## CONMAPSG types
+sand_types <- c("M", "Ms", "S", "Sm")
+mix_types <- c("Mg", "Mr", "Sg", "Sr")
+gravel_types <- c("G", "G*", "Gm", "Gr", "Gs", "Gs*", "Sg or Gs")
+rock_types <- c("G or R", "R", "R**", "Rf", "Rg", "Rm", "Rs")
+
+sand <- "sand"
+mix <- "mix"
+gravel <- "gravel"
+rock <- "rock"
+
 ## coordinate reference system
 ### set the coordinate reference system that data should become (NAD83 UTM 19N: https://epsg.io/26919)
 crs <- "EPSG:26919"
@@ -98,87 +109,94 @@ grid <- sf::st_read(dsn = study_region_gpkg,
 data_region <- data %>%
   rmapshaper::ms_clip(target = .,
                       clip = region) %>%
-  dplyr::mutate(type = dplyr::case_when(BARNHARDT == "M" ~ "sand_mud",
-                                        BARNHARDT == "Ms" ~ "sand_mud",
-                                        BARNHARDT == "S" ~ "sand_mud",
-                                        BARNHARDT == "Sm" ~ "sand_mud",
-                                        BARNHARDT == "Mg" ~ "mix",
-                                        BARNHARDT == "Mr" ~ "mix",
-                                        BARNHARDT == "Sg" ~ "mix",
-                                        BARNHARDT == "Sr" ~ "mix",
-                                        BARNHARDT == "G" ~ "gravel",
-                                        BARNHARDT == "G" ~ "gravel",
-                                        BARNHARDT == "G*" ~ "gravel",
-                                        BARNHARDT == "Gm" ~ "gravel",
-                                        BARNHARDT == "Gr" ~ "gravel",
-                                        BARNHARDT == "Gs" ~ "gravel",
-                                        BARNHARDT == "Gs*" ~ "gravel",
-                                        BARNHARDT == "Sg or Gs" ~ "gravel",
-                                        BARNHARDT == "G or R" ~ "rock",
-                                        BARNHARDT == "R" ~ "rock",
-                                        BARNHARDT == "R**" ~ "rock",
-                                        BARNHARDT == "Rf" ~ "rock",
-                                        BARNHARDT == "Rg" ~ "rock",
-                                        BARNHARDT == "Rm" ~ "rock",
-                                        BARNHARDT == "Rs" ~ "rock")) %>%
   dplyr::mutate(layer = stringr::str_glue("{data_name}"))
 
+#####################################
+
+# filter to specific types
+
+## sand
 data_region_sand <- data_region %>%
-  dplyr::filter(type == "sand_mud")
+  # filter for matching types
+  dplyr::filter(BARNHARDT %in% sand_types) %>%
+  # create new field that is filled with new type
+  dplyr::mutate(type = dplyr::case_when(BARNHARDT %in% sand_types ~ sand)) %>%
+  # select layers of interest
+  dplyr::select(BARNHARDT, layer, type)
 
+## mix
 data_region_mix <- data_region %>%
-  dplyr::filter(type == "mix")
+  # filter for matching types
+  dplyr::filter(BARNHARDT %in% mix_types) %>%
+  # create new field that is filled with new type
+  dplyr::mutate(type = dplyr::case_when(BARNHARDT %in% mix_types ~ mix)) %>%
+  # select layers of interest
+  dplyr::select(BARNHARDT, layer, type)
 
+## gravel
 data_region_gravel <- data_region %>%
-  dplyr::filter(type == "gravel")
+  # filter for matching types
+  dplyr::filter(BARNHARDT %in% gravel_types) %>%
+  # create new field that is filled with new type
+  dplyr::mutate(type = dplyr::case_when(BARNHARDT %in% gravel_types ~ gravel)) %>%
+  # select layers of interest
+  dplyr::select(BARNHARDT, layer, type)
 
+## rock
 data_region_rock <- data_region %>%
-  dplyr::filter(type == "rock")
-
-# data_region <- data_region %>%
-#   dplyr::mutate(type = dplyr::case_when(BARNHARDT == "M" ~ "sand_mud",
-#                                         BARNHARDT == "Ms" ~ "sand_mud",
-#                                         BARNHARDT == "S" ~ "sand_mud",
-#                                         BARNHARDT == "Sm" ~ "sand_mud",
-#                                         BARNHARDT == "Mg" ~ "mix",
-#                                         BARNHARDT == "Mr" ~ "mix",
-#                                         BARNHARDT == "Sg" ~ "mix",
-#                                         BARNHARDT == "Sr" ~ "mix",
-#                                         BARNHARDT == "G" ~ "gravel",
-#                                         BARNHARDT == "G" ~ "gravel",
-#                                         BARNHARDT == "G*" ~ "gravel",
-#                                         BARNHARDT == "Gm" ~ "gravel",
-#                                         BARNHARDT == "Gr" ~ "gravel",
-#                                         BARNHARDT == "Gs" ~ "gravel",
-#                                         BARNHARDT == "Gs*" ~ "gravel",
-#                                         BARNHARDT == "Sg or Gs" ~ "gravel",
-#                                         BARNHARDT == "G or R" ~ "rock",
-#                                         BARNHARDT == "R" ~ "rock",
-#                                         BARNHARDT == "R**" ~ "rock",
-#                                         BARNHARDT == "Rf" ~ "rock",
-#                                         BARNHARDT == "Rg" ~ "rock",
-#                                         BARNHARDT == "Rm" ~ "rock",
-#                                         BARNHARDT == "Rs" ~ "rock"))
-  
+  dplyr::filter(BARNHARDT %in% rock_types) %>%
+  dplyr::mutate(type = dplyr::case_when(BARNHARDT %in% rock_types ~ rock)) %>%
+  dplyr::select(BARNHARDT, layer, type)
 
 #####################################
 #####################################
 
 # CONMAPSG grid
-data_region_grid <- grid[data_region, ] %>%
+## sand
+data_region_grid_sand <- grid[data_region_sand, ] %>%
   # spatially join CONMAPSG to Stellwagen grid
   sf::st_join(x = .,
               y = data_region,
               join = st_intersects) %>%
   # select fields of importance
-  dplyr::select(index, layer, type)
+  dplyr::select(index, BARNHARDT, layer, type)
+
+## mix
+data_region_grid_mix <- grid[data_region_mix, ] %>%
+  # spatially join CONMAPSG to Stellwagen grid
+  sf::st_join(x = .,
+              y = data_region,
+              join = st_intersects) %>%
+  # select fields of importance
+  dplyr::select(index, BARNHARDT, layer, type)
+
+## gravel
+data_region_grid_gravel <- grid[data_region_gravel, ] %>%
+  # spatially join CONMAPSG to Stellwagen grid
+  sf::st_join(x = .,
+              y = data_region,
+              join = st_intersects) %>%
+  # select fields of importance
+  dplyr::select(index, BARNHARDT, layer, type)
+
+## rock
+data_region_grid_rock <- grid[data_region_rock, ] %>%
+  # spatially join CONMAPSG to Stellwagen grid
+  sf::st_join(x = .,
+              y = data_region,
+              join = st_intersects) %>%
+  # select fields of importance
+  dplyr::select(index, BARNHARDT, layer, type)
 
 #####################################
 #####################################
 
 # export data
 ## costs geopackage
-sf::st_write(obj = data_region_grid, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_{data_name}_grid"), append = FALSE)
+sf::st_write(obj = data_region_grid_sand, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_{data_name}_{sand}_grid"), append = FALSE)
+sf::st_write(obj = data_region_grid_mix, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_{data_name}_{mix}_grid"), append = FALSE)
+sf::st_write(obj = data_region_grid_gravel, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_{data_name}_{gravel}_grid"), append = FALSE)
+sf::st_write(obj = data_region_grid_rock, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_{data_name}_{rock}_grid"), append = FALSE)
 
 ## intermediate geopackage
 
@@ -188,4 +206,3 @@ sf::st_write(obj = data_region_grid, dsn = output_gpkg, layer = stringr::str_glu
 
 # calculate end time and print time difference
 print(Sys.time() - start) # print how long it takes to calculate
-

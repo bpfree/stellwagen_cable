@@ -35,4 +35,5 @@ data/a_raw_data/usgs_big_islands
 #####################################
 
 ## Intermediate data
+data/b_intermediate_data/costs.gpkg
 data/b_intermediate_data/barriers.gpkg

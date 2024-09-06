@@ -156,7 +156,7 @@ data_region_rock <- data_region %>%
 data_region_grid_sand <- grid[data_region_sand, ] %>%
   # spatially join CONMAPSG to Stellwagen grid
   sf::st_join(x = .,
-              y = data_region,
+              y = data_region_sand,
               join = st_intersects) %>%
   # select fields of importance
   dplyr::select(index, BARNHARDT, layer, type)
@@ -165,7 +165,7 @@ data_region_grid_sand <- grid[data_region_sand, ] %>%
 data_region_grid_mix <- grid[data_region_mix, ] %>%
   # spatially join CONMAPSG to Stellwagen grid
   sf::st_join(x = .,
-              y = data_region,
+              y = data_region_mix,
               join = st_intersects) %>%
   # select fields of importance
   dplyr::select(index, BARNHARDT, layer, type)
@@ -174,7 +174,7 @@ data_region_grid_mix <- grid[data_region_mix, ] %>%
 data_region_grid_gravel <- grid[data_region_gravel, ] %>%
   # spatially join CONMAPSG to Stellwagen grid
   sf::st_join(x = .,
-              y = data_region,
+              y = data_region_gravel,
               join = st_intersects) %>%
   # select fields of importance
   dplyr::select(index, BARNHARDT, layer, type)
@@ -183,7 +183,7 @@ data_region_grid_gravel <- grid[data_region_gravel, ] %>%
 data_region_grid_rock <- grid[data_region_rock, ] %>%
   # spatially join CONMAPSG to Stellwagen grid
   sf::st_join(x = .,
-              y = data_region,
+              y = data_region_rock,
               join = st_intersects) %>%
   # select fields of importance
   dplyr::select(index, BARNHARDT, layer, type)

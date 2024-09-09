@@ -65,12 +65,12 @@ sf::st_layers(dsn = data_dir,
 #####################################
 #####################################
 
-# Load raster grid
+# load raster grid
 raster <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_study_area_{cell_size}m.grd")))
 
 #####################################
 
-# Load vector data
+# load vector data
 ## barriers
 coral_points <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_coral_points_grid"))
 sites_avoid <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_sites_to_avoid_grid"))
@@ -80,7 +80,7 @@ cape_cod <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}
 #####################################
 #####################################
 
-# Create barriers layers
+# create barriers layers
 barriers <- coral_points %>%
   # combine barriers datasets so that each is an unique row
   rbind(sites_avoid,
@@ -98,7 +98,7 @@ barriers <- coral_points %>%
 #####################################
 #####################################
 
-# Convert to rasters
+# convert to rasters
 ## barriers
 coral_points_raster <- terra::rasterize(x = coral_points,
                                         y = raster,
@@ -119,7 +119,7 @@ cape_cod_raster <- terra::rasterize(x = cape_cod,
 #####################################
 #####################################
 
-# Create barriers raster
+# create barriers raster
 ## cover any NA values of another raster with values from any other raster (all barrier cells)
 barriers_raster <- terra::cover(x = coral_points_raster,
                                 y = sites_avoid_raster) %>%
@@ -128,15 +128,15 @@ barriers_raster <- terra::cover(x = coral_points_raster,
   # cover with Cape Cod limit raster
   terra::cover(y = cape_cod_raster)
 
-## Set values of 0 to be 99 for later cost analysis
+## set values of 0 to be 99 for later cost analysis
 barriers_raster[barriers_raster == 0] <- 99
 
 #####################################
 #####################################
 
-# Export data
-## Least cost geopackage
+# export data
+## least cost geopackage
 sf::st_write(obj = barriers, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_barriers", append = F))
 
-## Raster data
+## raster data
 terra::writeRaster(barriers_raster, filename = file.path(raster_dir, stringr::str_glue("{region_name}_barriers_{cell_size}m.grd")), overwrite = T)

@@ -55,6 +55,7 @@ data_dir <- "11_Stellwagen_Cable_Routing/Model Runs/StellwagenCableRoute/03_Cabl
 
 ## export directory
 export_dir <- "data/a_raw_data/stellwagen.gpkg"
+raster_dir <- "data/d_raster_data"
 
 #####################################
 
@@ -75,18 +76,43 @@ grid <- sf::st_read(dsn = data_dir, layer = "SW_NMS_AOI_model2_Selected") %>%
 # create a dissolved grid
 blank_grid <- grid %>%
   # create new field to designate region
-  dplyr::mutate(region = "stellwagen") %>%
+  dplyr::mutate(region = "stellwagen",
+                value = 0) %>%
   # group by region
-  dplyr::group_by(region) %>%
+  dplyr::group_by(region,
+                  value) %>%
   # summarise by region to dissolve to one polygon
   dplyr::summarise()
 
 #####################################
 #####################################
 
+# create grid
+### grid with 100 meter cell size
+#### create a template raster that has the extent of the study area
+rast_temp <- terra::rast(blank_grid,
+                         # use the extent of the marine study area
+                         extent = blank_grid,
+                         # give raster to have resolution of 100 meters
+                         resolution = 100,
+                         # have coordinate reference system as the study area (NAD83 UTM 19N: https://epsg.io/26919)
+                         crs = crs(blank_grid))
+
+#### Create raster filed with the data from the study area
+rast_100m <- terra::rasterize(x = blank_grid,
+                              y = rast_temp,
+                              field = "value")
+
+#####################################
+#####################################
+
 # export data
+## vector grids
 sf::st_write(obj = grid, dsn = export_dir, layer = "stellwagen_grid", append = F)
 sf::st_write(obj = blank_grid, dsn = export_dir, layer = "stellwagen_region", append = F)
+
+## raster grid
+terra::writeRaster(rast_100m, filename = file.path(raster_dir, "gom_study_area_marine_100m_raster.grd"), overwrite = T)
 
 #####################################
 #####################################

@@ -103,8 +103,9 @@ data_region <- data %>%
   #               dist = setback) %>%
   rmapshaper::ms_clip(target = .,
                       clip = region) %>%
-  dplyr::mutate(layer = stringr::str_glue("{data_name}")) %>%
-  dplyr::group_by(layer) %>%
+  dplyr::mutate(layer = stringr::str_glue("{data_name}"),
+                value = 0) %>%
+  dplyr::group_by(layer, value) %>%
   dplyr::summarise()
 
 #####################################
@@ -117,7 +118,7 @@ data_region_grid <- grid[data_region, ] %>%
               y = data_region,
               join = st_intersects) %>%
   # select fields of importance
-  dplyr::select(index, layer)
+  dplyr::select(index, layer, value)
 
 #####################################
 #####################################

@@ -11,6 +11,26 @@ start <- Sys.time()
 #####################################
 #####################################
 
+#####################################
+#####################################
+
+# set parameters
+## designate region name
+region_name <- "stellwagen"
+
+## cell size
+cell_size <- 100
+
+## coordinate reference system
+### set the coordinate reference system that data should become (NAD83 UTM 19N: https://epsg.io/26919)
+crs <- "EPSG:26919"
+
+## designate date
+date <- format(Sys.Date(), "%Y%m%d")
+
+#####################################
+#####################################
+
 # load packages
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(renv,
@@ -94,7 +114,7 @@ rast_temp <- terra::rast(blank_grid,
                          # use the extent of the marine study area
                          extent = blank_grid,
                          # give raster to have resolution of 100 meters
-                         resolution = 100,
+                         resolution = cell_size,
                          # have coordinate reference system as the study area (NAD83 UTM 19N: https://epsg.io/26919)
                          crs = crs(blank_grid))
 
@@ -112,7 +132,7 @@ sf::st_write(obj = grid, dsn = export_dir, layer = "stellwagen_grid", append = F
 sf::st_write(obj = blank_grid, dsn = export_dir, layer = "stellwagen_region", append = F)
 
 ## raster grid
-terra::writeRaster(rast_100m, filename = file.path(raster_dir, "gom_study_area_marine_100m_raster.grd"), overwrite = T)
+terra::writeRaster(rast_100m, filename = file.path(raster_dir, stringr::str_glue("{region_name}_study_area_{cell_size}m.grd")), overwrite = T)
 
 #####################################
 #####################################

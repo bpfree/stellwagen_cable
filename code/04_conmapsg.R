@@ -158,8 +158,11 @@ data_region_grid_sand <- grid[data_region_sand, ] %>%
   sf::st_join(x = .,
               y = data_region_sand,
               join = st_intersects) %>%
-  # select fields of importance
-  dplyr::select(index, BARNHARDT, layer, type)
+  # due to overlapping areas there are a few duplicated indexes
+  ## group by unique indexes
+  dplyr::group_by(index, BARNHARDT, layer, type) %>%
+  ## summarise to remove duplicates
+  dplyr::summarise()
 
 ## mix
 data_region_grid_mix <- grid[data_region_mix, ] %>%
@@ -167,8 +170,11 @@ data_region_grid_mix <- grid[data_region_mix, ] %>%
   sf::st_join(x = .,
               y = data_region_mix,
               join = st_intersects) %>%
-  # select fields of importance
-  dplyr::select(index, BARNHARDT, layer, type)
+  # due to overlapping areas there are a few duplicated indexes
+  ## group by unique indexes
+  dplyr::group_by(index, BARNHARDT, layer, type) %>%
+  ## summarise to remove duplicates
+  dplyr::summarise()
 
 ## gravel
 data_region_grid_gravel <- grid[data_region_gravel, ] %>%
@@ -176,8 +182,11 @@ data_region_grid_gravel <- grid[data_region_gravel, ] %>%
   sf::st_join(x = .,
               y = data_region_gravel,
               join = st_intersects) %>%
-  # select fields of importance
-  dplyr::select(index, BARNHARDT, layer, type)
+  # due to overlapping areas there are a few duplicated indexes
+  ## group by unique indexes
+  dplyr::group_by(index, BARNHARDT, layer, type) %>%
+  ## summarise to remove duplicates
+  dplyr::summarise()
 
 ## rock
 data_region_grid_rock <- grid[data_region_rock, ] %>%
@@ -185,8 +194,11 @@ data_region_grid_rock <- grid[data_region_rock, ] %>%
   sf::st_join(x = .,
               y = data_region_rock,
               join = st_intersects) %>%
-  # select fields of importance
-  dplyr::select(index, BARNHARDT, layer, type)
+  # due to overlapping areas there are a few duplicated indexes
+  ## group by unique indexes
+  dplyr::group_by(index, BARNHARDT, layer, type) %>%
+  ## summarise to remove duplicates
+  dplyr::summarise()
 
 #####################################
 #####################################

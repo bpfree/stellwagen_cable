@@ -140,3 +140,9 @@ sf::st_write(obj = barriers, dsn = output_gpkg, layer = stringr::str_glue("{regi
 
 ## raster data
 terra::writeRaster(barriers_raster, filename = file.path(raster_dir, stringr::str_glue("{region_name}_barriers_{cell_size}m.grd")), overwrite = T)
+
+#####################################
+#####################################
+
+# calculate end time and print time difference
+print(Sys.time() - start) # print how long it takes to calculate

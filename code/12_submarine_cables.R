@@ -1,6 +1,6 @@
-###############################
-### 12. cable and pipelines ###
-###############################
+#########################################
+### 12. submarine cable and pipelines ###
+#########################################
 
 # clear environment
 rm(list = ls())
@@ -16,8 +16,8 @@ start <- Sys.time()
 region_name <- "stellwagen"
 
 ## layer names
-data_name <- "cable_pipeline"
-layer_name <- "CableAndPipelineAreas"
+data_name <- "submarine_cable"
+layer_name <- "SubmarineCables"
 
 ## coordinate reference system
 ### set the coordinate reference system that data should become (NAD83 UTM 19N: https://epsg.io/26919)
@@ -86,6 +86,9 @@ data <- sf::st_read(dsn = data_dir,
 ### Check units for data
 sf::st_crs(data, parameters = TRUE)$units_gdal
 
+### check feature types (will notice they are not uniform)
+list(unique(sf::st_geometry_type(data)))
+
 ## Stellwagen region
 region <- sf::st_read(dsn = study_region_gpkg,
                       layer = stringr::str_glue("{region_name}_region")) %>%
@@ -103,12 +106,21 @@ grid <- sf::st_read(dsn = study_region_gpkg,
 
 # limit data to study region
 data_region <- data %>%
+  # make all geometery types the same
+  sf::st_cast(x = .,
+              # type should get MULTILINESTRING
+              to = "MULTILINESTRING") %>%
+  # set setback distance (***note: error will occur if not setting all objects to "MULTILINESTRING" first)
   sf::st_buffer(x = .,
                 dist = setback) %>%
+  # limit data to only area of interest
   rmapshaper::ms_clip(target = .,
                       clip = region) %>%
+  # add new field
   dplyr::mutate(layer = stringr::str_glue("{data_name}")) %>%
+  # group all objects using new field
   dplyr::group_by(layer) %>%
+  # reduce to single object
   dplyr::summarise()
 
 #####################################

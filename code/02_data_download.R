@@ -141,7 +141,19 @@ download_list <- c(
   ### Northeast Ocean Data portal: https://www.northeastoceandata.org/data-download/
   ### metadata: https://www.northeastoceandata.org/files/metadata/Themes/EnergyAndInfrastructure/CableAndPipelineAreas.htm
   
-  "https://www.northeastoceandata.org/files/metadata/Themes/EnergyAndInfrastructure.zip"
+  "https://www.northeastoceandata.org/files/metadata/Themes/EnergyAndInfrastructure.zip",
+  
+  ## shipping lanes (source: http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip)
+  ### Northeast Ocean Data portal: https://www.northeastoceandata.org/data-download/?#MarineTransportation
+  ### metadata: https://www.fisheries.noaa.gov/inport/item/39986
+  
+  "http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip",
+  
+  ## Stellwagen National Marine Sanctuary boundary (source: https://sanctuaries.noaa.gov/library/imast/sbnms_py2.zip)
+  ### Sanctuaries: https://sanctuaries.noaa.gov/library/imast_gis.html
+  ### map: https://nmssanctuaries.blob.core.windows.net/sanctuaries-prod/media/archive/visit/images/sb_map_big.jpg
+  
+  "https://sanctuaries.noaa.gov/library/imast/sbnms_py2.zip"
 )
 
 #####################################

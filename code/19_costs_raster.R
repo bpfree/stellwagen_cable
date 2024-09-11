@@ -28,6 +28,27 @@ date <- format(Sys.Date(), "%Y%m%d")
 #####################################
 #####################################
 
+# cost_function
+cost_function <- function(cost_layer, field_name, cost_value){
+  # add cost value
+  data <- cost_layer %>%
+    # create new field to add cost value
+    dplyr::mutate({{field_name}} := cost_value) %>%
+    # remove geometry so it is simplified data frame
+    sf::st_drop_geometry() %>%
+    # select fields of interest
+    dplyr::select(index, {{field_name}}) %>%
+    # due to different types leading to the same score, need to remove duplicates
+    ## group by unique indexes and values
+    ### using column position (1 = index, 2 = cost value for type)
+    dplyr::group_by_at(1:2) %>%
+    ## summarise to remove duplicates
+    dplyr::summarise()
+}
+
+#####################################
+#####################################
+
 # load packages
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(renv,
@@ -70,7 +91,7 @@ sf::st_layers(dsn = grid_dir,
 #####################################
 
 # load data
-study_area <- sf::st_read(dsn = grid_dir, layer = stringr::str_glue("{region_name}_region"))
+grid <- sf::st_read(dsn = grid_dir, layer = stringr::str_glue("{region_name}_grid"))
 
 ## constraints grid
 ### all constraints
@@ -80,3 +101,52 @@ constraints <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name
 
 # load data
 ## costs layers
+### CONMAPSG
+conmapsg_sand <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_conmapsg_sand_grid")) %>%
+  # add cost value and remove geometry
+  cost_function(cost_layer = ., field_name = "conmapsg_sand_value", cost_value = 0.2)
+
+conmapsg_mix <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_conmapsg_mix_grid")) %>%
+  # add cost value and remove geometry
+  cost_function(cost_layer = ., field_name = "conmapsg_mix_value", cost_value = 0.4)
+
+conmapsg_gravel <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_conmapsg_gravel_grid")) %>%
+  # add cost value and remove geometry
+  cost_function(cost_layer = ., field_name = "conmapsg_gravel_value", cost_value = 0.6)
+
+conmapsg_rock <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_conmapsg_rock_grid")) %>%
+  # add cost value and remove geometry
+  cost_function(cost_layer = ., field_name = "conmapsg_rock_value", cost_value = 1.0)
+
+#####################################
+
+# check for duplicates in the data that would impact cost layer
+duplicates <- conmapsg_rock %>%
+  # create frequency field based on index
+  dplyr::add_count(index) %>%
+  # see which ones are duplicates
+  dplyr::filter(n>1) %>%
+  # show distinct options
+  dplyr::distinct()
+
+#####################################
+#####################################
+
+conmapsg <- grid %>%
+  dplyr::left_join(x = .,
+                   y = conmapsg_sand,
+                   by = "index") %>%
+  dplyr::left_join(x = .,
+                   y = conmapsg_mix,
+                   by = "index") %>%
+  dplyr::left_join(x = .,
+                   y = conmapsg_gravel,
+                   by = "index") %>%
+  dplyr::left_join(x = .,
+                   y = conmapsg_rock,
+                   by = "index")
+
+#####################################
+#####################################
+
+

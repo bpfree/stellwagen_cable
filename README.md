@@ -69,6 +69,9 @@ Please contact Brian Free ([brian.free@noaa.gov](mailto:brian.free@noaa.gov)) wi
 - Starting Point: center of the Gulf of Maine PSN leases: 0564 and 0567. ([map of leases](https://www.boem.gov/renewable-energy/offshore-renewable-activities), [Gulf of Maine activities](https://www.boem.gov/renewable-energy/state-activities/maine/gulf-maine))
 - Ending Points: Plymouth and Boston (points were randomly selected to represent those two localities)
 
+#### Stellwagen
+Stellwagen National Marine Sanctuary ([data](https://sanctuaries.noaa.gov/library/imast/sbnms_py2.zip) and [map](https://sanctuaries.noaa.gov/visit/images/sb_map_big.jpg)) got split into two sections to determine how cable routing would get affected if limited to a northern or a southern route. The regions got split around the "traffic separation schemes" that influence vessel traffic into and out of Boston Harbor. [Three separation schemes](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip) split were removed from the study area and left north and southern sections. Each section became barriers to the cable routing analysis; thus each got separately removed from the Stellwagen National Marine Sanctuary to create two new cost rasters.
+
 ##### Documented issues
 *7 August 2024*
 

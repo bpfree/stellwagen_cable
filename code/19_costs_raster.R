@@ -353,7 +353,7 @@ lng_grid <- grid %>%
 #####################################
 #####################################
 
-# Create costs layer
+# create costs layer
 ## cover any NA values of another raster with values from any other raster (all barrier cells)
 cost_raster <- c(conmapsg_grid,
                  disposal_grid,
@@ -370,75 +370,42 @@ cost_raster <- c(conmapsg_grid,
   terra::crop(raster,
               mask = TRUE)
 
-## Cost raster without barriers
-cost_rm_constraints <- c(cost_raster,
+## cost raster without barriers
+cost_rm_barriers <- c(cost_raster,
                          barriers) %>% 
   # sum the two layers while removing any NA values
   terra::app(sum, na.rm = T) %>%
   # add 0.01 so there are no 0 values
   sum(., 0.01)
-plot(cost_rm_constraints)
+plot(cost_rm_barriers)
 
-# Make any values above 99 (where a constraint would be) to be set as NA to remove from analysis
-cost_rm_constraints[cost_rm_constraints >= 99] <- NA
-cost_rm_constraints[cost_rm_constraints == 0.01] <- NA
-plot(cost_rm_constraints)
-
-#####################################
-
-## cover any NA values of another raster with values from any other raster (all barrier cells)
-cost_with_lease_areas <- c(special_use_airspace,
-                           fish_haven,
-                           prd_species,
-                           pelagic_birds,
-                           psbf_lrf,
-                           boem_psbf,
-                           coral_hapc,
-                           lightering_zones,
-                           # carbon_capture, # data removed due to double counting with active lease blocks
-                           navigation_aid,
-                           shipping_lane,
-                           pipeline,
-                           oil_gas_lease_area,
-                           ais_cargo,
-                           ais_fishing,
-                           ais_passenger,
-                           ais_pleasure,
-                           ais_tanker,
-                           ais_tugtow,
-                           #ais_other,
-                           nexrad70km,
-                           menhaden,
-                           bathymetry,
-                           slope) %>%
-  terra::app(sum, na.rm = T) %>%
-  # remove land from cost layer
-  terra::crop(gom_raster,
-              mask = TRUE)
-
-## Cost raster without constraints
-cost_with_lease_areas_rm_constraints <- c(cost_with_lease_areas,
-                                          constraints_without_lease_areas) %>% 
-  # sum the two layers while removing any NA values
-  terra::app(sum, na.rm = T) %>%
-  # add 0.01 so there are no 0 values
-  sum(., 0.01)
-plot(cost_with_lease_areas_rm_constraints)
-
-# Make any values above 99 (where a constraint would be) to be set as NA to remove from analysis
-cost_with_lease_areas_rm_constraints[cost_with_lease_areas_rm_constraints >= 99] <- NA
-cost_with_lease_areas_rm_constraints[cost_with_lease_areas_rm_constraints == 0.01] <- NA
-plot(cost_with_lease_areas_rm_constraints)
+# make any values above 99 (where a constraint would be) to be set as NA to remove from analysis
+cost_rm_barriers[cost_rm_barriers >= 99] <- NA
+cost_rm_barriers[cost_rm_barriers == 0.01] <- NA
+plot(cost_rm_barriers)
 
 #####################################
 #####################################
 
 # export data
 ## least cost geopackage
-sf::st_write(obj = barriers, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_barriers", append = F))
+sf::st_write(obj = conmapsg_sand, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_conmapsg_rock_cost", append = F))
+sf::st_write(obj = conmapsg_mix, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_conmapsg_mix_cost", append = F))
+sf::st_write(obj = conmapsg_gravel, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_conmapsg_gravel_cost", append = F))
+sf::st_write(obj = conmapsg_sand, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_conmapsg_sand_cost", append = F))
+
+sf::st_write(obj = disposal_sites, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_disposal_sites_cost", append = F))
+sf::st_write(obj = intertidal_flats, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_intertidal_flats_cost", append = F))
+sf::st_write(obj = sand_patches, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_sand_patches_cost", append = F))
+sf::st_write(obj = channel_areas, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_channel_areas_cost", append = F))
+sf::st_write(obj = anchorage_areas, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_anchorage_areas_cost", append = F))
+sf::st_write(obj = eelgrass_meadows, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_eelgrass_meadows_cost", append = F))
+sf::st_write(obj = cable_pipelines, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_cable_pipelines_cost", append = F))
+sf::st_write(obj = submarine_cables, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_submarine_cables_cost", append = F))
+sf::st_write(obj = lng_pipelines, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_lng_pipelines_cost", append = F))
 
 ## raster data
-terra::writeRaster(barriers_raster, filename = file.path(raster_dir, stringr::str_glue("{region_name}_barriers_{cell_size}m.grd")), overwrite = T)
+terra::writeRaster(cost_rm_barriers, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_rm_barriers_{cell_size}m.grd")), overwrite = T)
 
 #####################################
 #####################################

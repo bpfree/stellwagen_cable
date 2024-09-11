@@ -176,3 +176,33 @@ disposal_sites <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region
 sand_patches <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_sand_patches_grid")) %>%
   # add cost value and remove geometry
   cost_function(cost_layer = ., field_name = "sand_patches_value", cost_value = 1.0)
+
+### channel areas
+channel_areas <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_channel_areas_grid")) %>%
+  # add cost value and remove geometry
+  cost_function(cost_layer = ., field_name = "channel_areas_value", cost_value = 1.0)
+
+### anchorage areas
+anchorage_areas <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_anchorage_areas_grid")) %>%
+  # add cost value and remove geometry
+  cost_function(cost_layer = ., field_name = "anchorage_areas_value", cost_value = 0.8)
+
+### eelgrass meadows
+eelgrass_meadows <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_eelgrass_meadows_grid")) %>%
+  # add cost value and remove geometry
+  cost_function(cost_layer = ., field_name = "eelgrass_meadows_value", cost_value = 0.4)
+
+### cable and pipeline areas
+eelgrass_meadows <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_eelgrass_meadows_grid")) %>%
+  # add cost value and remove geometry
+  cost_function(cost_layer = ., field_name = "eelgrass_meadows_value", cost_value = 0.4)
+
+### submarine cables
+eelgrass_meadows <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_eelgrass_meadows_grid")) %>%
+  # add cost value and remove geometry
+  cost_function(cost_layer = ., field_name = "eelgrass_meadows_value", cost_value = 0.4)
+
+### LNG pipelines
+eelgrass_meadows <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_eelgrass_meadows_grid")) %>%
+  # add cost value and remove geometry
+  cost_function(cost_layer = ., field_name = "eelgrass_meadows_value", cost_value = 0.4)

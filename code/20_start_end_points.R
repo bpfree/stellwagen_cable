@@ -15,9 +15,6 @@ start <- Sys.time()
 ## designate region name
 region_name <- "stellwagen"
 
-## cell size
-cell_size <- 100
-
 ## coordinate reference system
 ### set the coordinate reference system that data should become (NAD83 UTM 19N: https://epsg.io/26919)
 crs <- "EPSG:26919"
@@ -88,7 +85,6 @@ end_points <- sf::st_read(dsn = data_dir,
 # export data
 sf::st_write(start_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_point"))
 sf::st_write(end_points, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_end_points"))
-
 
 #####################################
 #####################################

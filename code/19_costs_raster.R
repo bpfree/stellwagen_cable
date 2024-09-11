@@ -144,9 +144,35 @@ conmapsg <- grid %>%
                    by = "index") %>%
   dplyr::left_join(x = .,
                    y = conmapsg_rock,
-                   by = "index")
+                   by = "index") %>%
+  # create final cost that takes maximum of all the values
+  dplyr::mutate(cost = pmax(conmapsg_sand_value,
+                            conmapsg_mix_value,
+                            conmapsg_gravel_value,
+                            conmapsg_rock_value,
+                            # remove any values that are NA when new field
+                            na.rm = T)) %>%
+  dplyr::relocate(cost, .after = conmapsg_rock_value) %>%
+  # give a value of 1 to the cost field in a cell if value is NA
+  dplyr::mutate(across(6, ~replace(x = .,
+                                     list = is.na(.),
+                                     # replacement values
+                                     values = 1)))
 
 #####################################
 #####################################
 
+### disposal sites
+disposal_sites <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_disposal_sites_grid")) %>%
+  # add cost value and remove geometry
+  cost_function(cost_layer = ., field_name = "disposal_sites_value", cost_value = 0.8)
 
+### intertidal flats
+disposal_sites <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_intertidal_flats_grid")) %>%
+  # add cost value and remove geometry
+  cost_function(cost_layer = ., field_name = "intertidal_flats_value", cost_value = 0.2)
+
+### sand patches
+sand_patches <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_sand_patches_grid")) %>%
+  # add cost value and remove geometry
+  cost_function(cost_layer = ., field_name = "sand_patches_value", cost_value = 1.0)

@@ -91,11 +91,15 @@ sf::st_layers(dsn = grid_dir,
 #####################################
 
 # load data
+## vector grid
 grid <- sf::st_read(dsn = grid_dir, layer = stringr::str_glue("{region_name}_grid"))
 
-## constraints grid
-### all constraints
-constraints <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_barriers_{cell_size}m.grd")))
+## raster grid
+raster <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_study_area_{cell_size}m.grd")))
+
+## barriers grid
+### all barriers
+barriers <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_barriers_{cell_size}m.grd")))
 
 #####################################
 
@@ -132,7 +136,7 @@ duplicates <- conmapsg_rock %>%
 #####################################
 #####################################
 
-conmapsg <- grid %>%
+conmapsg_grid <- grid %>%
   dplyr::left_join(x = .,
                    y = conmapsg_sand,
                    by = "index") %>%
@@ -146,18 +150,23 @@ conmapsg <- grid %>%
                    y = conmapsg_rock,
                    by = "index") %>%
   # create final cost that takes maximum of all the values
+  ## this will create the most conservative (costly) values
   dplyr::mutate(cost = pmax(conmapsg_sand_value,
                             conmapsg_mix_value,
                             conmapsg_gravel_value,
                             conmapsg_rock_value,
                             # remove any values that are NA when new field
                             na.rm = T)) %>%
+  # move the new field after all the other values
   dplyr::relocate(cost, .after = conmapsg_rock_value) %>%
-  # give a value of 1 to the cost field in a cell if value is NA
+  # give a value of 0 to the cost field in a cell if value is NA
   dplyr::mutate(across(6, ~replace(x = .,
-                                     list = is.na(.),
-                                     # replacement values
-                                     values = 1)))
+                                   list = is.na(.),
+                                   # replacement values
+                                   values = 0))) %>%
+  # rasterize data
+  terra::rasterize(y = raster,
+                   field = "cost")
 
 #####################################
 #####################################
@@ -167,42 +176,272 @@ disposal_sites <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region
   # add cost value and remove geometry
   cost_function(cost_layer = ., field_name = "disposal_sites_value", cost_value = 0.8)
 
+disposal_grid <- grid %>%
+  dplyr::left_join(x = .,
+                   y = disposal_sites,
+                   by = "index") %>%
+  dplyr::mutate(across(2, ~replace(x = .,
+                                   list = is.na(.),
+                                   # replacement values
+                                   values = 0))) %>%
+  # rasterize data
+  terra::rasterize(y = raster,
+                   field = "disposal_sites_value",
+                   x = .)
+
+#####################################
+
 ### intertidal flats
-disposal_sites <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_intertidal_flats_grid")) %>%
+intertidal_flats <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_intertidal_flats_grid")) %>%
   # add cost value and remove geometry
   cost_function(cost_layer = ., field_name = "intertidal_flats_value", cost_value = 0.2)
+
+intertidal_grid <- grid %>%
+  dplyr::left_join(x = .,
+                   y = intertidal_flats,
+                   by = "index") %>%
+  dplyr::mutate(across(2, ~replace(x = .,
+                                   list = is.na(.),
+                                   # replacement values
+                                   values = 0))) %>%
+  # rasterize data
+  terra::rasterize(y = raster,
+                   field = "intertidal_flats_value",
+                   x = .)
+
+#####################################
 
 ### sand patches
 sand_patches <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_sand_patches_grid")) %>%
   # add cost value and remove geometry
   cost_function(cost_layer = ., field_name = "sand_patches_value", cost_value = 1.0)
 
+sand_grid <- grid %>%
+  dplyr::left_join(x = .,
+                   y = sand_patches,
+                   by = "index") %>%
+  dplyr::mutate(across(2, ~replace(x = .,
+                                   list = is.na(.),
+                                   # replacement values
+                                   values = 0))) %>%
+  
+  # rasterize data
+  terra::rasterize(y = raster,
+                   field = "sand_patches_value",
+                   x = .)
+
+#####################################
+
 ### channel areas
 channel_areas <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_channel_areas_grid")) %>%
   # add cost value and remove geometry
   cost_function(cost_layer = ., field_name = "channel_areas_value", cost_value = 1.0)
+
+channel_grid <- grid %>%
+  dplyr::left_join(x = .,
+                   y = channel_areas,
+                   by = "index") %>%
+  dplyr::mutate(across(2, ~replace(x = .,
+                                   list = is.na(.),
+                                   # replacement values
+                                   values = 0))) %>%
+  # rasterize data
+  terra::rasterize(y = raster,
+                   field = "channel_areas_value",
+                   x = .)
+
+#####################################
 
 ### anchorage areas
 anchorage_areas <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_anchorage_areas_grid")) %>%
   # add cost value and remove geometry
   cost_function(cost_layer = ., field_name = "anchorage_areas_value", cost_value = 0.8)
 
+anchorage_grid <- grid %>%
+  dplyr::left_join(x = .,
+                   y = anchorage_areas,
+                   by = "index") %>%
+  dplyr::mutate(across(2, ~replace(x = .,
+                                   list = is.na(.),
+                                   # replacement values
+                                   values = 0))) %>%
+  # rasterize data
+  terra::rasterize(y = raster,
+                   field = "anchorage_areas_value",
+                   x = .)
+
+#####################################
+
 ### eelgrass meadows
-eelgrass_meadows <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_eelgrass_meadows_grid")) %>%
+eelgrass_meadows <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_eelgrass_meadow_grid")) %>%
   # add cost value and remove geometry
   cost_function(cost_layer = ., field_name = "eelgrass_meadows_value", cost_value = 0.4)
+
+eelgrass_grid <- grid %>%
+  dplyr::left_join(x = .,
+                   y = eelgrass_meadows,
+                   by = "index") %>%
+  dplyr::mutate(across(2, ~replace(x = .,
+                                   list = is.na(.),
+                                   # replacement values
+                                   values = 0))) %>%
+  # rasterize data
+  terra::rasterize(y = raster,
+                   field = "eelgrass_meadows_value",
+                   x = .)
+
+#####################################
 
 ### cable and pipeline areas
-eelgrass_meadows <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_eelgrass_meadows_grid")) %>%
+cable_pipelines <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_cable_pipeline_grid")) %>%
   # add cost value and remove geometry
-  cost_function(cost_layer = ., field_name = "eelgrass_meadows_value", cost_value = 0.4)
+  cost_function(cost_layer = ., field_name = "cable_pipelines_value", cost_value = 0.4)
+
+cable_grid <- grid %>%
+  dplyr::left_join(x = .,
+                   y = cable_pipelines,
+                   by = "index") %>%
+  dplyr::mutate(across(2, ~replace(x = .,
+                                   list = is.na(.),
+                                   # replacement values
+                                   values = 0))) %>%
+  # rasterize data
+  terra::rasterize(y = raster,
+                   field = "cable_pipelines_value",
+                   x = .)
+
+#####################################
 
 ### submarine cables
-eelgrass_meadows <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_eelgrass_meadows_grid")) %>%
+submarine_cables <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_submarine_cable_grid")) %>%
   # add cost value and remove geometry
-  cost_function(cost_layer = ., field_name = "eelgrass_meadows_value", cost_value = 0.4)
+  cost_function(cost_layer = ., field_name = "submarine_cables_value", cost_value = 0.4)
+
+submarine_grid <- grid %>%
+  dplyr::left_join(x = .,
+                   y = submarine_cables,
+                   by = "index") %>%
+  dplyr::mutate(across(2, ~replace(x = .,
+                                   list = is.na(.),
+                                   # replacement values
+                                   values = 0))) %>%
+  # rasterize data
+  terra::rasterize(y = raster,
+                   field = "submarine_cables_value",
+                   x = .)
+
+#####################################
 
 ### LNG pipelines
-eelgrass_meadows <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_eelgrass_meadows_grid")) %>%
+lng_pipelines <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_lng_pipeline_grid")) %>%
   # add cost value and remove geometry
-  cost_function(cost_layer = ., field_name = "eelgrass_meadows_value", cost_value = 0.4)
+  cost_function(cost_layer = ., field_name = "lng_pipelines_value", cost_value = 0.4)
+
+lng_grid <- grid %>%
+  dplyr::left_join(x = .,
+                   y = lng_pipelines,
+                   by = "index") %>%
+  dplyr::mutate(across(2, ~replace(x = .,
+                                   list = is.na(.),
+                                   # replacement values
+                                   values = 0))) %>%
+  # rasterize data
+  terra::rasterize(y = raster,
+                   field = "lng_pipelines_value",
+                   x = .)
+
+#####################################
+#####################################
+
+# Create costs layer
+## cover any NA values of another raster with values from any other raster (all barrier cells)
+cost_raster <- c(conmapsg_grid,
+                 disposal_grid,
+                 intertidal_grid,
+                 sand_grid,
+                 channel_grid,
+                 anchorage_grid,
+                 eelgrass_grid,
+                 cable_grid,
+                 submarine_grid,
+                 lng_grid) %>%
+  terra::app(sum, na.rm = T) %>%
+  # remove land from cost layer
+  terra::crop(raster,
+              mask = TRUE)
+
+## Cost raster without barriers
+cost_rm_constraints <- c(cost_raster,
+                         barriers) %>% 
+  # sum the two layers while removing any NA values
+  terra::app(sum, na.rm = T) %>%
+  # add 0.01 so there are no 0 values
+  sum(., 0.01)
+plot(cost_rm_constraints)
+
+# Make any values above 99 (where a constraint would be) to be set as NA to remove from analysis
+cost_rm_constraints[cost_rm_constraints >= 99] <- NA
+cost_rm_constraints[cost_rm_constraints == 0.01] <- NA
+plot(cost_rm_constraints)
+
+#####################################
+
+## cover any NA values of another raster with values from any other raster (all barrier cells)
+cost_with_lease_areas <- c(special_use_airspace,
+                           fish_haven,
+                           prd_species,
+                           pelagic_birds,
+                           psbf_lrf,
+                           boem_psbf,
+                           coral_hapc,
+                           lightering_zones,
+                           # carbon_capture, # data removed due to double counting with active lease blocks
+                           navigation_aid,
+                           shipping_lane,
+                           pipeline,
+                           oil_gas_lease_area,
+                           ais_cargo,
+                           ais_fishing,
+                           ais_passenger,
+                           ais_pleasure,
+                           ais_tanker,
+                           ais_tugtow,
+                           #ais_other,
+                           nexrad70km,
+                           menhaden,
+                           bathymetry,
+                           slope) %>%
+  terra::app(sum, na.rm = T) %>%
+  # remove land from cost layer
+  terra::crop(gom_raster,
+              mask = TRUE)
+
+## Cost raster without constraints
+cost_with_lease_areas_rm_constraints <- c(cost_with_lease_areas,
+                                          constraints_without_lease_areas) %>% 
+  # sum the two layers while removing any NA values
+  terra::app(sum, na.rm = T) %>%
+  # add 0.01 so there are no 0 values
+  sum(., 0.01)
+plot(cost_with_lease_areas_rm_constraints)
+
+# Make any values above 99 (where a constraint would be) to be set as NA to remove from analysis
+cost_with_lease_areas_rm_constraints[cost_with_lease_areas_rm_constraints >= 99] <- NA
+cost_with_lease_areas_rm_constraints[cost_with_lease_areas_rm_constraints == 0.01] <- NA
+plot(cost_with_lease_areas_rm_constraints)
+
+#####################################
+#####################################
+
+# export data
+## least cost geopackage
+sf::st_write(obj = barriers, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_barriers", append = F))
+
+## raster data
+terra::writeRaster(barriers_raster, filename = file.path(raster_dir, stringr::str_glue("{region_name}_barriers_{cell_size}m.grd")), overwrite = T)
+
+#####################################
+#####################################
+
+# calculate end time and print time difference
+print(Sys.time() - start) # print how long it takes to calculate

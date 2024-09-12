@@ -83,7 +83,7 @@ Three scenarios got investigated in this analysis:
 2. North barrier -- the normal scenario with an additional area removed that was the northern section of Stellwagen National Marine Sanctuary (as defined by as part of the marine sanctuary that fell north of the traffic separation schemes from the [shipping lanes dataset](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip))
 2. South barrier -- the normal scenario with an additional area removed that was the souther section of Stellwagen National Marine Sanctuary (as defined by as part of the marine sanctuary that fell south of the traffic separation schemes from the [shipping lanes dataset](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip))
 
-It should get noted that the leastcostpath package in R had been investigated as a possible option, but it was ruled out as a viable option till more work can get done (G[itHub repository](https://github.com/josephlewis/leastcostpath), [CRAN](https://cran.r-project.org/web/packages/leastcostpath/index.html), [reference manual](https://cran.r-project.org/web/packages/leastcostpath/leastcostpath.pdf)).
+It should get noted that the leastcostpath package in R had been investigated as a possible option, but it was ruled out as a viable option till more work can get done ([GitHub repository](https://github.com/josephlewis/leastcostpath), [CRAN](https://cran.r-project.org/web/packages/leastcostpath/index.html), [reference manual](https://cran.r-project.org/web/packages/leastcostpath/leastcostpath.pdf)).
 
 ##### Documented issues
 *7 August 2024*

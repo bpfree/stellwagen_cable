@@ -81,7 +81,7 @@ Stellwagen National Marine Sanctuary ([data](https://sanctuaries.noaa.gov/librar
 #### Least cost path
 This analysis leveraged the ["Least Cost Path" toolkit](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/creating-the-least-cost-path.htm) in Esri's ArcGIS Pro version 3.3. The tool works by summing all the "costs" moving from some identified starting point(s) to other identified ending (points). The costs are the sum of data layers overlapping in a predefined study region to create the cost surface -- think of this as a board where moving a piece is more challenging if certain areas are a forest, mountain, or sand, so going a slightly longer way on an easier path or a short way through a challenging part will be the take less effort.
 
-Three scenarios got investigated in this analysis:
+Three scenarios got investigated in this analysis for each starting option:
 
 1. Normal barriers -- all data layers with costs got summarized to a simple cost raster that had the 4 barriers removed (coral points, sites to avoid, boulder ridges, and Cape Cod shore)
 2. North barrier -- the normal scenario with an additional area removed that was the northern section of Stellwagen National Marine Sanctuary (as defined by as part of the marine sanctuary that fell north of the traffic separation schemes from the [shipping lanes dataset](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip))

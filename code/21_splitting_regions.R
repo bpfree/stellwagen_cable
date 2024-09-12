@@ -86,7 +86,9 @@ raster <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_stu
 grid <- sf::st_read(dsn = grid_dir, layer = stringr::str_glue("{region_name}_grid"))
 
 ## costs raster
-cost_rm_barriers <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_costs_rm_barriers_{cell_size}m.grd")))
+cost_rm_barriers <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_costs_rm_barriers_{cell_size}m.grd"))) %>%
+  # reclassify the values to have values only between 0 and maximum (4.61)
+  terra::classify(., cbind(terra::minmax(.)[1], 0.01, NA))
 
 #####################################
 #####################################

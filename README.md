@@ -69,7 +69,10 @@ Please contact Brian Free ([brian.free@noaa.gov](mailto:brian.free@noaa.gov)) wi
 
 
 #### Points of connection
-- Starting Point: center of the Gulf of Maine PSN leases: 0564 and 0567. ([map of leases](https://www.boem.gov/renewable-energy/offshore-renewable-activities), [Gulf of Maine activities](https://www.boem.gov/renewable-energy/state-activities/maine/gulf-maine))
+This analysis used the same ending points for all cable routing scenarios. Starting points got split into three separate options:
+- Starting Point (option 1): center of the Gulf of Maine PSN leases: 0564 and 0567. ([map of leases](https://www.boem.gov/renewable-energy/offshore-renewable-activities), [Gulf of Maine activities](https://www.boem.gov/renewable-energy/state-activities/maine/gulf-maine))
+- Staring Point (option 2): centralized of the Gulf of Maine PSN OCS-A 0564
+- Staring Point (option 3): centralized of the Gulf of Maine PSN OCS-A 0567
 - Ending Points: Plymouth and Boston (points were randomly selected to represent those two localities)
 
 #### Stellwagen

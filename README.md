@@ -74,6 +74,9 @@ Please contact Brian Free ([brian.free@noaa.gov](mailto:brian.free@noaa.gov)) wi
 #### Stellwagen
 Stellwagen National Marine Sanctuary ([data](https://sanctuaries.noaa.gov/library/imast/sbnms_py2.zip) and [map](https://sanctuaries.noaa.gov/visit/images/sb_map_big.jpg)) got split into two sections to determine how cable routing would get affected if limited to a northern or a southern route. The regions got split around the "traffic separation schemes" that influence vessel traffic into and out of Boston Harbor. [Three separation schemes](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip) split were removed from the study area and left north and southern sections. Each section became barriers to the cable routing analysis; thus each got separately removed from the Stellwagen National Marine Sanctuary to create two new cost rasters.
 
+#### Least cost path
+This analysis leveraged the ["Least Cost Path" toolkit]() in Esri's ArcGIS
+
 ##### Documented issues
 *7 August 2024*
 
@@ -95,3 +98,8 @@ Put simply, the previously shared data lack some of the deep-sea coral dataset p
 1. Shoreline limit for Cape Cod seems to come from the USGS global islands dataset. Is this dataset preferable to the Massachusetts [Coastal Zone Management dataset on shorelines between 1800 - 2014](https://czm-moris-mass-eoeea.hub.arcgis.com/datasets/783773f353f846a4ae0d5f4dcbcb9919_3)? The USGS global islands dataset got published in 2019 -- data were from 2014 as well. Which is the more authoritative data source?
 2. For the sites to avoid, most of the entries are wrecks. Publically available datasets for shipwrecks include: [AWOIS Wrecks](https://wrecks.nauticalcharts.noaa.gov/downloads/AWOIS_Wrecks.zip), [ENC Wrecks](https://wrecks.nauticalcharts.noaa.gov/downloads/ENC_Wrecks.zip), and [AWOIS Obstructions](https://wrecks.nauticalcharts.noaa.gov/downloads/AWOIS_Obstructions.zip). Other data included in the sites to avoid have descriptions of: "Boulder In", "Mud In", "Sand In", "Gravel In", "Sandtrap", and "NoiseReference". Cannot get determined the provider of the latter data.
 3. What was the provider of the boulder ridges data?
+
+*11 September 2024*
+1. How should cells that do not have any data from a particular dataset get analyzed? It makes the most sense to give value of 0 as there is no cost for that particular location for that particular dataset.
+2. How were start and end points chosen? Any particular coordinates or just randomized?
+3. Which data did the analysis to split [Stellwagen National Marine Sanctuary](https://sanctuaries.noaa.gov/library/imast/sbnms_py2.zip) into north and southern regions? [**Update 11 September 2024:** per [Alyssa Randall](mailto:alyssa.randall@noaa.gov) the data came from traffic lane layer on [Northeast Ocean Data portal](https://www.northeastoceandata.org/data-download/?#MarineTransportation). Those data direct you to [data hosted on ENC Direct](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip).]

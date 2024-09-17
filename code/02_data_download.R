@@ -111,49 +111,54 @@ download_list <- c(
   ## active and inactive disposal sites (source: https://marinecadastre.gov/downloads/data/mc/OceanDisposalSite.zip)
   ### MarineCadastre: https://marinecadastre-noaa.hub.arcgis.com/datasets/noaa::ocean-disposal-sites
   ### metadata: https://www.fisheries.noaa.gov/inport/item/54193
-  
+
   "https://marinecadastre.gov/downloads/data/mc/OceanDisposalSite.zip",
-  
+
   ## anchorage areas (source: https://marinecadastre.gov/downloads/data/mc/Anchorage.zip)
   ### MarineCadastre: https://marinecadastre-noaa.hub.arcgis.com/datasets/noaa::anchorages
   ### metadata: https://www.fisheries.noaa.gov/inport/item/48849
-  
+
   "https://marinecadastre.gov/downloads/data/mc/Anchorage.zip",
-  
+
   ## CONMAPSG (source: https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg.zip)
   ### metadata: https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg.htm
   ### metadata (text): https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg-metadata.txt
   ### FAQ: https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg-faq.htm
-  
+
   "https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg.zip",
-  
+
   ## eelgrass meadows (source: https://www.northeastoceandata.org/files/metadata/Themes/Habitat.zip)
   ### Northeast Ocean Data portal: https://www.northeastoceandata.org/data-download/
   ### metadata: https://www.northeastoceandata.org/files/metadata/Themes/Habitat/EelgrassMeadows.pdf
-  
+
   "https://www.northeastoceandata.org/files/metadata/Themes/Habitat.zip",
-  
+
   ## submarine cable areas (source: https://www.northeastoceandata.org/files/metadata/Themes/EnergyAndInfrastructure.zip)
   ### Northeast Ocean Data portal: https://www.northeastoceandata.org/data-download/
   ### metadata: https://www.northeastoceandata.org/files/metadata/Themes/EnergyAndInfrastructure/SubmarineCables.htm
-  
+
   ## cable and pipelines areas (source: https://www.northeastoceandata.org/files/metadata/Themes/EnergyAndInfrastructure.zip)
   ### Northeast Ocean Data portal: https://www.northeastoceandata.org/data-download/
   ### metadata: https://www.northeastoceandata.org/files/metadata/Themes/EnergyAndInfrastructure/CableAndPipelineAreas.htm
-  
+
   "https://www.northeastoceandata.org/files/metadata/Themes/EnergyAndInfrastructure.zip",
-  
+
   ## shipping lanes (source: http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip)
   ### Northeast Ocean Data portal: https://www.northeastoceandata.org/data-download/?#MarineTransportation
   ### metadata: https://www.fisheries.noaa.gov/inport/item/39986
-  
+
   "http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip",
-  
+
   ## Stellwagen National Marine Sanctuary boundary (source: https://sanctuaries.noaa.gov/library/imast/sbnms_py2.zip)
   ### Sanctuaries: https://sanctuaries.noaa.gov/library/imast_gis.html
   ### map: https://nmssanctuaries.blob.core.windows.net/sanctuaries-prod/media/archive/visit/images/sb_map_big.jpg
+
+  "https://sanctuaries.noaa.gov/library/imast/sbnms_py2.zip",
   
-  "https://sanctuaries.noaa.gov/library/imast/sbnms_py2.zip"
+  ## Gulf of Maine final sale notice areas (source: https://www.boem.gov/renewable-energy/state-activities/gulfofmainefsnareasgeodatabase)
+  ### Gulf of Maine state activities: https://www.boem.gov/renewable-energy/state-activities/maine/gulf-maine
+  
+  "https://www.boem.gov/renewable-energy/state-activities/gulfofmainefsnareasgeodatabase"
 )
 
 #####################################
@@ -173,6 +178,39 @@ parallel::stopCluster(cl = cl)
 
 # list all files in data directory
 list.files(data_dir)
+
+#####################################
+
+# update Gulf of Maine data to unzip the data
+gulf_gdb <- list.files(path = data_dir,
+                       # grab only the file that has "gulf" in it
+                       pattern = "gulf")
+
+# add ".zip" to the downloaded data so they can get unzipped and used
+file.rename(from=file.path(data_dir, gulf_gdb),  # Make default download directory flexible
+            # add the ".zip"
+            to=file.path(data_dir, paste0(gulf_gdb,".zip")))
+
+#####################################
+
+# get the zipped version of the Gulf of Maine
+gulf_gdb <- list.files(path = data_dir,
+                       pattern = "gulf")
+
+# unzip the data
+## grab text before ".zip" and keep only text before that
+new_dir_name <- sub(".zip", "", gulf_gdb)
+
+## create new directory for data
+new_dir <- file.path(data_dir, new_dir_name)
+
+## unzip the file
+unzip(zipfile = file.path(data_dir, gulf_gdb),
+      # export file to the new data directory
+      exdir = new_dir)
+
+## remove original zipped file
+file.remove(file.path(data_dir, gulf_gdb))
 
 #####################################
 #####################################

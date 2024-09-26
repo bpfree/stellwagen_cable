@@ -32,6 +32,10 @@ data/a_raw_data/state_costs.gpkg
 ### USGS global islands
 data/a_raw_data/usgs_big_islands
 
+### sediment
+data/a_raw_data/sediment_grid
+data/a_raw_data/sediment_tiff
+
 #####################################
 
 ## Intermediate data

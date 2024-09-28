@@ -149,8 +149,33 @@ plot(data_rcl)
 rm(data)
 rm(grid)
 
-gravel_fractions <- exactextractr::exact_extract(x = data_rcl,
-                                                 y = grid_gravel,
+div <- round(dim(grid_gravel)[1] / 5)
+div
+
+div2_start <- div + 1
+div2_end <- div * 2
+div2_end - div2_start
+
+div3_start <- div2_end + 1
+div3_end <- div * 3
+div3_end - div3_start
+
+div4_start <- div3_end + 1
+div4_end <- div * 4
+div4_end - div4_start
+
+div5_start <- div4_end + 1
+div5_end <- dim(grid_gravel)[1]
+div5_end - div5_start
+
+gravel_grid1 <- grid_gravel[1:div, ]
+gravel_grid2 <- grid_gravel[div2_start:div2_end, ]
+gravel_grid3 <- grid_gravel[div3_start:div3_end, ]
+gravel_grid4 <- grid_gravel[div4_start:div4_end, ]
+gravel_grid5 <- grid_gravel[div5_start:div5_end, ]
+
+gravel_fractions1 <- exactextractr::exact_extract(x = data_rcl,
+                                                 y = gravel_grid1,
                                                  function(df) {
                                                    df %>%
                                                      dplyr::mutate(frac_total = coverage_fraction / sum(coverage_fraction)) %>%
@@ -160,14 +185,84 @@ gravel_fractions <- exactextractr::exact_extract(x = data_rcl,
                                                  summarize_df = TRUE,
                                                  include_cols = "index")
 
+gravel_fractions1_gravel <- gravel_fractions1 %>%
+  # filter for areas that are gravel (value = 1) and have greater than 50% within the cell
+  dplyr::filter(value == 1 & freq >= 0.50)
+
+gravel_fractions2 <- exactextractr::exact_extract(x = data_rcl,
+                                                  y = gravel_grid2,
+                                                  function(df) {
+                                                    df %>%
+                                                      dplyr::mutate(frac_total = coverage_fraction / sum(coverage_fraction)) %>%
+                                                      dplyr::group_by(index, value) %>%
+                                                      dplyr::summarize(freq = sum(frac_total))
+                                                  },
+                                                  summarize_df = TRUE,
+                                                  include_cols = "index")
+
+gravel_fractions2_gravel <- gravel_fractions2 %>%
+  # filter for areas that are gravel (value = 1) and have greater than 50% within the cell
+  dplyr::filter(value == 1 & freq >= 0.50)
+
+gravel_fractions3 <- exactextractr::exact_extract(x = data_rcl,
+                                                  y = gravel_grid3,
+                                                  function(df) {
+                                                    df %>%
+                                                      dplyr::mutate(frac_total = coverage_fraction / sum(coverage_fraction)) %>%
+                                                      dplyr::group_by(index, value) %>%
+                                                      dplyr::summarize(freq = sum(frac_total))
+                                                  },
+                                                  summarize_df = TRUE,
+                                                  include_cols = "index")
+
+gravel_fractions4_gravel <- gravel_fractions4 %>%
+  # filter for areas that are gravel (value = 1) and have greater than 50% within the cell
+  dplyr::filter(value == 1 & freq >= 0.50)
+
+gravel_fractions4 <- exactextractr::exact_extract(x = data_rcl,
+                                                  y = gravel_grid4,
+                                                  function(df) {
+                                                    df %>%
+                                                      dplyr::mutate(frac_total = coverage_fraction / sum(coverage_fraction)) %>%
+                                                      dplyr::group_by(index, value) %>%
+                                                      dplyr::summarize(freq = sum(frac_total))
+                                                  },
+                                                  summarize_df = TRUE,
+                                                  include_cols = "index")
+
+gravel_fractions4_gravel <- gravel_fractions4 %>%
+  # filter for areas that are gravel (value = 1) and have greater than 50% within the cell
+  dplyr::filter(value == 1 & freq >= 0.50)
+
+gravel_fractions5 <- exactextractr::exact_extract(x = data_rcl,
+                                                  y = gravel_grid5,
+                                                  function(df) {
+                                                    df %>%
+                                                      dplyr::mutate(frac_total = coverage_fraction / sum(coverage_fraction)) %>%
+                                                      dplyr::group_by(index, value) %>%
+                                                      dplyr::summarize(freq = sum(frac_total))
+                                                  },
+                                                  summarize_df = TRUE,
+                                                  include_cols = "index")
+
+gravel_fractions5_gravel <- gravel_fractions5 %>%
+  # filter for areas that are gravel (value = 1) and have greater than 50% within the cell
+  dplyr::filter(value == 1 & freq >= 0.50)
+
+#####################################
+
+gravel_total <- rbind(gravel_fractions1_gravel,
+                      gravel_fractions2_gravel,
+                      gravel_fractions3_gravel,
+                      gravel_fractions4_gravel,
+                      gravel_fractions5_gravel)
+
+#####################################
+
 stellwagen_gravel_area <- gravel_fractions %>%
   dplyr::inner_join(x = .,
                     y = grid,
-                    by = "index") %>%
-  dplyr::filter(value = 1,
-                freq >= 0.5)
-
-
+                    by = "index")
 
 #####################################
 #####################################
@@ -200,6 +295,10 @@ sf::st_write(obj = data_region_grid, dsn = output_gpkg, layer = stringr::str_glu
 ## intermediate geopackage
 sf::st_write(obj = aoi_points, dsn = study_region_gpkg, layer = stringr::str_glue("{region_name}_points"), append = F)
 sf::st_write(obj = aoi_poly, dsn = study_region_gpkg, layer = stringr::str_glue("{region_name}_polygon"), append = F)
+sf::st_write(obj = grid_gravel, dsn = study_region_gpkg, layer = stringr::str_glue("{region_name}_gravel_grid"), append = F)
+
+## rasters
+terra::writeRaster(x = data_rcl, filename = "data/b_intermediate_data/sediment_gravel.grd", overwrite = T)
 
 #####################################
 #####################################

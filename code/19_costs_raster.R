@@ -116,7 +116,7 @@ conmapsg_mix <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_n
 
 conmapsg_gravel <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_conmapsg_gravel_grid")) %>%
   # add cost value and remove geometry
-  cost_function(cost_layer = ., field_name = "conmapsg_gravel_value", cost_value = 0.6)
+  cost_function(cost_layer = ., field_name = "conmapsg_gravel_value", cost_value = 0.5)
 
 conmapsg_rock <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_conmapsg_rock_grid")) %>%
   # add cost value and remove geometry
@@ -336,6 +336,26 @@ submarine_grid <- grid %>%
 lng_pipelines <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_lng_pipeline_grid")) %>%
   # add cost value and remove geometry
   cost_function(cost_layer = ., field_name = "lng_pipelines_value", cost_value = 0.4)
+
+lng_grid <- grid %>%
+  dplyr::left_join(x = .,
+                   y = lng_pipelines,
+                   by = "index") %>%
+  dplyr::mutate(across(2, ~replace(x = .,
+                                   list = is.na(.),
+                                   # replacement values
+                                   values = 0))) %>%
+  # rasterize data
+  terra::rasterize(y = raster,
+                   field = "lng_pipelines_value",
+                   x = .)
+
+#####################################
+
+### sediment gravel
+gravel <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_sediment_gravel_grid")) %>%
+  # add cost value and remove geometry
+  cost_function(cost_layer = ., field_name = "sediment_gravel_value", cost_value = 0.5)
 
 lng_grid <- grid %>%
   dplyr::left_join(x = .,

@@ -149,15 +149,21 @@ download_list <- c(
 
   "http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip",
 
+  ## slope (source: https://services.northeastoceandata.org/downloads/Habitat/SeascapesDerivatives.zip)
+  ### Northeast Ocean Data portal: https://www.northeastoceandata.org/data-download/
+  ###
+
+  "https://services.northeastoceandata.org/downloads/Habitat/SeascapesDerivatives.zip",
+
   ## Stellwagen National Marine Sanctuary boundary (source: https://sanctuaries.noaa.gov/library/imast/sbnms_py2.zip)
   ### Sanctuaries: https://sanctuaries.noaa.gov/library/imast_gis.html
   ### map: https://nmssanctuaries.blob.core.windows.net/sanctuaries-prod/media/archive/visit/images/sb_map_big.jpg
 
   "https://sanctuaries.noaa.gov/library/imast/sbnms_py2.zip",
-  
+
   ## Gulf of Maine final sale notice areas (source: https://www.boem.gov/renewable-energy/state-activities/gulfofmainefsnareasgeodatabase)
   ### Gulf of Maine state activities: https://www.boem.gov/renewable-energy/state-activities/maine/gulf-maine
-  
+
   "https://www.boem.gov/renewable-energy/state-activities/gulfofmainefsnareasgeodatabase"
 )
 

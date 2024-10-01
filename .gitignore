@@ -36,6 +36,9 @@ data/a_raw_data/usgs_big_islands
 data/a_raw_data/sediment_grid
 data/a_raw_data/sediment_tiff
 
+### seascape derivatives
+data/a_raw_data/SeascapesDerivatives
+
 #####################################
 
 ## Intermediate data

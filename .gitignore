@@ -41,5 +41,6 @@ data/a_raw_data/sediment_tiff
 ## Intermediate data
 data/b_intermediate_data/costs.gpkg
 data/b_intermediate_data/barriers.gpkg
+data/b_intermediate_data/sediment_gravel*
 
 data/c_analysis_data/costs.gpkg

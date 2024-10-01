@@ -127,3 +127,8 @@ Put simply, the previously shared data lack some of the deep-sea coral dataset p
 1. How should cells that do not have any data from a particular dataset get analyzed? It makes the most sense to give value of 0 as there is no cost for that particular location for that particular dataset.
 2. How were start and end points chosen? Any particular coordinates or just randomized?
 3. Which data did the analysis to split [Stellwagen National Marine Sanctuary](https://sanctuaries.noaa.gov/library/imast/sbnms_py2.zip) into north and southern regions? [**Update 11 September 2024:** per [Alyssa Randall](mailto:alyssa.randall@noaa.gov) the data came from traffic lane layer on [Northeast Ocean Data portal](https://www.northeastoceandata.org/data-download/?#MarineTransportation). Those data direct you to [data hosted on ENC Direct](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip).]
+
+*1 October 2024*
+1. Should the CONMAPSG gravel data and NMS sediment get combined or remain separate? [**Update 1 October 2024:** per [Alyssa Randall](mailto:alyssa.randall@noaa.gov) the data are remaining separate]
+2. Should the CONMAPSG gravel data get a value of 0.5 from the present 0.6? [**Update 1 October 2024:** per [Alyssa Randall](mailto:alyssa.randall@noaa.gov) the data will get a value of 0.5 to keep consistent with the suggestion by NMS]
+

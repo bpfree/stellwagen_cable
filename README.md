@@ -46,6 +46,7 @@ derived collaboratively with a sanctuary led working group (USGS/NOAA Fisheries/
 created the 3 class breaks from the multibeam backscatter data with ground truthing and was well vetted for use in the NEFMC habitat amendment
 works (including their SASI model). The boulder ridges were a polygon layer provided by USGS which were rasterized and added to the sediment
 raster to give it a 4th value (1-mud, 2-sand, 3-gravel, 4-boulder)."
+
 | **Value** | **Score** | **Classification** |
 |---------------|---------------|---------------|
 | 1 - 75 | 1 | Mud |

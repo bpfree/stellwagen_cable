@@ -41,7 +41,11 @@ Please contact Brian Free ([brian.free@noaa.gov](mailto:brian.free@noaa.gov)) wi
 | Shipping lanes | NOAA | [Boundary](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip) | [Metadata](https://www.fisheries.noaa.gov/inport/item/39986) | [Northeast Ocean Data portal](https://www.northeastoceandata.org/data-download/?#MarineTransportation) |
 | Stellwagen National Marine Sanctuary | [NOAA Sanctuaries](https://sanctuaries.noaa.gov/library/imast_gis.html) | [Boundary](https://sanctuaries.noaa.gov/library/imast/sbnms_py2.zip) | |  [Map](https://nmssanctuaries.blob.core.windows.net/sanctuaries-prod/media/archive/visit/images/sb_map_big.jpg) |
 
-Data for the gravel sediment came from [Michael Thompson](mailto:michael.a.thompson@noaa.gov). The sediment layer was derived collaboratively with a sanctuary led working group (USGS/NOAA Fisheries/NEFMC/UConn/UMass/BU/MA CZM & Stellwagen researchers) that created the 3 class breaks from the multibeam backscatter data with ground truthing and was well vetted for use in the NEFMC habitat amendment works (including their SASI model). The boulder ridges were a polygon layer provided by USGS which were rasterized and added to the sediment raster to give it a 4th value (1-mud, 2-sand, 3-gravel, 4-boulder).
+Data for the gravel sediment came from [Michael Thompson](mailto:michael.a.thompson@noaa.gov). As stated from him: "The sediment layer was
+derived collaboratively with a sanctuary led working group (USGS/NOAA Fisheries/NEFMC/UConn/UMass/BU/MA CZM & Stellwagen researchers) that
+created the 3 class breaks from the multibeam backscatter data with ground truthing and was well vetted for use in the NEFMC habitat amendment
+works (including their SASI model). The boulder ridges were a polygon layer provided by USGS which were rasterized and added to the sediment
+raster to give it a 4th value (1-mud, 2-sand, 3-gravel, 4-boulder)."
 | **Value** | **Score** | **Classification** |
 |---------------|---------------|---------------|
 | 1 - 75 | 1 | Mud |

@@ -357,9 +357,9 @@ gravel <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_s
   # add cost value and remove geometry
   cost_function(cost_layer = ., field_name = "sediment_gravel_value", cost_value = 0.5)
 
-lng_grid <- grid %>%
+gravel_grid <- grid %>%
   dplyr::left_join(x = .,
-                   y = lng_pipelines,
+                   y = gravel,
                    by = "index") %>%
   dplyr::mutate(across(2, ~replace(x = .,
                                    list = is.na(.),
@@ -367,7 +367,7 @@ lng_grid <- grid %>%
                                    values = 0))) %>%
   # rasterize data
   terra::rasterize(y = raster,
-                   field = "lng_pipelines_value",
+                   field = "gravel_value",
                    x = .)
 
 #####################################
@@ -384,7 +384,8 @@ cost_raster <- c(conmapsg_grid,
                  eelgrass_grid,
                  cable_grid,
                  submarine_grid,
-                 lng_grid) %>%
+                 lng_grid,
+                 gravel_grid) %>%
   terra::app(sum, na.rm = T) %>%
   # remove land from cost layer
   terra::crop(raster,
@@ -423,6 +424,7 @@ sf::st_write(obj = eelgrass_meadows, dsn = output_gpkg, layer = stringr::str_glu
 sf::st_write(obj = cable_pipelines, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_cable_pipelines_cost", append = F))
 sf::st_write(obj = submarine_cables, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_submarine_cables_cost", append = F))
 sf::st_write(obj = lng_pipelines, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_lng_pipelines_cost", append = F))
+sf::st_write(obj = gravel, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_gravel_cost", append = F))
 
 ## raster data
 terra::writeRaster(cost_rm_barriers, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_rm_barriers_{cell_size}m.grd")), overwrite = T)

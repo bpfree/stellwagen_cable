@@ -39,6 +39,9 @@ data/a_raw_data/sediment_tiff
 ### seascape derivatives
 data/a_raw_data/SeascapesDerivatives
 
+### slope
+data/a_raw_data/stellwagen_slope
+
 #####################################
 
 ## Intermediate data

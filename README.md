@@ -63,15 +63,15 @@ raster to give it a 4th value (1-mud, 2-sand, 3-gravel, 4-boulder)."
 | Sediment (CONMAPSG) - Mix | --------------- | 0.4 | In a second iteration score reduced to 0.1 |
 | Sediment (CONMAPSG) - Gravel | --------------- | 0.6 | In a second iteration score reduced to 0.1 |
 | Sediment (CONMAPSG) - Rock | --------------- | 1.0 | In a second iteration score reduced to 0.9 |
-| Active and Inactive Disposal Sites | 500 | 0.8 | |
-| Intertidal Flats | 500 | 0.2 | |
-| Sand Patches | 500 | 1.0 | |
-| Channel Areas | 600 | 1.0 | |
-| Anchorage Areas | 600 | 0.8 | |
-| Eelgrass Meadows | 675 | 0.4 | |
-| Cable and Pipeline Areas | 675 | 0.4 | |
-| Submarine Cables | 675 | 0.4 | |
-| LNG Pipelines | 675 | 0.4 | |
+| Active and Inactive Disposal Sites | 500 | 0.8 | --------------- |
+| Intertidal Flats | 500 | 0.2 | --------------- |
+| Sand Patches | 500 | 1.0 | --------------- |
+| Channel Areas | 600 | 1.0 | --------------- |
+| Anchorage Areas | 600 | 0.8 | --------------- |
+| Eelgrass Meadows | 675 | 0.4 | --------------- |
+| Cable and Pipeline Areas | 675 | 0.4 | --------------- |
+| Submarine Cables | 675 | 0.4 | --------------- |
+| LNG Pipelines | 675 | 0.4 | --------------- |
 
 #### Barriers
 | **Layer** | **Buffer distance (m)** | **Notes** |

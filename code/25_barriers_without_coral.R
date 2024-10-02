@@ -71,14 +71,13 @@ pacman::p_load(renv,
 # set directories
 ## define data directory (as this is an R Project, pathnames are simplified)
 ### input directories
-costs_dir <- "data/b_intermediate_data/costs.gpkg"
-grid_dir <- "data/a_raw_data/stellwagen.gpkg"
-barriers_dir <- "data/b_intermediate_data/barriers.gpkg"
+# costs_dir <- "data/b_intermediate_data/costs.gpkg"
+# grid_dir <- "data/a_raw_data/stellwagen.gpkg"
+data_dir <- "data/b_intermediate_data/barriers.gpkg"
 raster_dir <- "data/d_raster_data"
 
 ### output directory
-barriers_gpkg <- "data/c_analysis_data/barriers.gpkg"
-model_gpkg <- "data/c_analysis_data/model3.gpkg"
+output_gpkg <- "data/c_analysis_data/barriers.gpkg"
 
 #####################################
 
@@ -96,7 +95,7 @@ raster <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_stu
 
 # load vector data
 ## barriers
-sites_avoid <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_sites_to_avoid_grid"))
+sites_avoid <- sf::st_read(dsn = barriers_dir, layer = stringr::str_glue("{region_name}_sites_to_avoid_grid"))
 boulder_ridges <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_boulder_ridges_grid"))
 cape_cod <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_cape_cod_limit_grid"))
 
@@ -146,13 +145,14 @@ barriers_without_coral_raster <- terra::cover(x = sites_avoid_raster,
 
 ## set values of 0 to be 99 for later cost analysis
 barriers_without_coral_raster[barriers_without_coral_raster == 0] <- 99
+plot(barriers_without_coral_raster)
 
 #####################################
 #####################################
 
 # export data
 ## least cost geopackage
-sf::st_write(obj = barriers_without_coral, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_barriers", append = F))
+sf::st_write(obj = barriers_without_coral, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_barriers_without_coral", append = F))
 
 ## raster data
 terra::writeRaster(barriers_without_coral_raster, filename = file.path(raster_dir, stringr::str_glue("{region_name}_barriers_without_coral_{cell_size}m.grd")), overwrite = T)

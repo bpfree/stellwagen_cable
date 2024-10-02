@@ -48,6 +48,7 @@ pacman::p_load(renv,
 ## define data directory (as this is an R Project, pathnames are simplified)
 ### input directories
 data_dir <- "11_Stellwagen_Cable_Routing/Model Runs/StellwagenCableRoute/03_CableRouteModel/model_2/model_2.gdb"
+lease_dir <- "data/a_raw_data/gulfofmainefsnareasgeodatabase/Gulf_of_Maine_FSN_areas_09_10_2024.gdb"
 
 ### output directory
 output_gpkg <- "data/c_analysis_data/wind.gpkg"
@@ -58,10 +59,14 @@ output_gpkg <- "data/c_analysis_data/wind.gpkg"
 sf::st_layers(dsn = data_dir,
               do_count = TRUE)
 
+sf::st_layers(dsn = lease_dir,
+              do_count = TRUE)
+
 #####################################
 #####################################
 
 # start point
+## centralized
 start_point <- sf::st_read(dsn = data_dir,
                     layer = sf::st_layers(dsn = data_dir)[[1]][grep(pattern = "2_2_corridors_start",
                                                                     x = sf::st_layers(dsn = data_dir)[[1]])]) %>%
@@ -69,6 +74,59 @@ start_point <- sf::st_read(dsn = data_dir,
   sf::st_cast("POINT") %>%
   sf::st_transform(x = .,
                    crs = crs)
+
+## edge
+leases <- sf::st_read(dsn = lease_dir,
+                      layer = sf::st_layers(dsn = lease_dir)[[1]][grep(pattern = "all_outlines",
+                                                                          x = sf::st_layers(dsn = lease_dir)[[1]])]) %>%
+  # filter for only the leases of interest (0564 and 0567)
+  dplyr::filter(grepl(pattern = "0564|0567",
+                      # find the pattern within the "ADDITIONAL_INFORMATION" field
+                      ADDITIONAL_INFORMATION))
+
+### lease 0564
+lease_0564 <- leases %>%
+  # only lease 0564
+  dplyr::filter(grepl(pattern = "0564",
+                      # find the pattern within the "ADDITIONAL_INFORMATION" field
+                      ADDITIONAL_INFORMATION)) %>%
+  # make it first a multilinestring object
+  sf::st_cast(x = .,
+              to = "MULTILINESTRING") %>%
+  # then make it a collection of points
+  sf::st_cast(x = .,
+              to = "POINT") %>%
+  # create fields for longitude and latitude
+  dplyr::mutate(lon = sf::st_coordinates(.)[,1],
+                lat = sf::st_coordinates(.)[,2])
+
+lease_0564_edge_point <- lease_0564 %>%
+  # limit it to the furthest west point (xmin)
+  dplyr::filter(lon <= sf::st_bbox(.)$xmin)
+
+#####################################
+
+### lease 0567
+lease_0567 <- leases %>%
+  # limit to lease 0567
+  dplyr::filter(grepl(pattern = "0567",
+                      # find the pattern within the "ADDITIONAL_INFORMATION" field
+                      ADDITIONAL_INFORMATION)) %>%
+  # make it first a multilinestring object
+  sf::st_cast(x = .,
+              to = "MULTILINESTRING") %>%
+  # then make it a collection of points
+  sf::st_cast(x = .,
+              to = "POINT") %>%
+  # create fields for longitude and latitude
+  dplyr::mutate(lon = sf::st_coordinates(.)[,1],
+                lat = sf::st_coordinates(.)[,2])
+
+lease_0567_edge_point <- lease_0567 %>%
+  # limit it to the furthest west point (xmin)
+  dplyr::filter(lon <= sf::st_bbox(.)$xmin)
+
+#####################################
 
 # end point
 end_points <- sf::st_read(dsn = data_dir,
@@ -84,6 +142,9 @@ end_points <- sf::st_read(dsn = data_dir,
 
 # export data
 sf::st_write(start_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_point"))
+sf::st_write(lease_0564_edge_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_0564_edge_start"))
+sf::st_write(lease_0567_edge_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_0567_edge_start"))
+
 sf::st_write(end_points, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_end_points"))
 
 #####################################

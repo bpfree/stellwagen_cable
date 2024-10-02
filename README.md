@@ -109,6 +109,7 @@ It should get noted that the leastcostpath package in R had been investigated as
 
 #### Least cost path
 Model iterations:
+
 *2 October 2024*
 | **Starting Point** | **Ending Point** | **Costs** | **Barriers** | **Extent** |
 |---------------|---------------|---------------|---------------|---------------|

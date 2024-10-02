@@ -51,7 +51,7 @@ pacman::p_load(renv,
 # set directories
 ## define data directory (as this is an R Project, pathnames are simplified)
 ### input directories
-#### liquid natural gas pipelines
+#### sediment
 data_dir <- "data/a_raw_data/sediment_grid/sediment"
 
 #### study area grid

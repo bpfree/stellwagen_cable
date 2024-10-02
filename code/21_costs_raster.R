@@ -387,7 +387,7 @@ slope_grid <- grid %>%
                                    values = 0))) %>%
   # rasterize data
   terra::rasterize(y = raster,
-                   field = "slope_value",
+                   field = "slope_max",
                    x = .)
 
 #####################################

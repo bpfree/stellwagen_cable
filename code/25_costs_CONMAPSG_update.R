@@ -100,6 +100,7 @@ raster <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_stu
 ## barriers grid
 ### all barriers
 barriers <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_barriers_{cell_size}m.grd")))
+barriers_without_coral <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_barriers_without_coral_{cell_size}m.grd")))
 
 #####################################
 
@@ -387,7 +388,7 @@ slope_grid <- grid %>%
                                    values = 0))) %>%
   # rasterize data
   terra::rasterize(y = raster,
-                   field = "slope_value",
+                   field = "slope_max",
                    x = .)
 
 #####################################
@@ -395,7 +396,7 @@ slope_grid <- grid %>%
 
 # create costs layer
 ## cover any NA values of another raster with values from any other raster (all barrier cells)
-cost_raster <- c(conmapsg_grid,
+cost_raster <- c(conmapsg_grid_update,
                  disposal_grid,
                  intertidal_grid,
                  sand_grid,
@@ -414,7 +415,7 @@ cost_raster <- c(conmapsg_grid,
 
 ## cost raster without barriers
 cost_rm_barriers <- c(cost_raster,
-                      barriers) %>% 
+                      barriers_without_coral) %>% 
   # sum the two layers while removing any NA values
   terra::app(sum, na.rm = T) %>%
   # add 0.01 so there are no 0 values
@@ -448,7 +449,7 @@ sf::st_write(obj = lng_pipelines, dsn = output_gpkg, layer = stringr::str_glue("
 sf::st_write(obj = gravel, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_gravel_cost", append = F))
 
 ## raster data
-terra::writeRaster(cost_rm_barriers, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_rm_barriers_{cell_size}m.grd")), overwrite = T)
+terra::writeRaster(cost_rm_barriers, filename = file.path(raster_dir, stringr::str_glue("{region_name}_conmapsg_update_costs_rm_barriers_without_coral_{cell_size}m.grd")), overwrite = T)
 
 #####################################
 #####################################

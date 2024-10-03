@@ -148,6 +148,12 @@ end_points <- sf::st_read(dsn = data_dir,
   sf::st_transform(x = .,
                    crs = crs)
 
+boston <- end_points %>%
+  dplyr::slice(2)
+
+plymouth <- end_points %>%
+  dplyr::slice(1)
+
 #####################################
 #####################################
 
@@ -158,6 +164,8 @@ sf::st_write(lease_0567_edge_point, dsn = output_gpkg, layer = stringr::str_glue
 sf::st_write(start_edge_points, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_edge_start_points"), append = FALSE)
 
 sf::st_write(end_points, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_end_points"), append = FALSE)
+sf::st_write(plymouth, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_plymouth_end_point"), append = FALSE)
+sf::st_write(boston, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_boston_end_point"), append = FALSE)
 
 #####################################
 #####################################

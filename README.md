@@ -49,6 +49,8 @@ works (including their SASI model). The boulder ridges were a polygon layer prov
 raster to give it a 4th value (1-mud, 2-sand, 3-gravel, 4-boulder)."
 
 The slope data required opening the data in ArcGIS Pro (version 3.0.2) and exporting the raster data from the geodatabase to usable formats in R (.GRID and .TIFF).
+Before a linear regression was applied, only slope values within the study region got extracted; this kept the rescaled values between the minimum and maximum slope
+values possible within the study area.
 
 | **Value** | **Score** | **Classification** |
 |---------------|---------------|---------------|

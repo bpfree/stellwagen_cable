@@ -48,6 +48,8 @@ created the 3 class breaks from the multibeam backscatter data with ground truth
 works (including their SASI model). The boulder ridges were a polygon layer provided by USGS which were rasterized and added to the sediment
 raster to give it a 4th value (1-mud, 2-sand, 3-gravel, 4-boulder)."
 
+The slope data required opening the data in ArcGIS Pro (version 3.0.2) and exporting the raster data from the geodatabase to usable formats in R (.GRID and .TIFF).
+
 | **Value** | **Score** | **Classification** |
 |---------------|---------------|---------------|
 | 1 - 75 | 1 | Mud |
@@ -72,6 +74,8 @@ raster to give it a 4th value (1-mud, 2-sand, 3-gravel, 4-boulder)."
 | Cable and Pipeline Areas | 675 | 0.4 | --------------- |
 | Submarine Cables | 675 | 0.4 | --------------- |
 | LNG Pipelines | 675 | 0.4 | --------------- |
+| Gravel | --------------- | 0.5 | --------------- |
+| Slope | --------------- | Linear regression | --------------- |
 
 #### Barriers
 | **Layer** | **Buffer distance (m)** | **Notes** |

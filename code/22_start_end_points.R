@@ -130,7 +130,11 @@ lease_0567_edge_point <- lease_0567 %>%
 
 # combine edge points
 start_edge_points <- rbind(lease_0564_edge_point,
-                           lease_0567_edge_point)
+                           lease_0567_edge_point) %>%
+  sf::st_zm() %>%
+  sf::st_cast("POINT") %>%
+  sf::st_transform(x = .,
+                   crs = crs)
 
 #####################################
 #####################################
@@ -148,12 +152,12 @@ end_points <- sf::st_read(dsn = data_dir,
 #####################################
 
 # export data
-sf::st_write(start_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_point"), overwrite = T)
-sf::st_write(lease_0564_edge_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_0564_edge_start"), overwrite = T)
-sf::st_write(lease_0567_edge_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_0567_edge_start"), overwrite = T)
-sf::st_write(start_edge_points, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_edge_start_points"), overwrite = T)
+sf::st_write(start_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_point"), append = FALSE)
+sf::st_write(lease_0564_edge_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_0564_edge_start"), append = FALSE)
+sf::st_write(lease_0567_edge_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_0567_edge_start"), append = FALSE)
+sf::st_write(start_edge_points, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_edge_start_points"), append = FALSE)
 
-sf::st_write(end_points, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_end_points"), overwrite = T)
+sf::st_write(end_points, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_end_points"), append = FALSE)
 
 #####################################
 #####################################

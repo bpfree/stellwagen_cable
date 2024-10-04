@@ -4,8 +4,8 @@ datatype=FLT4S
 nodatavalue=nan
 byteorder=little
 nbands=1
-minvalue=-9.52790631435109618e+37
-maxvalue=2.65420236462775392e+38
+minvalue=-3.33476726072890767e+38
+maxvalue=3.33476726072890767e+38
 categorical=FALSE
 [description]
 layername=sum

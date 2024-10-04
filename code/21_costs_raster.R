@@ -415,7 +415,7 @@ cost_raster <- c(conmapsg_grid,
 
 ## cost raster without barriers
 cost_rm_barriers <- c(cost_raster,
-                      barriers_without_coral) %>% 
+                      barriers) %>% 
   # sum the two layers while removing any NA values
   terra::app(sum, na.rm = T) %>%
   # add 0.01 so there are no 0 values
@@ -426,6 +426,22 @@ plot(cost_rm_barriers)
 cost_rm_barriers[cost_rm_barriers >= 99] <- NA
 cost_rm_barriers[cost_rm_barriers == 0.01] <- NA
 plot(cost_rm_barriers)
+
+#####################################
+
+## cost raster without barriers without coral
+cost_rm_barriers_without_coral <- c(cost_raster,
+                      barriers_without_coral) %>% 
+  # sum the two layers while removing any NA values
+  terra::app(sum, na.rm = T) %>%
+  # add 0.01 so there are no 0 values
+  sum(., 0.01)
+plot(cost_rm_barriers_without_coral)
+
+# make any values above 99 (where a constraint would be) to be set as NA to remove from analysis
+cost_rm_barriers_without_coral[cost_rm_barriers_without_coral >= 99] <- NA
+cost_rm_barriers_without_coral[cost_rm_barriers_without_coral == 0.01] <- NA
+plot(cost_rm_barriers_without_coral)
 
 #####################################
 #####################################
@@ -449,7 +465,9 @@ sf::st_write(obj = lng_pipelines, dsn = output_gpkg, layer = stringr::str_glue("
 sf::st_write(obj = gravel, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_gravel_cost", append = F))
 
 ## raster data
-terra::writeRaster(cost_rm_barriers, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_rm_barriers_without_coral_{cell_size}m.grd")), overwrite = T)
+terra::writeRaster(cost_raster, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_{cell_size}m.grd")), overwrite = T)
+terra::writeRaster(cost_rm_barriers, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_rm_barriers_{cell_size}m.grd")), overwrite = T)
+terra::writeRaster(cost_rm_barriers_without_coral, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_rm_barriers_without_coral_{cell_size}m.grd")), overwrite = T)
 
 #####################################
 #####################################

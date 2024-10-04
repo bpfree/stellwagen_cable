@@ -161,6 +161,26 @@ plymouth <- end_points %>%
 #####################################
 #####################################
 
+# route combinations
+boston_0564 <- lease_0564_edge_point %>%
+  select(Shape) %>%
+  rbind(boston)
+
+boston_0567 <- lease_0567_edge_point %>%
+  select(Shape) %>%
+  rbind(boston)
+
+plymouth_0564 <- lease_0564_edge_point %>%
+  select(Shape) %>%
+  rbind(plymouth)
+
+plymouth_0567 <- lease_0567_edge_point %>%
+  select(Shape) %>%
+  rbind(plymouth)
+
+#####################################
+#####################################
+
 # export data
 sf::st_write(start_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_point"), append = FALSE)
 sf::st_write(lease_0564_edge_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_0564_edge_start"), append = FALSE)
@@ -170,6 +190,11 @@ sf::st_write(start_edge_points, dsn = output_gpkg, layer = stringr::str_glue("{r
 sf::st_write(end_points, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_end_points"), append = FALSE)
 sf::st_write(plymouth, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_plymouth_end_point"), append = FALSE)
 sf::st_write(boston, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_boston_end_point"), append = FALSE)
+
+sf::st_write(plymouth_0564, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_plymouth_0564"), append = FALSE)
+sf::st_write(plymouth_0567, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_plymouth_0567"), append = FALSE)
+sf::st_write(boston_0564, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_boston_0564"), append = FALSE)
+sf::st_write(boston_0567, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_boston_0567"), append = FALSE)
 
 #####################################
 #####################################

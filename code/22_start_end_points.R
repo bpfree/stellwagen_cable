@@ -102,7 +102,9 @@ lease_0564 <- leases %>%
 
 lease_0564_edge_point <- lease_0564 %>%
   # limit it to the furthest west point (xmin)
-  dplyr::filter(lon <= sf::st_bbox(.)$xmin)
+  dplyr::filter(lon <= sf::st_bbox(.)$xmin) %>%
+  sf::st_transform(x = .,
+                   crs = crs)
 
 #####################################
 
@@ -124,7 +126,9 @@ lease_0567 <- leases %>%
 
 lease_0567_edge_point <- lease_0567 %>%
   # limit it to the furthest west point (xmin)
-  dplyr::filter(lon <= sf::st_bbox(.)$xmin)
+  dplyr::filter(lon <= sf::st_bbox(.)$xmin) %>%
+  sf::st_transform(x = .,
+                   crs = crs)
 
 #####################################
 

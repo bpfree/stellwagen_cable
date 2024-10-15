@@ -44,6 +44,10 @@ data/a_raw_data/stellwagen_slope
 
 #####################################
 
+data/zz_miscellaneous_data/
+
+#####################################
+
 ## Intermediate data
 data/b_intermediate_data/costs.gpkg
 data/b_intermediate_data/barriers.gpkg

@@ -74,6 +74,8 @@ data_dir <- "11_Stellwagen_Cable_Routing/Model Runs/StellwagenCableRoute/03_Cabl
 export_dir <- "data/a_raw_data/stellwagen.gpkg"
 raster_dir <- "data/d_raster_data"
 
+export_dir <- "data/zz_miscellaneous_data"
+
 #####################################
 
 # inspect layers within geodatabases and geopackages
@@ -130,6 +132,9 @@ sf::st_write(obj = blank_grid, dsn = export_dir, layer = "stellwagen_region", ap
 
 ## raster grid
 terra::writeRaster(rast_100m, filename = file.path(raster_dir, stringr::str_glue("{region_name}_study_area_{cell_size}m.grd")), overwrite = T)
+
+sf::st_write(obj = grid, dsn = file.path(export_dir, "stellwagen_grid.shp"), append = F)
+terra::writeRaster(rast_100m, filename = file.path(export_dir, stringr::str_glue("{region_name}_study_area_{cell_size}m.grd")), overwrite = T)
 
 #####################################
 #####################################

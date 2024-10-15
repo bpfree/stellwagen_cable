@@ -77,7 +77,7 @@ sf::st_layers(dsn = study_region_gpkg,
 #####################################
 
 # read data
-## anchorage areas
+## submarine cable
 data <- sf::st_read(dsn = data_dir,
                     layer = stringr::str_glue("{layer_name}")) %>%
   sf::st_transform(x = .,

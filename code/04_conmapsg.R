@@ -64,6 +64,9 @@ pacman::p_load(renv,
 #### CONMAPSG
 data_dir <- "data/a_raw_data/state_costs.gpkg"
 
+#### National Marine Sanctuary
+stellwagen_dir <- "data/a_raw_data/sbnms_py2"
+
 #### study area grid
 study_region_gpkg <- stringr::str_glue("data/a_raw_data/{region_name}.gpkg")
 
@@ -102,6 +105,11 @@ grid <- sf::st_read(dsn = study_region_gpkg,
   sf::st_transform(x = .,
                    crs = crs)
 
+## Stellwagen boundary
+stellwagen <- sf::st_read(dsn = stellwagen_dir) %>%
+  sf::st_transform(x = .,
+                   crs = crs)
+
 #####################################
 #####################################
 
@@ -109,6 +117,8 @@ grid <- sf::st_read(dsn = study_region_gpkg,
 data_region <- data %>%
   rmapshaper::ms_clip(target = .,
                       clip = region) %>%
+  rmapshaper::ms_erase(target = .,
+                      erase = stellwagen) %>%
   dplyr::mutate(layer = stringr::str_glue("{data_name}"))
 
 #####################################

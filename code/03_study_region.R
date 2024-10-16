@@ -107,7 +107,7 @@ blank_grid <- grid %>%
 #####################################
 
 # create grid
-### grid with 100 meter cell size
+### grid with 100-meter cell size
 #### create a template raster that has the extent of the study area
 rast_temp <- terra::rast(blank_grid,
                          # use the extent of the marine study area

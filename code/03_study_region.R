@@ -16,7 +16,7 @@ start <- Sys.time()
 region_name <- "stellwagen"
 
 ## cell size
-cell_size <- 100
+cell_size <- 50
 
 ## coordinate reference system
 ### set the coordinate reference system that data should become (NAD83 UTM 19N: https://epsg.io/26919)
@@ -118,7 +118,7 @@ rast_temp <- terra::rast(blank_grid,
                          crs = crs(blank_grid))
 
 #### Create raster filed with the data from the study area
-rast_100m <- terra::rasterize(x = blank_grid,
+rast <- terra::rasterize(x = blank_grid,
                               y = rast_temp,
                               field = "value")
 
@@ -131,7 +131,7 @@ sf::st_write(obj = grid, dsn = export_dir, layer = "stellwagen_grid", append = F
 sf::st_write(obj = blank_grid, dsn = export_dir, layer = "stellwagen_region", append = F)
 
 ## raster grid
-terra::writeRaster(rast_100m, filename = file.path(raster_dir, stringr::str_glue("{region_name}_study_area_{cell_size}m.grd")), overwrite = T)
+terra::writeRaster(rast, filename = file.path(raster_dir, stringr::str_glue("{region_name}_study_area_{cell_size}m.grd")), overwrite = T)
 
 #####################################
 #####################################

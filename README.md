@@ -69,6 +69,7 @@ values possible within the study area.
 | Sediment (CONMAPSG) - Mix | -------------- | 0.4 | In a second iteration score reduced to 0.1 |
 | Sediment (CONMAPSG) - Gravel | -------------- | 0.5 | In a second iteration score reduced to 0.1 |
 | Sediment (CONMAPSG) - Rock | -------------- | 1.0 | In a second iteration score reduced to 0.9, a third further dropped the score to 0.6 |
+| Sediment (CONMAPSG) - Rock | --------------- | 1.0 | In a second iteration score reduced to 0.9, a third further dropped the score to 0.6 |
 | Active and Inactive Disposal Sites | 500 | 0.8 | --------------- |
 | Intertidal Flats | 500 | 0.2 | --------------- |
 | Sand Patches | 500 | 1.0 | --------------- |

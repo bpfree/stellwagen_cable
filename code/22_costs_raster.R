@@ -16,7 +16,7 @@ start <- Sys.time()
 region_name <- "stellwagen"
 
 ## cell size
-cell_size <- 100
+cell_size <- 50
 
 ## coordinate reference system
 ### set the coordinate reference system that data should become (NAD83 UTM 19N: https://epsg.io/26919)
@@ -109,15 +109,15 @@ barriers_without_coral_boulder <- terra::rast(file.path(raster_dir, stringr::str
 ### CONMAPSG
 conmapsg_sand <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_conmapsg_sand_grid")) %>%
   # add cost value and remove geometry
-  cost_function(cost_layer = ., field_name = "conmapsg_sand_value", cost_value = 0.2)
+  cost_function(cost_layer = ., field_name = "conmapsg_sand_value", cost_value = 0.1)
 
 conmapsg_mix <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_conmapsg_mix_grid")) %>%
   # add cost value and remove geometry
-  cost_function(cost_layer = ., field_name = "conmapsg_mix_value", cost_value = 0.4)
+  cost_function(cost_layer = ., field_name = "conmapsg_mix_value", cost_value = 0.1)
 
 conmapsg_gravel <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_conmapsg_gravel_grid")) %>%
   # add cost value and remove geometry
-  cost_function(cost_layer = ., field_name = "conmapsg_gravel_value", cost_value = 0.6)
+  cost_function(cost_layer = ., field_name = "conmapsg_gravel_value", cost_value = 0.1)
 
 conmapsg_rock <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_conmapsg_rock_grid")) %>%
   # add cost value and remove geometry

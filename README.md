@@ -37,7 +37,7 @@ Please contact Brian Free ([brian.free@noaa.gov](mailto:brian.free@noaa.gov)) wi
 | Neptune LNG Pipeline | Massachusetts CZM | [Liquid natural gas](https://czm-moris-mass-eoeea.hub.arcgis.com/datasets/Mass-EOEEA::neptune-lng-pipeline) | [Metadata](https://www.arcgis.com/sharing/rest/content/items/0df6b39f58444cc9a236755b75d1c92b/info/metadata/metadata.xml?format=default&output=html) | [RESTService](https://services1.arcgis.com/7iJyYTjCtKsZS1LR/arcgis/rest/services/Neptune_LNG_Pipeline/FeatureServer/1) |
 | Northeast Gateway LNG Pipeline | Massachusetts CZM | [Liquid natural gas](https://czm-moris-mass-eoeea.hub.arcgis.com/datasets/Mass-EOEEA::northeast-gateway-lng-pipeline) | [Metadata](https://www.arcgis.com/sharing/rest/content/items/7826f80140934c869571dfb2b46f0313/info/metadata/metadata.xml?format=default&output=html) | [RESTService](https://services1.arcgis.com/7iJyYTjCtKsZS1LR/arcgis/rest/services/Northeast_Gateway_LNG_Pipeline/FeatureServer/1) |
 | Algonquin Hubline LNC Pipeline | Massachusetts CZM | [Liquid natural gas](https://czm-moris-mass-eoeea.hub.arcgis.com/datasets/Mass-EOEEA::algonquin-hubline-lnc-pipeline) | [Metadata](https://www.arcgis.com/sharing/rest/content/items/8cbe1bdd72a443a5bf04c2d50c78df10/info/metadata/metadata.xml?format=default&output=html) | [RESTService](https://services1.arcgis.com/7iJyYTjCtKsZS1LR/arcgis/rest/services/Algonquin_Hubline_LNC_Pipeline/FeatureServer/1) |
-| CONMAPSG | USGS | [CONMAPSG](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg.zip) | [Metadata](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg.htm)  ([text](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg-metadata.txt)) | [FAQ](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg-faq.htm), Data provided for the analysis, by [Brooke Hodge](mailto:brooke.hodge@mass.gov) are more expansive than this dataset ([report](https://www.mass.gov/doc/sediment-and-geology-work-group-report/download)) |
+| CONMAPSG | USGS | [CONMAPSG](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg.zip) | [Metadata](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg.htm)  ([text](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg-metadata.txt)) | [FAQ](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg-faq.htm), Data provided for the analysis, by [Brooke Hodge](mailto:brooke.hodge@mass.gov), are more expansive than this dataset ([report](https://www.mass.gov/doc/sediment-and-geology-work-group-report/download)) |
 | Shipping lanes | NOAA | [Boundary](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip) | [Metadata](https://www.fisheries.noaa.gov/inport/item/39986) | [Northeast Ocean Data portal](https://www.northeastoceandata.org/data-download/?#MarineTransportation) |
 | Seascape derivatives | --------------- | [Slope](https://services.northeastoceandata.org/downloads/Habitat/SeascapesDerivatives.zip) | ----------- |  --------------- |
 | Stellwagen National Marine Sanctuary | [NOAA Sanctuaries](https://sanctuaries.noaa.gov/library/imast_gis.html) | [Boundary](https://sanctuaries.noaa.gov/library/imast/sbnms_py2.zip) | |  [Map](https://nmssanctuaries.blob.core.windows.net/sanctuaries-prod/media/archive/visit/images/sb_map_big.jpg) |
@@ -48,16 +48,18 @@ created the 3 class breaks from the multibeam backscatter data with ground truth
 works (including their SASI model). The boulder ridges were a polygon layer provided by USGS which were rasterized and added to the sediment
 raster to give it a 4th value (1-mud, 2-sand, 3-gravel, 4-boulder)."
 
-The slope data required opening the data in ArcGIS Pro (version 3.0.2) and exporting the raster data from the geodatabase to usable formats in R (.GRID and .TIFF).
-Before a linear regression was applied, only slope values within the study region got extracted; this kept the rescaled values between the minimum and maximum slope
-values possible within the study area.
-
 | **Value** | **Score** | **Classification** |
 |---------------|---------------|---------------|
 | 1 - 75 | 1 | Mud |
 | 76 - 165 | 2 | Sand |
 | 166 - 255 | 3 | Gravel |
 | NA | 4 | Boulder |
+
+Data for the Stellwagen Critical Sand Lance Habitat polygon additional were shared by [Michael Thompson](mailto:michael.a.thompson@noaa.gov) for inclusion into the model's third iteration. These data were shared since this dataset "covers most major areas but not all of the sand lance that are fundamental to the sanctuary."
+
+The slope data required opening the data in ArcGIS Pro (version 3.0.2) and exporting the raster data from the geodatabase to usable formats in R (.GRID and .TIFF).
+Before a linear regression was applied, only slope values within the study region got extracted; this kept the rescaled values between the minimum and maximum slope
+values possible within the study area.
 
 ### Methods
 #### Costs
@@ -66,7 +68,7 @@ values possible within the study area.
 | Sediment (CONMAPSG) - Sand/Mud | --------------- | 0.2 | In a second iteration score reduced to 0.1 |
 | Sediment (CONMAPSG) - Mix | --------------- | 0.4 | In a second iteration score reduced to 0.1 |
 | Sediment (CONMAPSG) - Gravel | --------------- | 0.5 | In a second iteration score reduced to 0.1 |
-| Sediment (CONMAPSG) - Rock | --------------- | 1.0 | In a second iteration score reduced to 0.9 |
+| Sediment (CONMAPSG) - Rock | --------------- | 1.0 | In a second iteration score reduced to 0.9, a third further dropped the score to 0.6 |
 | Active and Inactive Disposal Sites | 500 | 0.8 | --------------- |
 | Intertidal Flats | 500 | 0.2 | --------------- |
 | Sand Patches | 500 | 1.0 | --------------- |
@@ -76,20 +78,27 @@ values possible within the study area.
 | Cable and Pipeline Areas | 675 | 0.4 | --------------- |
 | Submarine Cables | 675 | 0.4 | --------------- |
 | LNG Pipelines | 675 | 0.4 | --------------- |
+| Mud | --------------- | 0.4 | In the third iteration, this dataset got added |
+| Sand | --------------- | 0.6 | In the third iteration, this dataset got added |
 | Gravel | --------------- | 0.5 | --------------- |
+| Boulder | --------------- | 0.6 | In the third iteration, this dataset got added |
+| Boulder Ridges | 500 | 0.9 | Moved from barrier to cost in last two iterations |
 | Slope | --------------- | Linear regression | --------------- |
+
+The CONMAPSG sediment data had the Stellwagen National Marine Sanctuary boundary removed; thus no data existed for the entirety of the national marine sanctuary.
 
 #### Barriers
 | **Layer** | **Buffer distance (m)** | **Notes** |
 |---------------|---------------|---------------|
-| Coral points | 675 | Provided by MA CZM |
+| Coral points | 675 | Provided by MA CZM, not included in later iterations as a barrier |
 | Sites to avoid | 1000 | Provided by NMS |
-| Boulder ridges | 500 | Provided by NMS |
+| Boulder ridges | 500 | Provided by NMS, moved from barrier to cost in last two iterations of model |
 | Cape Cod shore | 500 | Generated by MA CZM |
 
-Two different barrier rasters got made:
+Three different barrier rasters got made:
 1. One with all 4 datasets (coral points, sites to avoid, boulder ridges, and Cape Cod shoreline)
 2. One with only 3 datasets (sites to avoid, boulder ridges, and Cape Cod shoreline) -- coral points were removed
+3. One with only 2 datasets (sites to avoid and Cape Cod shoreline) -- coral points and boulder ridges were removed
 
 #### Points of connection
 This analysis used the same ending points for all cable routing scenarios. Starting points got split into five separate options:
@@ -97,7 +106,7 @@ This analysis used the same ending points for all cable routing scenarios. Start
 - Starting Point (option 2): centralized of the Gulf of Maine PSN OCS-A 0564
 - Starting Point (option 3): centralized of the Gulf of Maine PSN OCS-A 0567
 - Starting Point (option 4): edge of boundary for Gulf of Maine PSN leases: 0564 and 0567
-- Ending Points: Plymouth and Boston (points were randomly selected to represent those two localities)
+- Ending Points: Plymouth and Boston (points were randomly selected to represent those two localities -- then moved further away so that they were at least 1000m from the edge of the cost and barrier rasters
 
 #### Stellwagen
 Stellwagen National Marine Sanctuary ([data](https://sanctuaries.noaa.gov/library/imast/sbnms_py2.zip) and [map](https://sanctuaries.noaa.gov/visit/images/sb_map_big.jpg)) got split into two sections to determine how cable routing would get affected if limited to a northern or a southern route. The regions got split around the "traffic separation schemes" that influence vessel traffic into and out of Boston Harbor. [Three separation schemes](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip) split were removed from the study area and left north and southern sections. Each section became barriers to the cable routing analysis; thus each got separately removed from the Stellwagen National Marine Sanctuary to create two new cost rasters.

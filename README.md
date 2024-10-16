@@ -39,7 +39,7 @@ Please contact Brian Free ([brian.free@noaa.gov](mailto:brian.free@noaa.gov)) wi
 | Algonquin Hubline LNC Pipeline | Massachusetts CZM | [Liquid natural gas](https://czm-moris-mass-eoeea.hub.arcgis.com/datasets/Mass-EOEEA::algonquin-hubline-lnc-pipeline) | [Metadata](https://www.arcgis.com/sharing/rest/content/items/8cbe1bdd72a443a5bf04c2d50c78df10/info/metadata/metadata.xml?format=default&output=html) | [RESTService](https://services1.arcgis.com/7iJyYTjCtKsZS1LR/arcgis/rest/services/Algonquin_Hubline_LNC_Pipeline/FeatureServer/1) |
 | CONMAPSG | USGS | [CONMAPSG](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg.zip) | [Metadata](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg.htm)  ([text](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg-metadata.txt)) | [FAQ](https://pubs.usgs.gov/of/2005/1001/data/conmapsg/conmapsg-faq.htm), Data provided for the analysis, by [Brooke Hodge](mailto:brooke.hodge@mass.gov), are more expansive than this dataset ([report](https://www.mass.gov/doc/sediment-and-geology-work-group-report/download)) |
 | Shipping lanes | NOAA | [Boundary](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip) | [Metadata](https://www.fisheries.noaa.gov/inport/item/39986) | [Northeast Ocean Data portal](https://www.northeastoceandata.org/data-download/?#MarineTransportation) |
-| Seascape derivatives | --------------- | [Slope](https://services.northeastoceandata.org/downloads/Habitat/SeascapesDerivatives.zip) | ----------- |  --------------- |
+| Seascape derivatives | --------------- | [Slope](https://services.northeastoceandata.org/downloads/Habitat/SeascapesDerivatives.zip) | ---------- |  --------------- |
 | Stellwagen National Marine Sanctuary | [NOAA Sanctuaries](https://sanctuaries.noaa.gov/library/imast_gis.html) | [Boundary](https://sanctuaries.noaa.gov/library/imast/sbnms_py2.zip) | |  [Map](https://nmssanctuaries.blob.core.windows.net/sanctuaries-prod/media/archive/visit/images/sb_map_big.jpg) |
 
 Data for the gravel sediment came from [Michael Thompson](mailto:michael.a.thompson@noaa.gov). As stated from him: "The sediment layer was
@@ -65,9 +65,9 @@ values possible within the study area.
 #### Costs
 | **Layer** | **Buffer distance (m)** | **Score** | **Notes** |
 |---------------|---------------|---------------|---------------|
-| Sediment (CONMAPSG) - Sand/Mud | --------------- | 0.2 | In a second iteration score reduced to 0.1 |
-| Sediment (CONMAPSG) - Mix | --------------- | 0.4 | In a second iteration score reduced to 0.1 |
-| Sediment (CONMAPSG) - Gravel | --------------- | 0.5 | In a second iteration score reduced to 0.1 |
+| Sediment (CONMAPSG) - Sand/Mud | -------------- | 0.2 | In a second iteration score reduced to 0.1 |
+| Sediment (CONMAPSG) - Mix | -------------- | 0.4 | In a second iteration score reduced to 0.1 |
+| Sediment (CONMAPSG) - Gravel | -------------- | 0.5 | In a second iteration score reduced to 0.1 |
 | Sediment (CONMAPSG) - Rock | --------------- | 1.0 | In a second iteration score reduced to 0.9, a third further dropped the score to 0.6 |
 | Active and Inactive Disposal Sites | 500 | 0.8 | --------------- |
 | Intertidal Flats | 500 | 0.2 | --------------- |
@@ -78,12 +78,12 @@ values possible within the study area.
 | Cable and Pipeline Areas | 675 | 0.4 | --------------- |
 | Submarine Cables | 675 | 0.4 | --------------- |
 | LNG Pipelines | 675 | 0.4 | --------------- |
-| Mud | --------------- | 0.4 | In the third iteration, this dataset got added |
-| Sand | --------------- | 0.6 | In the third iteration, this dataset got added |
-| Gravel | --------------- | 0.5 | --------------- |
-| Boulder | --------------- | 0.6 | In the third iteration, this dataset got added |
+| Mud | -------------- | 0.4 | In the third iteration, this dataset got added |
+| Sand | -------------- | 0.6 | In the third iteration, this dataset got added |
+| Gravel | -------------- | 0.5 | --------------- |
+| Boulder | -------------- | 0.6 | In the third iteration, this dataset got added |
 | Boulder Ridges | 500 | 0.9 | Moved from barrier to cost in last two iterations |
-| Slope | --------------- | Linear regression | --------------- |
+| Slope | -------------- | Linear regression | --------------- |
 
 The CONMAPSG sediment data had the Stellwagen National Marine Sanctuary boundary removed; thus no data existed for the entirety of the national marine sanctuary.
 

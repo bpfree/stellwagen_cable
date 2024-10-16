@@ -16,7 +16,7 @@ start <- Sys.time()
 region_name <- "stellwagen"
 
 ## cell size
-cell_size <- 100
+cell_size <- 50
 
 ## coordinate reference system
 ### set the coordinate reference system that data should become (NAD83 UTM 19N: https://epsg.io/26919)
@@ -144,7 +144,7 @@ plot(barriers_without_coral_boulder_raster)
 
 # export data
 ## least cost geopackage
-sf::st_write(obj = barriers_without_coral_boulder, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_barriers_without_coral_boulder", append = F))
+sf::st_write(obj = barriers_without_coral_boulder, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_barriers_without_coral_boulder"), append = F)
 
 ## raster data
 terra::writeRaster(barriers_without_coral_boulder_raster, filename = file.path(raster_dir, stringr::str_glue("{region_name}_barriers_without_coral_boulder_{cell_size}m.grd")), overwrite = T)

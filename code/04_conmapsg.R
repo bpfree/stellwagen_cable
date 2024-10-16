@@ -213,7 +213,7 @@ data_region_grid_rock <- grid[data_region_rock, ] %>%
 #####################################
 
 # check for duplicates in the data that would impact cost layer
-duplicates <- data_region_grid_sand %>%
+duplicates <- data_region_grid_rock %>%
   # create frequency field based on index
   dplyr::add_count(index) %>%
   # see which ones are duplicates

@@ -61,8 +61,9 @@ pacman::p_load(renv,
 # set directories
 ## define data directory (as this is an R Project, pathnames are simplified)
 ### input directories
-#### CONMAPSG
-data_dir <- "data/a_raw_data/state_costs.gpkg"
+#### CONMAPSG (data shared by Brooke Hodge -- brooke.hodge@mass.gov)
+##### report: https://www.mass.gov/doc/sediment-and-geology-work-group-report/download
+data_dir <- "data/a_raw_data/Final_merged_data"
 
 #### National Marine Sanctuary
 stellwagen_dir <- "data/a_raw_data/sbnms_py2"
@@ -88,8 +89,7 @@ sf::st_layers(dsn = study_region_gpkg,
 
 # read data
 ## CONMAPSG
-data <- sf::st_read(dsn = data_dir,
-                    layer = stringr::str_glue("{data_name}")) %>%
+data <- sf::st_read(dsn = data_dir) %>%
   sf::st_transform(x = .,
                    crs = crs)
 

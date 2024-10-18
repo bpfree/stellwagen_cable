@@ -16,7 +16,7 @@ start <- Sys.time()
 region_name <- "stellwagen"
 
 ## cell size
-cell_size <- 100
+cell_size <- 50
 
 ## coordinate reference system
 ### set the coordinate reference system that data should become (NAD83 UTM 19N: https://epsg.io/26919)
@@ -121,7 +121,7 @@ conmapsg_gravel_update <- sf::st_read(dsn = data_dir, layer = stringr::str_glue(
 
 conmapsg_rock_update <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_conmapsg_rock_grid")) %>%
   # add cost value and remove geometry
-  cost_function(cost_layer = ., field_name = "conmapsg_rock_value", cost_value = 0.9)
+  cost_function(cost_layer = ., field_name = "conmapsg_rock_value", cost_value = 0.6)
 
 #####################################
 

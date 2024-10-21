@@ -15,7 +15,7 @@ start <- Sys.time()
 ## designate region name
 region_name <- "stellwagen"
 
-## cell size
+## cell size (in meters)
 cell_size <- 50
 
 ## coordinate reference system
@@ -107,12 +107,12 @@ blank_grid <- grid %>%
 #####################################
 
 # create grid
-### grid with 100-meter cell size
+### grid with cell size
 #### create a template raster that has the extent of the study area
 rast_temp <- terra::rast(blank_grid,
                          # use the extent of the marine study area
                          extent = blank_grid,
-                         # give raster to have resolution of 100 meters
+                         # give raster to have resolution of cell size (in meters)
                          resolution = cell_size,
                          # have coordinate reference system as the study area (NAD83 UTM 19N: https://epsg.io/26919)
                          crs = crs(blank_grid))

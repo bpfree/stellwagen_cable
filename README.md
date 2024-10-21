@@ -174,4 +174,4 @@ Put simply, the previously shared data lack some of the deep-sea coral dataset p
 
 *21 October 2024*
 1. Should there exist two submarine cable datasets or get different values? [**Update 21 October 2024:** per [Brooke Hodge](mailto:brooke.hodge@mass.gov) and [Michael Thompson](mailto:michael.a.thompson@noaa.gov) only a single dataset gets integrated; Sanctuaries did not have dataset, so keeping value as requested by Massachusetts, which is 0.4]
-2. Should the CONMAPSG gravel data get a value of 0.5 from the present 0.6? [**Update 1 October 2024:** per [Alyssa Randall](mailto:alyssa.randall@noaa.gov) the data will get a value of 0.5 to keep consistent with the suggestion by NMS]
+

@@ -15,7 +15,7 @@ start <- Sys.time()
 ## designate region name
 region_name <- "stellwagen"
 
-## cell size
+## cell size (in meters)
 cell_size <- 50
 
 ## coordinate reference system
@@ -71,8 +71,6 @@ pacman::p_load(renv,
 # set directories
 ## define data directory (as this is an R Project, pathnames are simplified)
 ### input directories
-# costs_dir <- "data/b_intermediate_data/costs.gpkg"
-# grid_dir <- "data/a_raw_data/stellwagen.gpkg"
 data_dir <- "data/b_intermediate_data/barriers.gpkg"
 raster_dir <- "data/d_raster_data"
 
@@ -102,7 +100,7 @@ cape_cod <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}
 #####################################
 
 # create barriers layers
-barriers_without_coral_boulder <- sites_avoid %>%
+barriers <- sites_avoid %>%
   # combine barriers datasets so that each is an unique row
   rbind(cape_cod) %>%
   # create field called "barrier" and fill with "barrier" for summary; "value" populate with 0
@@ -132,22 +130,22 @@ cape_cod_raster <- terra::rasterize(x = cape_cod,
 
 # create barriers raster
 ## cover any NA values of another raster with values from any other raster (all barrier cells)
-barriers_without_coral_boulder_raster <- terra::cover(x = sites_avoid_raster,
-                                              y = cape_cod_raster)
+barriers_raster <- terra::cover(x = sites_avoid_raster,
+                                y = cape_cod_raster)
 
 ## set values of 0 to be 99 for later cost analysis
-barriers_without_coral_boulder_raster[barriers_without_coral_boulder_raster == 0] <- 99
-plot(barriers_without_coral_boulder_raster)
+barriers_raster[barriers_raster == 0] <- 99
+plot(barriers_raster)
 
 #####################################
 #####################################
 
 # export data
 ## least cost geopackage
-sf::st_write(obj = barriers_without_coral_boulder, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_barriers_without_coral_boulder"), append = F)
+sf::st_write(obj = barriers, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_barriers_without_coral_boulder"), append = F)
 
 ## raster data
-terra::writeRaster(barriers_without_coral_boulder_raster, filename = file.path(raster_dir, stringr::str_glue("{region_name}_barriers_without_coral_boulder_{cell_size}m.grd")), overwrite = T)
+terra::writeRaster(barriers_raster, filename = file.path(raster_dir, stringr::str_glue("{region_name}_barriers_without_coral_boulder_{cell_size}m.grd")), overwrite = T)
 
 #####################################
 #####################################

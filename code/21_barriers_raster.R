@@ -15,7 +15,7 @@ start <- Sys.time()
 ## designate region name
 region_name <- "stellwagen"
 
-## cell size
+## cell size (in meters)
 cell_size <- 100
 
 ## coordinate reference system

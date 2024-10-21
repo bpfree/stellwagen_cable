@@ -75,6 +75,8 @@ start_point <- sf::st_read(dsn = data_dir,
   sf::st_transform(x = .,
                    crs = crs)
 
+#####################################
+
 ## edge
 leases <- sf::st_read(dsn = lease_dir,
                       layer = sf::st_layers(dsn = lease_dir)[[1]][grep(pattern = "all_outlines",
@@ -159,6 +161,29 @@ plymouth <- end_points %>%
   dplyr::slice(1)
 
 #####################################
+
+end_point <- rbind(c("point",-70.995, 42.341), # Boston
+                   c("point",-70.623, 41.980)) %>% # Plymouth
+  # convert to data frame
+  as.data.frame() %>%
+  # rename column names
+  dplyr::rename("point" = "V1",
+                "lon" = "V2",
+                "lat" = "V3") %>%
+  # new field
+  dplyr::mutate("city" = row_number()) %>%
+  # recode city names
+  dplyr::mutate(city = recode(city,
+                              "1" = "Boston",
+                              "2" = "Plymouth")) %>%
+  # convert to simple feature
+  sf::st_as_sf(coords = c("lon", "lat"),
+               # set the coordinate reference system to WGS84
+               crs = 4326) %>% # EPSG 4326 (https://epsg.io/4326)
+  # reproject the coordinate reference system
+  sf::st_transform(crs) # "EPSG:26919" (NAD83 UTM 19N: https://epsg.io/26919)
+
+#####################################
 #####################################
 
 # route combinations
@@ -190,6 +215,8 @@ sf::st_write(start_edge_points, dsn = output_gpkg, layer = stringr::str_glue("{r
 sf::st_write(end_points, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_end_points"), append = FALSE)
 sf::st_write(plymouth, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_plymouth_end_point"), append = FALSE)
 sf::st_write(boston, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_boston_end_point"), append = FALSE)
+
+sf::st_write(end_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_end_points_1000m"), append = FALSE)
 
 sf::st_write(plymouth_0564, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_plymouth_0564"), append = FALSE)
 sf::st_write(plymouth_0567, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_plymouth_0567"), append = FALSE)

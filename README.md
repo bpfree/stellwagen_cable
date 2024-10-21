@@ -127,7 +127,7 @@ Model iterations:
 
 *2 October 2024*
 | **Iteration** | **Starting Point** | **Ending Point** | **Costs** | **Barriers** | **Extent** |
-|---------------|---------------|---------------|---------------|---------------|
+|---------------|---------------|---------------|---------------|---------------|---------------|
 | Iteration 1 | 0564 & 0567 (edges) | Boston & Plymouth | Normal | No coral points | Full |
 | Iteration 2 | 0564 & 0567 (edges) | Boston & Plymouth | Normal | No coral points | North |
 | Iteration 3 | 0564 & 0567 (edges) | Boston & Plymouth | Normal | No coral points | South |
@@ -135,7 +135,7 @@ Model iterations:
 
 *22 October 2024*
 | **Iteration** | **Starting Point** | **Ending Point** | **Costs** | **Barriers** | **Extent** |
-|---------------|---------------|---------------|---------------|---------------|
+|---------------|---------------|---------------|---------------|---------------|---------------|
 | Iteration 1 | 0564 & 0567 (edges) | Boston & Plymouth (1000m separation) | Sediment updates | No coral points nor boulder ridges | Full |
 | Iteration 2 | 0564 & 0567 (edges) | Boston & Plymouth (1000m separation) | Sediment updates | No coral points nor boulder ridges | North |
 | Iteration 3 | 0564 & 0567 (edges) | Boston & Plymouth (1000m separation) | Sediment updates | No coral points nor boulder ridges | South |

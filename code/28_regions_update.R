@@ -82,41 +82,37 @@ stellwagen <- sf::st_read(dsn = stellwagen_dir) %>%
 ## raster grid
 raster <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_study_area_{cell_size}m.grd")))
 
-## vector grid
-grid <- sf::st_read(dsn = grid_dir, layer = stringr::str_glue("{region_name}_grid"))
-
 ## costs raster
-cost_rm_barriers <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_costs_rm_barriers_{cell_size}m.grd"))) %>%
-  # reclassify the values to have values only between 0.21 and maximum (4.61)
-  terra::classify(., cbind(terra::minmax(.)[1], 0.01, NA))
-
-cost_rm_barriers_without_coral <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_costs_rm_barriers_without_coral_{cell_size}m.grd"))) %>%
-  # reclassify the values to have values only between 0.21 and maximum (4.61)
-  terra::classify(., cbind(terra::minmax(.)[1], 0.01, NA))
-
-cost_rm_barriers_conmapsg_update_without_coral <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_conmapsg_update_costs_rm_barriers_without_coral_{cell_size}m.grd"))) %>%
-  # reclassify the values to have values only between 0.11 and maximum (4.51)
+cost_rm_barriers <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_sediment_update_costs_rm_barriers_without_coral_boulder_{cell_size}m.grd"))) %>%
+  # reclassify the values to have values only between minimum and maximum
   terra::classify(., cbind(terra::minmax(.)[1], 0.01, NA))
 
 terra::minmax(cost_rm_barriers)
-terra::minmax(cost_rm_barriers_without_coral)
-terra::minmax(cost_rm_barriers_conmapsg_update_without_coral)
+plot(cost_rm_barriers)
 
 #####################################
 #####################################
 
 stellwagen_regions <- stellwagen %>%
+  # remove areas that are traffic separators
   rmapshaper::ms_erase(data) %>%
+  # convert to polygon
   sf::st_cast(x = .,
               to = "POLYGON") %>%
+  # create indices to designate region
   dplyr::mutate(index = row_number())
 
+# north region
 stellwagen_north <- stellwagen_regions %>%
+  # select region
   dplyr::filter(index == 1)
 
+# south region
 stellwagen_south <- stellwagen_regions %>%
+  # selection region
   dplyr::filter(index == 2)
 
+plot(stellwagen_regions$geometry)
 plot(stellwagen_north$geometry)
 plot(stellwagen_south$geometry)
 
@@ -147,9 +143,9 @@ plot(south_raster)
 
 # remove regions from costs raster
 ## north
-### normal
 costs_rm_north <- c(cost_rm_barriers,
                     north_raster) %>%
+  # sum rasters
   terra::app(sum, na.rm = T) %>%
   # remove land from cost layer
   terra::crop(raster,
@@ -162,40 +158,10 @@ plot(costs_rm_north)
 
 #####################################
 
-### without coral
-costs_rm_north_without_coral <- c(cost_rm_barriers_without_coral,
-                    north_raster) %>%
-  terra::app(sum, na.rm = T) %>%
-  # remove land from cost layer
-  terra::crop(raster,
-              mask = TRUE)
-
-#### make any values above 99 (where a constraint would be) to be set as NA to remove from analysis
-costs_rm_north_without_coral[costs_rm_north_without_coral >= 99] <- NA
-costs_rm_north_without_coral[costs_rm_north_without_coral == 0.01] <- NA
-plot(costs_rm_north_without_coral)
-
-#####################################
-
-### CONMAPSG update without coral
-costs_rm_north_conmapsg_update_without_coral <- c(cost_rm_barriers_conmapsg_update_without_coral,
-                    north_raster) %>%
-  terra::app(sum, na.rm = T) %>%
-  # remove land from cost layer
-  terra::crop(raster,
-              mask = TRUE)
-
-#### make any values above 99 (where a constraint would be) to be set as NA to remove from analysis
-costs_rm_north_conmapsg_update_without_coral[costs_rm_north_conmapsg_update_without_coral >= 99] <- NA
-costs_rm_north_conmapsg_update_without_coral[costs_rm_north_conmapsg_update_without_coral == 0.01] <- NA
-plot(costs_rm_north_conmapsg_update_without_coral)
-
-#####################################
-
 ## south
-### normal
 costs_rm_south <- c(cost_rm_barriers,
                     south_raster) %>%
+  # sum rasters
   terra::app(sum, na.rm = T) %>%
   # remove land from cost layer
   terra::crop(raster,
@@ -207,46 +173,11 @@ costs_rm_south[costs_rm_south == 0.01] <- NA
 plot(costs_rm_south)
 
 #####################################
-
-### without coral
-costs_rm_south_without_coral <- c(cost_rm_barriers_without_coral,
-                                  south_raster) %>%
-  terra::app(sum, na.rm = T) %>%
-  # remove land from cost layer
-  terra::crop(raster,
-              mask = TRUE)
-
-#### make any values above 99 (where a constraint would be) to be set as NA to remove from analysis
-costs_rm_south_without_coral[costs_rm_south_without_coral >= 99] <- NA
-costs_rm_south_without_coral[costs_rm_south_without_coral == 0.01] <- NA
-plot(costs_rm_south_without_coral)
-
-#####################################
-
-### CONMAPSG update without coral
-costs_rm_south_conmapsg_update_without_coral <- c(cost_rm_barriers_conmapsg_update_without_coral,
-                                                  south_raster) %>%
-  terra::app(sum, na.rm = T) %>%
-  # remove land from cost layer
-  terra::crop(raster,
-              mask = TRUE)
-
-#### make any values above 99 (where a constraint would be) to be set as NA to remove from analysis
-costs_rm_south_conmapsg_update_without_coral[costs_rm_south_conmapsg_update_without_coral >= 99] <- NA
-costs_rm_south_conmapsg_update_without_coral[costs_rm_south_conmapsg_update_without_coral == 0.01] <- NA
-plot(costs_rm_south_conmapsg_update_without_coral)
-
-#####################################
 #####################################
 
 # export data
-terra::writeRaster(costs_rm_north, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_rm_north_{cell_size}m.grd")), overwrite = T)
-terra::writeRaster(costs_rm_north_without_coral, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_rm_north_without_coral_{cell_size}m.grd")), overwrite = T)
-terra::writeRaster(costs_rm_north_conmapsg_update_without_coral, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_rm_north_conmapsg_update_without_coral_{cell_size}m.grd")), overwrite = T)
-
-terra::writeRaster(costs_rm_south, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_rm_south_{cell_size}m.grd")), overwrite = T)
-terra::writeRaster(costs_rm_south_without_coral, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_rm_south_without_coral_{cell_size}m.grd")), overwrite = T)
-terra::writeRaster(costs_rm_south_conmapsg_update_without_coral, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_rm_south_conmapsg_update_without_coral_{cell_size}m.grd")), overwrite = T)
+terra::writeRaster(costs_rm_north, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_sediment_updates_barriers_coral_boulder_rm_north_{cell_size}m.grd")), overwrite = T)
+terra::writeRaster(costs_rm_south, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_sediment_updates_barriers_coral_boulder_rm_south_{cell_size}m.grd")), overwrite = T)
 
 #####################################
 #####################################

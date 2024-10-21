@@ -126,7 +126,7 @@ It should get noted that the leastcostpath package in R had been investigated as
 Model iterations:
 
 *2 October 2024*
-| **Starting Point** | **Ending Point** | **Costs** | **Barriers** | **Extent** |
+| **Iteration** | **Starting Point** | **Ending Point** | **Costs** | **Barriers** | **Extent** |
 |---------------|---------------|---------------|---------------|---------------|
 | Iteration 1 | 0564 & 0567 (edges) | Boston & Plymouth | Normal | No coral points | Full |
 | Iteration 2 | 0564 & 0567 (edges) | Boston & Plymouth | Normal | No coral points | North |
@@ -134,7 +134,7 @@ Model iterations:
 | Iteration 4 | 0564 & 0567 (edges) | Boston & Plymouth | CONMAPSG update | No coral points | Full |
 
 *22 October 2024*
-| **Starting Point** | **Ending Point** | **Costs** | **Barriers** | **Extent** |
+| **Iteration** | **Starting Point** | **Ending Point** | **Costs** | **Barriers** | **Extent** |
 |---------------|---------------|---------------|---------------|---------------|
 | Iteration 1 | 0564 & 0567 (edges) | Boston & Plymouth (1000m separation) | Sediment updates | No coral points nor boulder ridges | Full |
 | Iteration 2 | 0564 & 0567 (edges) | Boston & Plymouth (1000m separation) | Sediment updates | No coral points nor boulder ridges | North |

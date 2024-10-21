@@ -15,8 +15,8 @@ start <- Sys.time()
 ## designate region name
 region_name <- "stellwagen"
 
-## cell size
-cell_size <- 100
+## cell size (in meters)
+cell_size <- 50
 
 ## setback
 setback <- 500

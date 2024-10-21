@@ -15,7 +15,7 @@ start <- Sys.time()
 ## designate region name
 region_name <- "stellwagen"
 
-## cell size
+## cell size (in meters)
 cell_size <- 50
 
 ## coordinate reference system
@@ -418,7 +418,7 @@ boulder_ridge <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_
   # add cost value and remove geometry
   cost_function(cost_layer = ., field_name = "boulder_ridge_value", cost_value = 0.6)
 
-sand_grid <- grid %>%
+ridge_grid <- grid %>%
   dplyr::left_join(x = .,
                    y = boulder_ridge,
                    by = "index") %>%

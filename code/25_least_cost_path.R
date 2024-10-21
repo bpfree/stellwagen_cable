@@ -89,11 +89,19 @@ costs <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_sedi
 terra::minmax(costs)
 plot(costs)
 
+## Swapping values
+max <- terra::minmax(costs)[2,]
+
+new_value <- max - costs
+
+terra::minmax(new_value)
+plot(new_value)
+
 #####################################
 #####################################
 
 # create slope cost surface
-cs <- leastcostpath::create_cs(x = costs,
+cs <- leastcostpath::create_cs(x = new_value,
                                # neighbors = 4, 8, 16, 32, 48
                                neighbours = neighbors)
 

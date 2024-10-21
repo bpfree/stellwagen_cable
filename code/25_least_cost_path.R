@@ -15,8 +15,8 @@ start <- Sys.time()
 ## designate region name
 region_name <- "stellwagen"
 
-## cell size
-cell_size <- 100
+## cell size (in meters)
+cell_size <- 50
 
 ## coordinate reference system
 ### set the coordinate reference system that data should become (NAD83 UTM 19N: https://epsg.io/26919)

@@ -23,7 +23,7 @@ data_name <- "boulder_ridges"
 crs <- "EPSG:26919"
 
 ## setback distance
-setback <- 500
+setback <- 100
 
 ## designate date
 date <- format(Sys.Date(), "%Y%m%d")

@@ -23,7 +23,7 @@ data_name <- "sites_to_avoid"
 crs <- "EPSG:26919"
 
 ## setback distance
-setback <- 1000
+setback <- 500
 
 ## designate date
 date <- format(Sys.Date(), "%Y%m%d")

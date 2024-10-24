@@ -129,6 +129,8 @@ north_raster <- stellwagen_north %>%
 north_raster[north_raster == 1] <- 99
 plot(north_raster)
 
+#####################################
+
 ## south region
 south_raster <- stellwagen_south %>%
   terra::rasterize(x = .,
@@ -173,11 +175,29 @@ costs_rm_south[costs_rm_south == 0.01] <- NA
 plot(costs_rm_south)
 
 #####################################
+
+## TSS
+costs_rm_tss <- c(cost_rm_barriers,
+                  north_raster,
+                  south_raster) %>%
+  # sum rasters
+  terra::app(sum, na.rm = T) %>%
+  # remove land from cost layer
+  terra::crop(raster,
+              mask = TRUE)
+
+#### make any values above 99 (where a constraint would be) to be set as NA to remove from analysis
+costs_rm_tss[costs_rm_tss >= 99] <- NA
+costs_rm_tss[costs_rm_tss == 0.01] <- NA
+plot(costs_rm_tss)
+
+#####################################
 #####################################
 
 # export data
 terra::writeRaster(costs_rm_north, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_sediment_updates_barriers_coral_boulder_rm_north_{cell_size}m.grd")), overwrite = T)
 terra::writeRaster(costs_rm_south, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_sediment_updates_barriers_coral_boulder_rm_south_{cell_size}m.grd")), overwrite = T)
+terra::writeRaster(costs_rm_tss, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_sediment_updates_barriers_coral_boulder_tss_{cell_size}m.grd")), overwrite = T)
 
 #####################################
 #####################################

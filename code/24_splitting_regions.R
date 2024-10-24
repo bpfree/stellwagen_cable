@@ -105,6 +105,9 @@ stellwagen_north <- stellwagen_regions %>%
 stellwagen_south <- stellwagen_regions %>%
   dplyr::filter(index == 2)
 
+stellwagen_tss_outside <- rbind(stellwagen_north,
+                                stellwagen_south)
+
 plot(stellwagen_north)
 
 #####################################

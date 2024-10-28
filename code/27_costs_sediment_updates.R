@@ -566,7 +566,7 @@ sf::st_write(obj = sand_lance, dsn = output_gpkg, layer = stringr::str_glue("{re
 sf::st_write(obj = boulder_ridge, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_boulder_ridge_cost"), append = F)
 
 ## raster data
-terra::writeRaster(cost_rm_barriers, filename = file.path(raster_dir, stringr::str_glue("{region_name}_sediment_update_costs_rm_barriers_without_coral_boulder_{cell_size}m.grd")), overwrite = T)
+terra::writeRaster(cost_rm_barriers, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_sediment_updates_rm_barriers_without_coral_boulder_{cell_size}m.grd")), overwrite = T)
 
 #####################################
 #####################################

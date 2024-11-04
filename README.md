@@ -106,7 +106,7 @@ This analysis used the same ending points for all cable routing scenarios. Start
 - Starting Point (option 2): centralized of the Gulf of Maine PSN OCS-A 0564
 - Starting Point (option 3): centralized of the Gulf of Maine PSN OCS-A 0567
 - Starting Point (option 4): edge of boundary for Gulf of Maine PSN leases: 0564 and 0567
-- Ending Points: Plymouth and Boston (points were randomly selected to represent those two localities -- then moved further away so that they were at least 1000m from the edge of the cost and barrier rasters
+- Ending Points: Plymouth and Boston (points were randomly selected to represent those two localities) -- then moved further away so that they were at least 1000m from the edge of the cost and barrier rasters
 
 #### Stellwagen
 Stellwagen National Marine Sanctuary ([data](https://sanctuaries.noaa.gov/library/imast/sbnms_py2.zip) and [map](https://sanctuaries.noaa.gov/visit/images/sb_map_big.jpg)) got split into two sections to determine how cable routing would get affected if limited to a northern or a southern route. The regions got split around the "traffic separation schemes" that influence vessel traffic into and out of Boston Harbor. [Three separation schemes](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip) split were removed from the study area and left north and southern sections. Each section became barriers to the cable routing analysis; thus each got separately removed from the Stellwagen National Marine Sanctuary to create two new cost rasters.
@@ -117,7 +117,6 @@ This analysis first leveraged the ["Least Cost Path" toolkit](https://pro.arcgis
 When a path with a set width was chosen as the desired output, the analysis used the ["optimal corridor connections" toolkit](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/optimal-corridor-connections.htm) in ArcGIS Pro version 3.3. Its output is a corridor of a pre-determined width (500m around the points to create a 1000m-wide corridor). For the tool to work, two actions had to get taken. First, a new feature class (a geodatabase got created and populated with template features for the four paths (each lease to Boston or Plymouth)) got [created](https://pro.arcgis.com/en/pro-app/latest/help/data/feature-classes/create-a-feature-class.htm.
 Geopackages in QGIS have the ability to exist in 64-bit, but ArcGIS cannot handle 64-bit data. So new features classes got created to exist in 32-bit (set OIDType to equal 32-bit and keep the coordinate reference system the same as the original data (NAD83 19N)). The original data can then get [appended](https://pro.arcgis.com/en/pro-app/latest/tool-reference/data-management/append.htm) the start-end points for each path to their respective newly created feature class within the geodatabase. Each path had its own corridor run, as the tool when multiple starting and ending points are given, creates corridors in a particular order instead of the desired one starting location
 to the two end locations and then for the next lease starting location.
-
 
 Four scenarios got investigated in this analysis for each starting option:
 

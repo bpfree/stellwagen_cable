@@ -120,7 +120,7 @@ to the two end locations and then for the next lease starting location.
 
 Four scenarios got investigated in this analysis for each starting option:
 
-1. Normal barriers -- all data layers with costs got summarized to a simple cost raster that had the 4 barriers removed (coral points, sites to avoid, boulder ridges, and Cape Cod shore)
+1. Normal barriers -- all data layers with costs got summarized to a simple cost raster that had the 4 barriers removed (coral points, sites to avoid, boulder ridges, and Cape Cod shore) -- then 2 barriers (sites to avoid, Cape Cod shore)
 2. North barrier -- the normal scenario with an additional area removed that was the southern section of Stellwagen National Marine Sanctuary (as defined by as part of the marine sanctuary that fell south of the traffic separation schemes from the [shipping lanes dataset](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip))
 3. South barrier -- the normal scenario with an additional area removed that was the northern section of Stellwagen National Marine Sanctuary (as defined by as part of the marine sanctuary that fell north of the traffic separation schemes from the [shipping lanes dataset](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip))
 4. TSS -- the normal scenario with both the northern and southern sections of Stellwagen National Marine Sanctuary (as defined by as parts of the marine sanctuary that fell north and south of the traffic separation schemes from the [shipping lanes dataset](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip))

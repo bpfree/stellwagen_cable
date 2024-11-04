@@ -67,13 +67,13 @@ sf::st_layers(dsn = lease_dir,
 
 # start point
 ## centralized
-start_point <- sf::st_read(dsn = data_dir,
-                    layer = sf::st_layers(dsn = data_dir)[[1]][grep(pattern = "2_2_corridors_start",
-                                                                    x = sf::st_layers(dsn = data_dir)[[1]])]) %>%
-  sf::st_zm() %>%
-  sf::st_cast("POINT") %>%
-  sf::st_transform(x = .,
-                   crs = crs)
+# start_point <- sf::st_read(dsn = data_dir,
+#                     layer = sf::st_layers(dsn = data_dir)[[1]][grep(pattern = "2_2_corridors_start",
+#                                                                     x = sf::st_layers(dsn = data_dir)[[1]])]) %>%
+#   sf::st_zm() %>%
+#   sf::st_cast("POINT") %>%
+#   sf::st_transform(x = .,
+#                    crs = crs)
 
 #####################################
 
@@ -146,19 +146,19 @@ start_edge_points <- rbind(lease_0564_edge_point,
 #####################################
 
 # end point
-end_points <- sf::st_read(dsn = data_dir,
-                           layer = sf::st_layers(dsn = data_dir)[[1]][grep(pattern = "2_2_corridors_end",
-                                                                           x = sf::st_layers(dsn = data_dir)[[1]])]) %>%
-  sf::st_zm() %>%
-  sf::st_cast("POINT") %>%
-  sf::st_transform(x = .,
-                   crs = crs)
-
-boston <- end_points %>%
-  dplyr::slice(2)
-
-plymouth <- end_points %>%
-  dplyr::slice(1)
+# end_points <- sf::st_read(dsn = data_dir,
+#                            layer = sf::st_layers(dsn = data_dir)[[1]][grep(pattern = "2_2_corridors_end",
+#                                                                            x = sf::st_layers(dsn = data_dir)[[1]])]) %>%
+#   sf::st_zm() %>%
+#   sf::st_cast("POINT") %>%
+#   sf::st_transform(x = .,
+#                    crs = crs)
+# 
+# boston <- end_points %>%
+#   dplyr::slice(2)
+# 
+# plymouth <- end_points %>%
+#   dplyr::slice(1)
 
 #####################################
 
@@ -182,6 +182,16 @@ end_point <- rbind(c("point",-70.995, 42.341), # Boston
                crs = 4326) %>% # EPSG 4326 (https://epsg.io/4326)
   # reproject the coordinate reference system
   sf::st_transform(crs) # "EPSG:26919" (NAD83 UTM 19N: https://epsg.io/26919)
+
+boston <- end_point %>%
+  dplyr::filter(city == "Boston") %>%
+  dplyr::select(geometry) %>%
+  dplyr::rename("Shape" = "geometry")
+
+plymouth <- end_point %>%
+  dplyr::filter(city == "Plymouth") %>%
+  dplyr::select(geometry) %>%
+  dplyr::rename("Shape" = "geometry")
 
 #####################################
 #####################################
@@ -210,9 +220,9 @@ plymouth_0567 <- lease_0567_edge_point %>%
 sf::st_write(start_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_point"), append = FALSE)
 sf::st_write(lease_0564_edge_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_0564_edge_start"), append = FALSE)
 sf::st_write(lease_0567_edge_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_0567_edge_start"), append = FALSE)
-sf::st_write(start_edge_points, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_edge_start_points"), append = FALSE)
+# sf::st_write(start_edge_points, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_edge_start_points"), append = FALSE)
 
-sf::st_write(end_points, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_end_points"), append = FALSE)
+# sf::st_write(end_points, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_end_points"), append = FALSE)
 sf::st_write(plymouth, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_plymouth_end_point"), append = FALSE)
 sf::st_write(boston, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_boston_end_point"), append = FALSE)
 

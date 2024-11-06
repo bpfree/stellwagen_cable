@@ -49,6 +49,7 @@ pacman::p_load(renv,
 ### input directories
 data_dir <- "11_Stellwagen_Cable_Routing/Model Runs/StellwagenCableRoute/03_CableRouteModel/model_2/model_2.gdb"
 lease_dir <- "data/a_raw_data/gulfofmainefsnareasgeodatabase/Gulf_of_Maine_FSN_areas_09_10_2024.gdb"
+stellwagen_dir <- "data/a_raw_data/sbnms_py2"
 
 ### output directory
 output_gpkg <- "data/c_analysis_data/wind.gpkg"
@@ -145,6 +146,50 @@ start_edge_points <- rbind(lease_0564_edge_point,
 #####################################
 #####################################
 
+## Stellwagen boundary
+stellwagen <- sf::st_read(dsn = stellwagen_dir) %>%
+  sf::st_transform(x = .,
+                   crs = crs) %>%
+  # change to linestring
+  sf::st_cast("LINESTRING")
+
+stellwagen_start <- stellwagen %>%
+  # create points along the linestring
+  sf::st_line_sample(x = .,
+                     # a point every 1 km
+                     density = units::set_units(1, 1/km)) %>%
+  sf::st_as_sf() %>%
+  sf::st_cast("POINT") %>%
+  # create fields for longitude and latitude
+  dplyr::mutate(lon = sf::st_coordinates(.)[,1],
+                lat = sf::st_coordinates(.)[,2]) %>%
+  dplyr::filter(lon >= sf::st_bbox(.)$xmax - (sf::st_bbox(.)$xmax - sf::st_bbox(.)$xmin) / 3) %>%
+  # get the points along the eastern boundary
+  dplyr::slice_head(n = 77)
+
+plot(stellwagen_start$x)
+
+stellwagen_end <- stellwagen %>%
+  # create points along the linestring
+  sf::st_line_sample(x = .,
+                     # a point every 1 km
+                     density = units::set_units(1, 1/km)) %>%
+  sf::st_as_sf() %>%
+  sf::st_cast("POINT") %>%
+  # create fields for longitude and latitude
+  dplyr::mutate(lon = sf::st_coordinates(.)[,1],
+                lat = sf::st_coordinates(.)[,2]) %>%
+  dplyr::filter(lon <= sf::st_bbox(.)$xmax - (sf::st_bbox(.)$xmax - sf::st_bbox(.)$xmin) / 2)
+
+plot(stellwagen_end$x)
+
+#####################################
+#####################################
+
+plot(test)
+
+sf::st_bbox(test)
+
 # end point
 # end_points <- sf::st_read(dsn = data_dir,
 #                            layer = sf::st_layers(dsn = data_dir)[[1]][grep(pattern = "2_2_corridors_end",
@@ -221,6 +266,9 @@ sf::st_write(start_point, dsn = output_gpkg, layer = stringr::str_glue("{region_
 sf::st_write(lease_0564_edge_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_0564_edge_start"), append = FALSE)
 sf::st_write(lease_0567_edge_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_0567_edge_start"), append = FALSE)
 # sf::st_write(start_edge_points, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_edge_start_points"), append = FALSE)
+
+sf::st_write(stellwagen_start, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_stellwagen_starts"), append = FALSE)
+sf::st_write(stellwagen_end, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_stellwagen_ends"), append = FALSE)
 
 # sf::st_write(end_points, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_end_points"), append = FALSE)
 sf::st_write(plymouth, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_plymouth_end_point"), append = FALSE)

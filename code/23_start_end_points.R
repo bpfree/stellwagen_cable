@@ -162,10 +162,12 @@ stellwagen_start <- stellwagen %>%
   sf::st_cast("POINT") %>%
   # create fields for longitude and latitude
   dplyr::mutate(lon = sf::st_coordinates(.)[,1],
-                lat = sf::st_coordinates(.)[,2]) %>%
+                lat = sf::st_coordinates(.)[,2],) %>%
   dplyr::filter(lon >= sf::st_bbox(.)$xmax - (sf::st_bbox(.)$xmax - sf::st_bbox(.)$xmin) / 3) %>%
   # get the points along the eastern boundary
-  dplyr::slice_head(n = 77)
+  dplyr::slice_head(n = 77) %>%
+  # create start index
+  dplyr::mutate(index_start = row_number())
 
 plot(stellwagen_start$x)
 
@@ -179,16 +181,44 @@ stellwagen_end <- stellwagen %>%
   # create fields for longitude and latitude
   dplyr::mutate(lon = sf::st_coordinates(.)[,1],
                 lat = sf::st_coordinates(.)[,2]) %>%
-  dplyr::filter(lon <= sf::st_bbox(.)$xmax - (sf::st_bbox(.)$xmax - sf::st_bbox(.)$xmin) / 2)
+  dplyr::filter(lon <= sf::st_bbox(.)$xmax - (sf::st_bbox(.)$xmax - sf::st_bbox(.)$xmin) / 2) %>%
+  # create start index
+  dplyr::mutate(index_start = 77 + row_number())
 
 plot(stellwagen_end$x)
 
 #####################################
+
+a <- stellwagen_start %>%
+  sf::st_drop_geometry() %>%
+  dplyr::select(lon, lat) %>%
+  dplyr::rename(starts_x = lon, starts_y = lat)
+
+b <- stellwagen_end %>%
+  sf::st_drop_geometry() %>%
+  dplyr::select(lon, lat) %>%
+  dplyr::rename(ends_x = lon, ends_y = lat)
+
+pairs <- tidyr::crossing(a, b)
+
+for(i in seq(nrow(a))){
+  for(j in seq(nrow(b))){
+    
+    row <- st_as_sf(st_sfc(st_linestring(matrix(as.numeric(c(a[i,], b[j,])), ncol = 2, byrow = TRUE)), crs = crs))
+    
+    row <- st_set_geometry(row, "geometry")
+    
+    row <- cbind(row, a[i,], b[j,])
+
+    if(i==1 & j==1){out_df = row}
+    else{out_df = rbind(out_df, row)}
+  }
+}
+
+sf::st_write(obj = out_df, dsn = output_gpkg, layer = "stellwagen_lines", append = F)
+
 #####################################
-
-plot(test)
-
-sf::st_bbox(test)
+#####################################
 
 # end point
 # end_points <- sf::st_read(dsn = data_dir,

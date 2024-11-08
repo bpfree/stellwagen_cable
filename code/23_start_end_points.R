@@ -53,6 +53,7 @@ stellwagen_dir <- "data/a_raw_data/sbnms_py2"
 
 ### output directory
 output_gpkg <- "data/c_analysis_data/wind.gpkg"
+csv_dir <- "data/c_analysis_data"
 
 #####################################
 
@@ -192,14 +193,20 @@ plot(stellwagen_end$x)
 a <- stellwagen_start %>%
   sf::st_drop_geometry() %>%
   dplyr::select(lon, lat) %>%
-  dplyr::rename(starts_x = lon, starts_y = lat)
+  dplyr::rename(starts_x = lon, starts_y = lat) %>%
+  # create start index
+  dplyr::mutate(index_start = row_number())
 
 b <- stellwagen_end %>%
   sf::st_drop_geometry() %>%
   dplyr::select(lon, lat) %>%
-  dplyr::rename(ends_x = lon, ends_y = lat)
+  dplyr::rename(ends_x = lon, ends_y = lat) %>%
+  # create start index
+  dplyr::mutate(index_end = 77 + row_number())
 
-pairs <- tidyr::crossing(a, b)
+pairs <- tidyr::crossing(a, b) %>%
+  dplyr::mutate(index = row_number()) %>%
+  dplyr::relocate(index, .before = starts_x)
 
 for(i in seq(nrow(a))){
   for(j in seq(nrow(b))){
@@ -215,6 +222,7 @@ for(i in seq(nrow(a))){
   }
 }
 
+write.csv(x = pairs, file = file.path(csv_dir, "stellwagen_points.csv"))
 sf::st_write(obj = out_df, dsn = output_gpkg, layer = "stellwagen_lines", append = F)
 
 #####################################

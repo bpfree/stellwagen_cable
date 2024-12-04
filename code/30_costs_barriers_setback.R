@@ -115,7 +115,7 @@ barriers_without_coral_500m <- terra::rast(file.path(raster_dir, stringr::str_gl
 # cost rasters
 ## cost raster without barriers with 500m setback
 cost_rm_barriers_500m <- c(costs,
-                      barriers_500m) %>% 
+                           barriers_500m) %>% 
   # sum the two layers while removing any NA values
   terra::app(sum, na.rm = T) %>%
   # add 0.01 so there are no 0 values
@@ -131,7 +131,7 @@ plot(cost_rm_barriers_500m)
 
 ## cost raster without barriers without coral
 cost_rm_barriers_without_coral_500m <- c(costs,
-                                    barriers_without_coral_500m) %>% 
+                                         barriers_without_coral_500m) %>% 
   # sum the two layers while removing any NA values
   terra::app(sum, na.rm = T) %>%
   # add 0.01 so there are no 0 values
@@ -147,7 +147,7 @@ plot(cost_rm_barriers_without_coral_500m)
 
 ## cost raster with CONMAPSG update and without barriers with 500m setback
 cost_conmapsg_update_rm_barriers_500m <- c(costs_conmapsg,
-                           barriers_500m) %>% 
+                                           barriers_500m) %>% 
   # sum the two layers while removing any NA values
   terra::app(sum, na.rm = T) %>%
   # add 0.01 so there are no 0 values
@@ -163,7 +163,7 @@ plot(cost_conmapsg_update_rm_barriers_500m)
 
 ## cost raster with CONMAPSG update and without barriers without coral
 cost_conmapsg_update_rm_barriers_without_coral_500m <- c(costs_conmapsg,
-                                         barriers_without_coral_500m) %>% 
+                                                         barriers_without_coral_500m) %>% 
   # sum the two layers while removing any NA values
   terra::app(sum, na.rm = T) %>%
   # add 0.01 so there are no 0 values

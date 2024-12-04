@@ -83,7 +83,7 @@ stellwagen <- sf::st_read(dsn = stellwagen_dir) %>%
 raster <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_study_area_{cell_size}m.grd")))
 
 ## costs raster
-cost_rm_barriers <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_sediment_update_costs_rm_barriers_without_coral_boulder_{cell_size}m.grd"))) %>%
+cost_rm_barriers <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_costs_sediment_updates_rm_barriers_without_coral_boulder_{cell_size}m.grd"))) %>%
   # reclassify the values to have values only between minimum and maximum
   terra::classify(., cbind(terra::minmax(.)[1], 0.01, NA))
 

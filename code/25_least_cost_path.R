@@ -94,7 +94,7 @@ start_point <- sf::st_read(dsn = points_dir, layer = stringr::str_glue("{region_
 ending_points <- sf::st_read(dsn = points_dir, layer = stringr::str_glue("{region_name}_end_points_1000m"))
 
 ## cost raster
-costs_full <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_sediment_update_costs_rm_barriers_without_coral_boulder_{cell_size}m.grd"))) %>%
+costs_full <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_costs_sediment_updates_rm_barriers_without_coral_boulder_{cell_size}m.grd"))) %>%
   # reclassify the values to have values only between minimum and maximum
   terra::classify(., cbind(terra::minmax(.)[1], 0.01, NA))
 

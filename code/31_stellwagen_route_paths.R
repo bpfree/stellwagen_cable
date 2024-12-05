@@ -100,12 +100,13 @@ cost_rm_barriers <- terra::rast(file.path(raster_dir, stringr::str_glue("{region
 ## Stellwagen starting-ending lines
 start_end_lines <- sf::st_read(dsn = lines_dir,
                                layer = sf::st_layers(dsn = lines_dir)[[1]][[grep(pattern = "lines",
-                                                                             x = sf::st_layers(dsn = lines_dir)[[1]])]])
+                                                                                 x = sf::st_layers(dsn = lines_dir)[[1]])]]) %>%
+  dplyr::mutate(row = row_number())
 
 ## barriers
 barriers <- sf::st_read(dsn = barrier_dir,
                         layer = sf::st_layers(dsn = barrier_dir)[[1]][[grep(pattern = "coral_boulder",
-                                                                             x = sf::st_layers(dsn = barrier_dir)[[1]])]])
+                                                                            x = sf::st_layers(dsn = barrier_dir)[[1]])]])
 
 #####################################
 #####################################
@@ -135,46 +136,60 @@ plot(lines_buffered$geom)
 #####################################
 
 # create lines that intersect with barriers
-lines_no_go <- as.vector(as.data.frame(sf::st_intersects(x = barriers,
-                          y = lines_buffered))$col.id)
+corridors_no_go <- as.vector(as.data.frame(sf::st_intersects(x = barriers,
+                                                         y = lines_buffered))$col.id)
 
 # create lines fully contained within Stellwagen
-lines_stellwagen <- as.vector(as.data.frame(sf::st_contains(x = stellwagen,
+corridors_stellwagen <- as.vector(as.data.frame(sf::st_contains(x = stellwagen,
                                                             y = start_end_lines))$col.id)
 
 #####################################
 
 # generate lines that do not go through a barrier zone nor go outside the Stellwagen National Marine Sanctuary
-lines_fine <- lines_buffered %>%
-  dplyr::filter(!row %in% lines_no_go & row %in% lines_stellwagen)
+corridors_fine <- lines_buffered %>%
+  dplyr::filter(!row %in% corridors_no_go & row %in% corridors_stellwagen)
 
 plot(lines_fine$geom)
 
 #####################################
 #####################################
 
+lines_fine <- start_end_lines %>%
+  dplyr::filter(row %in% corridors_fine$row)
+
+#####################################
+#####################################
+
 # calculate costs for each connection avenue
-lines_costs <- start_end_lines %>%
+lines_costs <- lines_test %>%
   # create a "cost_max" field and populate it with the maximum, mean, and sum cost values of the buffered lines (1000m)
   dplyr::mutate(cost_max = exactextractr::exact_extract(x = stellwagen_cost[[1]],
                                                         # for each line
-                                                        y = lines_buffered,
+                                                        y = lines_fine,
                                                         # calculate the maximum cost
                                                         fun = 'max'),
                 
                 # mean cost
                 cost_mean = exactextractr::exact_extract(x = stellwagen_cost[[1]],
                                                          # for each line
-                                                         y = lines_buffered,
+                                                         y = lines_fine,
                                                          # calculate the mean cost
                                                          fun = 'mean'),
                 
                 # summed cost
                 cost_sum = exactextractr::exact_extract(x = stellwagen_cost[[1]],
                                                         # for each line
-                                                        y = lines_buffered,
+                                                        y = lines_fine,
                                                         # calculate the sum cost
                                                         fun = 'sum'),
+                
+                # quantiles
+                cost_quantile = exactextractr::exact_extract(x = stellwagen_cost[[1]],
+                                                             # for each line
+                                                             y = lines_fine,
+                                                             # calculate the quantiles
+                                                             fun = "quantile",
+                                                             quantiles = c(0.25, 0.75)),
                 
                 # line length (in meters)
                 line_length = sf::st_length(.),

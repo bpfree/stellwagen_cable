@@ -56,6 +56,9 @@ pacman::p_load(renv,
 #### National Marine Sanctuary
 stellwagen_dir <- "data/a_raw_data/sbnms_py2"
 
+#### barriers
+barrier_dir <- "data/c_analysis_data/barriers.gpkg"
+
 #### cost raster surface
 raster_dir <- "data/d_raster_data"
 
@@ -71,6 +74,9 @@ output_gpkg <- "data/c_analysis_data/stellwagen_lines.gpkg"
 
 # inspect layers within directories
 sf::st_layers(dsn = lines_dir,
+              do_count = T)
+
+sf::st_layers(dsn = barrier_dir,
               do_count = T)
 
 #####################################
@@ -96,6 +102,11 @@ start_end_lines <- sf::st_read(dsn = lines_dir,
                                layer = sf::st_layers(dsn = lines_dir)[[1]][[grep(pattern = "lines",
                                                                              x = sf::st_layers(dsn = lines_dir)[[1]])]])
 
+## barriers
+barriers <- sf::st_read(dsn = barrier_dir,
+                        layer = sf::st_layers(dsn = barrier_dir)[[1]][[grep(pattern = "coral_boulder",
+                                                                             x = sf::st_layers(dsn = barrier_dir)[[1]])]])
+
 #####################################
 #####################################
 
@@ -111,10 +122,33 @@ plot(stellwagen_cost)
 
 # buffered starting-ending lines
 lines_buffered <- start_end_lines %>%
+  # give lines a buffer of 500 meters on either side for a 1000m corridor
   sf::st_buffer(x = .,
-                dist = setback)
+                # distance equals setback distance
+                dist = setback) %>%
+  # add a column that gets populated with row number
+  dplyr::mutate(row = row_number())
 
 plot(lines_buffered$geom)
+
+#####################################
+#####################################
+
+# create lines that intersect with barriers
+lines_no_go <- as.vector(as.data.frame(sf::st_intersects(x = barriers,
+                          y = lines_buffered))$col.id)
+
+# create lines fully contained within Stellwagen
+lines_stellwagen <- as.vector(as.data.frame(sf::st_contains(x = stellwagen,
+                                                            y = start_end_lines))$col.id)
+
+#####################################
+
+# generate lines that do not go through a barrier zone nor go outside the Stellwagen National Marine Sanctuary
+lines_fine <- lines_buffered %>%
+  dplyr::filter(!row %in% lines_no_go & row %in% lines_stellwagen)
+
+plot(lines_fine$geom)
 
 #####################################
 #####################################

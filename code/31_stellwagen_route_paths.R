@@ -1,6 +1,6 @@
-################################################
+##############################
 ### 31. Stellwagen routing ###
-################################################
+##############################
 
 # clear environment
 rm(list = ls())
@@ -87,7 +87,10 @@ sf::st_layers(dsn = barrier_dir,
 stellwagen <- sf::st_read(dsn = stellwagen_dir) %>%
   # change to matching CRS
   sf::st_transform(x = .,
-                   crs = crs) %>%
+                   crs = crs)
+
+## sanctuary with a 500-m buffer
+stellwagen_buffer <- stellwagen %>%
   # add a 500-meter buffer so all starting and ending points exist 
   sf::st_buffer(x = .,
                 dist = setback)
@@ -114,7 +117,7 @@ barriers <- sf::st_read(dsn = barrier_dir,
 # Stellwagen cost raster
 stellwagen_cost <- cost_rm_barriers %>%
   terra::crop(x = .,
-              y = stellwagen,
+              y = stellwagen_buffer,
               mask = T)
 
 plot(stellwagen_cost)
@@ -137,19 +140,17 @@ plot(lines_buffered$geom)
 
 # create lines that intersect with barriers
 corridors_no_go <- as.vector(as.data.frame(sf::st_intersects(x = barriers,
-                                                         y = lines_buffered))$col.id)
+                                                             y = lines_buffered))$col.id)
 
 # create lines fully contained within Stellwagen
 corridors_stellwagen <- as.vector(as.data.frame(sf::st_contains(x = stellwagen,
-                                                            y = start_end_lines))$col.id)
+                                                                y = start_end_lines))$col.id)
 
 #####################################
 
 # generate lines that do not go through a barrier zone nor go outside the Stellwagen National Marine Sanctuary
 corridors_fine <- lines_buffered %>%
   dplyr::filter(!row %in% corridors_no_go & row %in% corridors_stellwagen)
-
-plot(lines_fine$geom)
 
 #####################################
 #####################################
@@ -161,44 +162,58 @@ lines_fine <- start_end_lines %>%
 #####################################
 
 # calculate costs for each connection avenue
-lines_costs <- lines_test %>%
-  # create a "cost_max" field and populate it with the maximum, mean, and sum cost values of the buffered lines (1000m)
-  dplyr::mutate(cost_max = exactextractr::exact_extract(x = stellwagen_cost[[1]],
-                                                        # for each line
-                                                        y = lines_fine,
-                                                        # calculate the maximum cost
-                                                        fun = 'max'),
-                
-                # mean cost
-                cost_mean = exactextractr::exact_extract(x = stellwagen_cost[[1]],
-                                                         # for each line
-                                                         y = lines_fine,
-                                                         # calculate the mean cost
-                                                         fun = 'mean'),
-                
-                # summed cost
-                cost_sum = exactextractr::exact_extract(x = stellwagen_cost[[1]],
-                                                        # for each line
-                                                        y = lines_fine,
-                                                        # calculate the sum cost
-                                                        fun = 'sum'),
-                
-                # quantiles
-                cost_quantile = exactextractr::exact_extract(x = stellwagen_cost[[1]],
-                                                             # for each line
-                                                             y = lines_fine,
-                                                             # calculate the quantiles
-                                                             fun = "quantile",
-                                                             quantiles = c(0.25, 0.75)),
-                
-                # line length (in meters)
-                line_length = sf::st_length(.),
-                
-                # average cost per length
-                line_cost_avg = units::drop_units(cost_sum / line_length))
+lines_costs <- lines_fine %>%
+  # create a fields and populate it with the maximum, mean, 25th and 75th quantiles, and sum cost values of the buffered lines (1000m)
+  dplyr::mutate(
+    # 25th quantile
+    cost_q25 = exactextractr::exact_extract(x = stellwagen_cost[[1]],
+                                            # for each line
+                                            y = lines_fine,
+                                            # calculate the quantiles
+                                            fun = "quantile",
+                                            # set quantiles for 25th and 75th percentiles
+                                            quantiles = c(0.25)),
+    
+    # mean cost
+    cost_mean = exactextractr::exact_extract(x = stellwagen_cost[[1]],
+                                             # for each line
+                                             y = lines_fine,
+                                             # calculate the mean cost
+                                             fun = 'mean'),
+    
+    # 75th quantile
+    cost_q75 = exactextractr::exact_extract(x = stellwagen_cost[[1]],
+                                            # for each line
+                                            y = lines_fine,
+                                            # calculate the quantiles
+                                            fun = "quantile",
+                                            # set quantiles for 25th and 75th percentiles
+                                            quantiles = c(0.75)),
+    
+    # maximum cost value         
+    cost_max = exactextractr::exact_extract(x = stellwagen_cost[[1]],
+                                            # for each line
+                                            y = lines_fine,
+                                            # calculate the maximum cost
+                                            fun = 'max'),
+    # summed cost
+    cost_sum = exactextractr::exact_extract(x = stellwagen_cost[[1]],
+                                            # for each line
+                                            y = lines_fine,
+                                            # calculate the sum cost
+                                            fun = 'sum'),
+    
+    # line length (in meters)
+    line_length = sf::st_length(.),
+    
+    # average cost per length
+    line_cost_avg = units::drop_units(cost_sum / line_length)
+  )
 
 #####################################
 #####################################
+
+plot(lines_costs$geom)
 
 # histograms
 hist(lines_costs$cost_sum)
@@ -211,6 +226,11 @@ hist(lines_costs$line_cost_avg)
 # export data
 ## lines data
 sf::st_write(obj = lines_costs, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_end_lines_costs"), append = F)
+
+# sf::st_write(obj = corridors_no_go, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_end_corridors_no_go"), append = F)
+# sf::st_write(obj = corridors_stellwagen, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_end_corridors_nms"), append = F)
+sf::st_write(obj = lines_fine, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_end_lines_fine"), append = F)
+
 sf::st_write(obj = lines_buffered, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_end_buffered_lines"), append = F)
 sf::st_write(obj = stellwagen, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_boundary_{setback}m"), append = F)
 

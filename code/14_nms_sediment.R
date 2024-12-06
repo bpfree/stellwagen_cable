@@ -127,7 +127,7 @@ data_region_grid <- exactextractr::exact_extract(x = data_region,
                                             y = grid_stellwagen,
                                             # populate with the sediment value that covers the majority of the grid
                                             fun = 'majority') %>%
-  # convert to a dataframe
+  # convert to a data frame
   as.data.frame() %>%
   # rename the field to be sediment
   dplyr::rename("sediment" = ".") %>%

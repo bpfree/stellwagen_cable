@@ -24,6 +24,9 @@ setback <- 500
 ## circle area 
 area_limit <- pi * setback ** 2
 
+## area factor (multiply area limit by 1.5 to estimate that each polygon might have an additional 25% -- so will be 150% of area limit)
+area_factor <- 1.5
+
 ## coordinate reference system
 ### set the coordinate reference system that data should become (NAD83 UTM 19N: https://epsg.io/26919)
 crs <- "EPSG:26919"
@@ -203,8 +206,8 @@ areas2_inside <- areas_with2 %>%
   # calculate total area of the corridor outside the sanctuary
   dplyr::mutate(total_area = units::drop_units(sf::st_area(.))) %>%
   # area of two halves = full circle (area of circle = pi * r^2 = pi * 500^2 = pi * 250000 = ~ 785,398)
-  ## multiply by 1.5 to estimate that each polygon might have an additional 25%
-  dplyr::filter(total_area <= area_limit * 1.5) %>% # 150% of circle area with 500m radius --> 1178097
+  ## multiply by area factor
+  dplyr::filter(total_area <= area_limit * area_factor) %>%
   # drop geometry convert back to dataframe
   sf::st_drop_geometry()
 

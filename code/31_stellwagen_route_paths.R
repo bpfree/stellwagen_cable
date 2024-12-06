@@ -21,6 +21,9 @@ cell_size <- 50
 ## setback
 setback <- 500
 
+## circle area 
+area_limit <- pi * setback ** 2
+
 ## coordinate reference system
 ### set the coordinate reference system that data should become (NAD83 UTM 19N: https://epsg.io/26919)
 crs <- "EPSG:26919"
@@ -89,12 +92,6 @@ stellwagen <- sf::st_read(dsn = stellwagen_dir) %>%
   sf::st_transform(x = .,
                    crs = crs)
 
-## sanctuary with a 500-m buffer
-stellwagen_buffer <- stellwagen %>%
-  # add a 500-meter buffer so all starting and ending points exist 
-  sf::st_buffer(x = .,
-                dist = setback)
-
 ## cost raster
 cost_rm_barriers <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_sediment_update_costs_rm_barriers_without_coral_boulder_{cell_size}m.grd"))) %>%
   # reclassify the values to have values only between minimum and maximum
@@ -113,6 +110,12 @@ barriers <- sf::st_read(dsn = barrier_dir,
 
 #####################################
 #####################################
+
+## sanctuary with a 500-m buffer
+stellwagen_buffer <- stellwagen %>%
+  # add a 500-meter buffer so all starting and ending points exist 
+  sf::st_buffer(x = .,
+                dist = setback)
 
 # Stellwagen cost raster
 stellwagen_cost <- cost_rm_barriers %>%
@@ -133,8 +136,6 @@ lines_buffered <- start_end_lines %>%
   # add a column that gets populated with row number
   dplyr::mutate(row = row_number())
 
-plot(lines_buffered$geom)
-
 #####################################
 #####################################
 
@@ -142,15 +143,196 @@ plot(lines_buffered$geom)
 corridors_no_go <- as.vector(as.data.frame(sf::st_intersects(x = barriers,
                                                              y = lines_buffered))$col.id)
 
-# create lines fully contained within Stellwagen
-corridors_stellwagen <- as.vector(as.data.frame(sf::st_contains(x = stellwagen,
-                                                                y = start_end_lines))$col.id)
+# # create lines fully contained within Stellwagen
+# corridors_stellwagen <- as.vector(as.data.frame(sf::st_contains(x = stellwagen,
+#                                                                 y = start_end_lines))$col.id)
+
+#####################################
+#####################################
+
+# get lines that are fully contained within Stellwagen
+## given that all the lines extend beyond the national marine sanctuary boundary, have to get creative
+## on how to determine corridors that leave and re-enter (in south-east section and north-west section)
+
+### in an effort to do this, the sections of the corridors were eliminated if they comprised of more than two parts outside the boundary;
+### thus the first step was to get only the sections outside the boundary
+### second, calculate the number of parts for a particular corridor were outside the boundary (anything with more than 3 got eliminated)
+### third, based on the area calculations, remove the corridors with the largest sections -- this got tricky as the math is not perfect nor as expected
+### due to that the boundary is not perfectly straight lines, so at times more than half a circle gets generated on the sides
+
+areas_outside <- lines_buffered %>%
+  # erase any areas that fall within the national marine sanctuary
+  sf::st_difference(x = lines_buffered,
+                    # use the national marine sanctuary 
+                    y = stellwagen) %>%
+  # calculate the area outside the sanctuary, total area, and percentage of area outside the sanctuary
+  dplyr::mutate(outside_area = units::drop_units(sf::st_area(.)), # total area of the outside area
+                # total area -- with units (m) dropped
+                total_area = units::drop_units(sf::st_area(lines_buffered)),
+                # outside percentage
+                outside_pct = outside_area / total_area * 100)
+
+## inspect the types of geometry for the newly created areas outside the sanctuary
+list(unique(sf::st_geometry_type(areas_outside)))
+
+#####################################
+
+# calculate the number of polygons for each corridor outside the sanctuary
+areas_outside_many <- areas_outside %>%
+  # since not all geometries are MULTIPOLYGON, need to cast to that type
+  sf::st_cast(to = "MULTIPOLYGON") %>%
+  # now can cast to POLYGON to get each unique polygon
+  sf::st_cast(to = "POLYGON") %>%
+  # group by the corridor (row)
+  dplyr::group_by(row) %>%
+  # and count the total number of instances of the row
+  dplyr::summarise(count = n())
+
+# check the geometry types to ensure they are only POLYGON
+list(unique(sf::st_geometry_type(areas_outside_many)))
+
+#####################################
+
+# corridors with 2 polygons
+areas_with2 <- areas_outside_many %>%
+  # limit to only corridors with two polygons
+  dplyr::filter(count <= 2)
+
+areas2_inside <- areas_with2 %>%
+  # calculate total area of the corridor outside the sanctuary
+  dplyr::mutate(total_area = units::drop_units(sf::st_area(.))) %>%
+  # area of two halves = full circle (area of circle = pi * r^2 = pi * 500^2 = pi * 250000 = ~ 785,398)
+  ## multiply by 1.5 to estimate that each polygon might have an additional 25%
+  dplyr::filter(total_area <= area_limit * 1.5) %>% # 150% of circle area with 500m radius --> 1178097
+  as.data.frame() %>%
+  dplyr::pull(row)
+
+corridors_fine <- lines_buffered %>%
+  dplyr::filter(!row %in% corridors_no_go & row %in% areas2_inside)
+
+plot(corridors_fine)
+
+# lines_less3 <- lines_outside_many %>%
+#   dplyr::filter(count >= 3)
+
+
+#   dplyr::mutate(n_polygons = st_geometry(geom)) %>%
+#   map_int(~ length(sf::st_cast(., "POLYGON")))
+# 
+# plot(test_erase[1:3,1])
+# 
+#   # count the number of polygons along the transect
+#   dplyr::mutate(vertices = mapview::npts(., by_feature = TRUE))
+# 
+# outside_threshold50 <- test_erase %>%
+#   dplyr::filter(outside_pct <= 50)
+# 
+# outside_threshold30 <- test_erase %>%
+#   dplyr::filter(outside_pct <= 30)
+# 
+# outside_threshold25 <- test_erase %>%
+#   dplyr::filter(outside_pct <= 25)
+# 
+# outside_threshold10 <- test_erase %>%
+#   dplyr::filter(outside_pct <= 10)
+# 
+# outside_threshold05 <- test_erase %>%
+#   dplyr::filter(outside_pct <= 5)
+# 
+# outside_threshold025 <- test_erase %>%
+#   dplyr::filter(outside_pct <= 2.5)
+# 
+# outside_threshold022 <- test_erase %>%
+#   dplyr::filter(outside_pct <= 2.2)
+# 
+# plot(test_erase$geom)
+# hist(test_erase$outside_pct)
+# plot(test_erase$outside_pct)
+# 
+# outside_threshold <- test_erase %>%
+#   dplyr::filter(outside_area <= 800000)
+# 
+# outside_threshold2 <- test_erase %>%
+#   dplyr::filter(outside_area <= 1.5e6)
+# 
+# 785398
+# 
+# plot(outside_threshold$outside_area)
+# hist(outside_threshold$outside_area)
+# 
+# plot(outside_threshold2$outside_area)
+# hist(outside_threshold2$outside_area)
+# 
+# plot(outside_threshold50$outside_pct)
+# plot(outside_threshold30$outside_pct)
+# plot(outside_threshold25$outside_pct)
+# plot(outside_threshold10$outside_pct)
+# plot(outside_threshold5$outside_pct)
+# plot(outside_threshold025$outside_pct)
+# plot(outside_threshold022$outside_pct)
+
+
+plot(corridors_fine2$geom)
+
+lines_fine <- start_end_lines %>%
+  dplyr::filter(row %in% corridors_fine$row)
+
+# calculate costs for each connection avenue
+lines_costs <- lines_fine %>%
+  # create a fields and populate it with the maximum, mean, 25th and 75th quantiles, and sum cost values of the buffered lines (1000m)
+  dplyr::mutate(
+    # 25th quantile
+    cost_q25 = exactextractr::exact_extract(x = stellwagen_cost[[1]],
+                                            # for each line
+                                            y = lines_fine,
+                                            # calculate the quantiles
+                                            fun = "quantile",
+                                            # set quantiles for 25th and 75th percentiles
+                                            quantiles = c(0.25)),
+    
+    # mean cost
+    cost_mean = exactextractr::exact_extract(x = stellwagen_cost[[1]],
+                                             # for each line
+                                             y = lines_fine,
+                                             # calculate the mean cost
+                                             fun = 'mean'),
+    
+    # 75th quantile
+    cost_q75 = exactextractr::exact_extract(x = stellwagen_cost[[1]],
+                                            # for each line
+                                            y = lines_fine,
+                                            # calculate the quantiles
+                                            fun = "quantile",
+                                            # set quantiles for 25th and 75th percentiles
+                                            quantiles = c(0.75)),
+    
+    # maximum cost value         
+    cost_max = exactextractr::exact_extract(x = stellwagen_cost[[1]],
+                                            # for each line
+                                            y = lines_fine,
+                                            # calculate the maximum cost
+                                            fun = 'max'),
+    # summed cost
+    cost_sum = exactextractr::exact_extract(x = stellwagen_cost[[1]],
+                                            # for each line
+                                            y = lines_fine,
+                                            # calculate the sum cost
+                                            fun = 'sum'),
+    
+    # line length (in meters)
+    line_length = sf::st_length(.),
+    
+    # average cost per length
+    line_cost_avg = units::drop_units(cost_sum / line_length)
+  )
 
 #####################################
 
 # generate lines that do not go through a barrier zone nor go outside the Stellwagen National Marine Sanctuary
 corridors_fine <- lines_buffered %>%
   dplyr::filter(!row %in% corridors_no_go & row %in% corridors_stellwagen)
+
+plot(corridors_fine$geom)
 
 #####################################
 #####################################
@@ -230,6 +412,7 @@ sf::st_write(obj = lines_costs, dsn = output_gpkg, layer = stringr::str_glue("{r
 # sf::st_write(obj = corridors_no_go, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_end_corridors_no_go"), append = F)
 # sf::st_write(obj = corridors_stellwagen, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_end_corridors_nms"), append = F)
 sf::st_write(obj = lines_fine, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_end_lines_fine"), append = F)
+sf::st_write(obj = corridors_fine, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_corridors_fine"), append = F)
 
 sf::st_write(obj = lines_buffered, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_end_buffered_lines"), append = F)
 sf::st_write(obj = stellwagen, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_boundary_{setback}m"), append = F)

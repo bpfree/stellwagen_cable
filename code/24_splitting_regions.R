@@ -93,12 +93,16 @@ cost_rm_barriers <- terra::rast(file.path(raster_dir, stringr::str_glue("{region
 #####################################
 #####################################
 
+# construction Stellwagen regions
+## Stellwagen outside TSS
 stellwagen_regions <- stellwagen %>%
+  # remove any area considered TSS
   rmapshaper::ms_erase(data) %>%
   sf::st_cast(x = .,
               to = "POLYGON") %>%
   dplyr::mutate(index = row_number())
 
+## Northern portion of Stellwagen
 stellwagen_north <- stellwagen_regions %>%
   dplyr::filter(index == 1)
 
@@ -108,7 +112,16 @@ stellwagen_south <- stellwagen_regions %>%
 stellwagen_tss_outside <- rbind(stellwagen_north,
                                 stellwagen_south)
 
-plot(stellwagen_north)
+stellwagen_tss <- stellwagen %>%
+  rmapshaper::ms_erase(stellwagen_tss_outside) %>%
+  sf::st_cast(x = .,
+              to = "POLYGON") %>%
+  dplyr::mutate(index = row_number())
+
+stellwagen_south2 <- stellwagen_tss %>%
+  s
+
+plot(stellwagen_tss$geometry)
 
 #####################################
 #####################################

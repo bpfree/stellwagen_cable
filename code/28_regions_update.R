@@ -57,6 +57,7 @@ raster_dir <- "data/d_raster_data"
 
 ### output directory
 output_gpkg <- "data/c_analysis_data/wind.gpkg"
+boundary_gpkg <- "data/c_analysis_data/stellwagen_boundary.gpkg"
 
 #####################################
 
@@ -93,28 +94,79 @@ plot(cost_rm_barriers)
 #####################################
 #####################################
 
+# construction Stellwagen regions
+## Stellwagen outside TSS
 stellwagen_regions <- stellwagen %>%
-  # remove areas that are traffic separators
+  # remove any area considered TSS
   rmapshaper::ms_erase(data) %>%
-  # convert to polygon
   sf::st_cast(x = .,
               to = "POLYGON") %>%
-  # create indices to designate region
   dplyr::mutate(index = row_number())
 
-# north region
+## Northern portion of Stellwagen
 stellwagen_north <- stellwagen_regions %>%
-  # select region
+  # identify north portion
   dplyr::filter(index == 1)
 
-# south region
+## Southern portion of Stellwagen
 stellwagen_south <- stellwagen_regions %>%
-  # selection region
+  # identify south portion
   dplyr::filter(index == 2)
 
-plot(stellwagen_regions$geometry)
-plot(stellwagen_north$geometry)
-plot(stellwagen_south$geometry)
+## Stellwagen north and south
+stellwagen_tss_outside <- rbind(stellwagen_north,
+                                stellwagen_south)
+
+## Stellwagen TSS region
+stellwagen_tss <- stellwagen %>%
+  # remove outside areas
+  rmapshaper::ms_erase(stellwagen_tss_outside) %>%
+  # convert polygons
+  sf::st_cast(x = .,
+              # conversion type
+              to = "POLYGON") %>%
+  # add an index
+  dplyr::mutate(index = row_number())
+
+## complete TSS region
+stellwagen_tss_complete <- stellwagen_tss %>%
+  # limit to only central region
+  dplyr::filter(index == 1)
+
+## additional south portion
+stellwagen_south2 <- stellwagen_tss %>%
+  dplyr::filter(index == 2)
+
+## get complete southern portion
+stellwagen_south_complete <- rbind(stellwagen_south,
+                                   stellwagen_south2) %>%
+  dplyr::group_by(index) %>%
+  dplyr::summarise()
+
+plot(stellwagen_south_complete$geometry)
+
+# stellwagen_regions <- stellwagen %>%
+#   # remove areas that are traffic separators
+#   rmapshaper::ms_erase(data) %>%
+#   # convert to polygon
+#   sf::st_cast(x = .,
+#               to = "POLYGON") %>%
+#   # create indices to designate region
+#   dplyr::mutate(index = row_number())
+# 
+# # north region
+# stellwagen_north <- stellwagen_regions %>%
+#   # select region
+#   dplyr::filter(index == 1)
+# 
+# # south region
+# stellwagen_south <- stellwagen_regions %>%
+#   # selection region
+#   dplyr::filter(index == 2)
+# 
+# plot(stellwagen_regions$geometry)
+# plot(stellwagen_north$geometry)
+# plot(stellwagen_south$geometry)
 
 #####################################
 #####################################
@@ -132,7 +184,7 @@ plot(north_raster)
 #####################################
 
 ## south region
-south_raster <- stellwagen_south %>%
+south_raster <- stellwagen_south_complete %>%
   terra::rasterize(x = .,
                    y = raster)
 
@@ -195,6 +247,12 @@ plot(costs_rm_tss)
 #####################################
 
 # export data
+## Stellwagen boundaries
+sf::st_write(obj = stellwagen_north, dsn = boundary_gpkg, layer = stringr::str_glue("{region_name}_nms_boundary_north"), append = F)
+sf::st_write(obj = stellwagen_south_complete, dsn = boundary_gpkg, layer = stringr::str_glue("{region_name}_nms_boundary_south"), append = F)
+sf::st_write(obj = stellwagen_tss_complete, dsn = boundary_gpkg, layer = stringr::str_glue("{region_name}_nms_boundary_central_tss"), append = F)
+
+## raster data
 terra::writeRaster(costs_rm_north, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_sediment_updates_barriers_coral_boulder_rm_north_{cell_size}m.grd")), overwrite = T)
 terra::writeRaster(costs_rm_south, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_sediment_updates_barriers_coral_boulder_rm_south_{cell_size}m.grd")), overwrite = T)
 terra::writeRaster(costs_rm_tss, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_sediment_updates_barriers_coral_boulder_tss_{cell_size}m.grd")), overwrite = T)

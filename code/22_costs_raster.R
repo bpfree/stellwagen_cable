@@ -414,7 +414,7 @@ sand_grid <- grid %>%
 #####################################
 
 ### boulder ridge
-boulder_ridge <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_boulder_ridge_grid")) %>%
+boulder_ridge <- sf::st_read(dsn = data_dir, layer = stringr::str_glue("{region_name}_boulder_ridges_grid")) %>%
   # add cost value and remove geometry
   cost_function(cost_layer = ., field_name = "boulder_ridge_value", cost_value = 0.6)
 
@@ -449,7 +449,7 @@ cost_raster <- c(conmapsg_grid,
                  gravel_grid,
                  slope_grid,
                  sand_grid,
-                 boulder_grid) %>%
+                 ridge_grid) %>%
   terra::app(sum, na.rm = T) %>%
   # remove land from cost layer
   terra::crop(raster,
@@ -490,21 +490,21 @@ plot(cost_rm_barriers_without_coral_boulder)
 
 # export data
 ## least cost geopackage
-sf::st_write(obj = conmapsg_sand, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_conmapsg_rock_cost", append = F))
-sf::st_write(obj = conmapsg_mix, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_conmapsg_mix_cost", append = F))
-sf::st_write(obj = conmapsg_gravel, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_conmapsg_gravel_cost", append = F))
-sf::st_write(obj = conmapsg_sand, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_conmapsg_sand_cost", append = F))
+sf::st_write(obj = conmapsg_sand, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_conmapsg_rock_cost"), append = F)
+sf::st_write(obj = conmapsg_mix, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_conmapsg_mix_cost"), append = F)
+sf::st_write(obj = conmapsg_gravel, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_conmapsg_gravel_cost"), append = F)
+sf::st_write(obj = conmapsg_sand, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_conmapsg_sand_cost"), append = F)
 
-sf::st_write(obj = disposal_sites, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_disposal_sites_cost", append = F))
-sf::st_write(obj = intertidal_flats, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_intertidal_flats_cost", append = F))
-sf::st_write(obj = sand_patches, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_sand_patches_cost", append = F))
-sf::st_write(obj = channel_areas, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_channel_areas_cost", append = F))
-sf::st_write(obj = anchorage_areas, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_anchorage_areas_cost", append = F))
-sf::st_write(obj = eelgrass_meadows, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_eelgrass_meadows_cost", append = F))
-sf::st_write(obj = cable_pipelines, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_cable_pipelines_cost", append = F))
-sf::st_write(obj = submarine_cables, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_submarine_cables_cost", append = F))
-sf::st_write(obj = lng_pipelines, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_lng_pipelines_cost", append = F))
-sf::st_write(obj = gravel, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_gravel_cost", append = F))
+sf::st_write(obj = disposal_sites, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_disposal_sites_cost"), append = F)
+sf::st_write(obj = intertidal_flats, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_intertidal_flats_cost"), append = F)
+sf::st_write(obj = sand_patches, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_sand_patches_cost"), append = F)
+sf::st_write(obj = channel_areas, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_channel_areas_cost"), append = F)
+sf::st_write(obj = anchorage_areas, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_anchorage_areas_cost"), append = F)
+sf::st_write(obj = eelgrass_meadows, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_eelgrass_meadows_cost"), append = F)
+sf::st_write(obj = cable_pipelines, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_cable_pipelines_cost"), append = F)
+sf::st_write(obj = submarine_cables, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_submarine_cables_cost"), append = F)
+sf::st_write(obj = lng_pipelines, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_lng_pipelines_cost"), append = F)
+sf::st_write(obj = gravel, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_gravel_cost"), append = F)
 
 ## raster data
 terra::writeRaster(cost_raster, filename = file.path(raster_dir, stringr::str_glue("{region_name}_costs_{cell_size}m.grd")), overwrite = T)

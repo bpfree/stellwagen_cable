@@ -151,6 +151,11 @@ start_edge_points <- rbind(lease_0564_edge_point,
 stellwagen <- sf::st_read(dsn = stellwagen_dir) %>%
   sf::st_transform(x = .,
                    crs = crs) %>%
+  # shrink the boundary
+  ## this will allow points to be inside the boundary
+  sf::st_buffer(x = .,
+                # compress by 10 meters
+                dist = -10) %>%
   # change to linestring
   sf::st_cast("LINESTRING")
 
@@ -190,14 +195,24 @@ plot(stellwagen_end$x)
 
 #####################################
 
-a <- stellwagen_start %>%
+# a <- stellwagen_start %>%
+#   sf::st_drop_geometry() %>%
+#   dplyr::select(lon, lat) %>%
+#   dplyr::rename(starts_x = lon, starts_y = lat)
+# 
+# b <- stellwagen_end %>%
+#   sf::st_drop_geometry() %>%
+#   dplyr::select(lon, lat) %>%
+#   dplyr::rename(ends_x = lon, ends_y = lat)
+
+a2 <- stellwagen_start %>%
   sf::st_drop_geometry() %>%
   dplyr::select(lon, lat) %>%
   dplyr::rename(starts_x = lon, starts_y = lat) %>%
   # create start index
   dplyr::mutate(index_start = row_number())
 
-b <- stellwagen_end %>%
+b2 <- stellwagen_end %>%
   sf::st_drop_geometry() %>%
   dplyr::select(lon, lat) %>%
   dplyr::rename(ends_x = lon, ends_y = lat) %>%
@@ -208,22 +223,68 @@ pairs <- tidyr::crossing(a, b) %>%
   dplyr::mutate(index = row_number()) %>%
   dplyr::relocate(index, .before = starts_x)
 
-for(i in seq(nrow(a))){
-  for(j in seq(nrow(b))){
-    
-    row <- st_as_sf(st_sfc(st_linestring(matrix(as.numeric(c(a[i,], b[j,])), ncol = 2, byrow = TRUE)), crs = crs))
-    
-    row <- st_set_geometry(row, "geometry")
-    
-    row <- cbind(row, a[i,], b[j,])
+View(pairs)
 
-    if(i==1 & j==1){out_df = row}
-    else{out_df = rbind(out_df, row)}
+for(i in seq(nrow(a2))){
+  for(j in seq(nrow(b2))){
+    
+    # row <- as.numeric(c(a2[i,], b2[j,]))
+    # row <- matrix(as.numeric(c(a2[i,], b2[j,])), ncol = 3, byrow = TRUE)
+    # row <- st_linestring(matrix(as.numeric(c(a2[i,1:2], b2[j,1:2])), ncol = 2, byrow = TRUE))
+    # row <- st_sfc(st_linestring(matrix(as.numeric(c(a2[i,1:2], b2[j,1:2])), ncol = 4, byrow = TRUE)), crs = crs)
+    
+    row <- sf::st_as_sf(sf::st_sfc(sf::st_linestring(matrix(as.numeric(c(a2[i, 1:2], b2[j, 1:2])), ncol = 2, byrow = TRUE)), crs = crs))
+    
+    row <- sf::st_set_geometry(row, "geometry")
+    
+    row <- cbind(row, a2[i,], b2[j,])
+    
+    if(i==1 & j==1){out_df2 = row}
+    else{out_df2 = rbind(out_df2, row)}
   }
 }
 
+row
+
+out_df2$geometry[1,]
+
+View(out_df2)
+plot(out_df2$geometry)
+
+# for(i in seq(nrow(a))){
+#   for(j in seq(nrow(b))){
+#     
+#     row <- as.numeric(c(a[i,], b[j,]))
+#     row <- matrix(as.numeric(c(a[i,], b[j,])), ncol = 2, byrow = TRUE)
+#     row <- st_linestring(matrix(as.numeric(c(a[i,], b[j,])), ncol = 2, byrow = TRUE))
+#     row <- st_as_sf(st_sfc(st_linestring(matrix(as.numeric(c(a[i,], b[j,])), ncol = 2, byrow = TRUE)), crs = crs))
+#     
+#     row <- st_set_geometry(row, "geometry")
+#     
+#     row <- cbind(row, a[i,], b[j,])
+# 
+#     if(i==1 & j==1){out_df = row}
+#     else{out_df = rbind(out_df, row)}
+#   }
+# }
+# 
+# row
+# out_df$geometry[1,]
+# 
+# View(out_df)
+# plot(out_df$geometry)
+
+g <- ggplot2::ggplot() +
+  ggplot2::geom_sf(data = stellwagen_start, color = "lightblue", size = 2) +
+  ggplot2::geom_sf(data = stellwagen_end, color = "darkred", size = 2) +
+  ggplot2::geom_sf(data = out_df2, color = "black", linetype = "dashed")
+
+g
+
 write.csv(x = pairs, file = file.path(csv_dir, "stellwagen_points.csv"))
 sf::st_write(obj = out_df, dsn = output_gpkg, layer = "stellwagen_lines", append = F)
+
+# sf::st_delete(dsn = output_gpkg, layer = "stellwagen_lines")
 
 #####################################
 #####################################
@@ -300,7 +361,7 @@ plymouth_0567 <- lease_0567_edge_point %>%
 #####################################
 
 # export data
-sf::st_write(start_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_point"), append = FALSE)
+# sf::st_write(start_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_point"), append = FALSE)
 sf::st_write(lease_0564_edge_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_0564_edge_start"), append = FALSE)
 sf::st_write(lease_0567_edge_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_0567_edge_start"), append = FALSE)
 # sf::st_write(start_edge_points, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_edge_start_points"), append = FALSE)

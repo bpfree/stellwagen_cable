@@ -219,11 +219,11 @@ b2 <- stellwagen_end %>%
   # create start index
   dplyr::mutate(index_end = 77 + row_number())
 
-pairs <- tidyr::crossing(a, b) %>%
-  dplyr::mutate(index = row_number()) %>%
-  dplyr::relocate(index, .before = starts_x)
-
-View(pairs)
+# pairs <- tidyr::crossing(a, b) %>%
+#   dplyr::mutate(index = row_number()) %>%
+#   dplyr::relocate(index, .before = starts_x)
+# 
+# View(pairs)
 
 for(i in seq(nrow(a2))){
   for(j in seq(nrow(b2))){
@@ -239,17 +239,17 @@ for(i in seq(nrow(a2))){
     
     row <- cbind(row, a2[i,], b2[j,])
     
-    if(i==1 & j==1){out_df2 = row}
-    else{out_df2 = rbind(out_df2, row)}
+    if(i==1 & j==1){out_df = row}
+    else{out_df = rbind(out_df, row)}
   }
 }
 
 row
 
-out_df2$geometry[1,]
+out_df$geometry[1,]
 
-View(out_df2)
-plot(out_df2$geometry)
+View(out_df)
+plot(out_df$geometry)
 
 # for(i in seq(nrow(a))){
 #   for(j in seq(nrow(b))){
@@ -277,7 +277,7 @@ plot(out_df2$geometry)
 g <- ggplot2::ggplot() +
   ggplot2::geom_sf(data = stellwagen_start, color = "lightblue", size = 2) +
   ggplot2::geom_sf(data = stellwagen_end, color = "darkred", size = 2) +
-  ggplot2::geom_sf(data = out_df2, color = "black", linetype = "dashed")
+  ggplot2::geom_sf(data = out_df, color = "black", linetype = "dashed")
 
 g
 

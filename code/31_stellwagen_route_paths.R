@@ -100,6 +100,10 @@ cost_rm_barriers <- terra::rast(file.path(raster_dir, stringr::str_glue("{region
   # reclassify the values to have values only between minimum and maximum
   terra::classify(., cbind(terra::minmax(.)[1], 0.01, NA))
 
+# cost_rm_barriers <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_costs_conmapsg_update_rm_barriers_without_coral_{setback}m_{cell_size}m.grd"))) %>%
+#   # reclassify the values to have values only between minimum and maximum
+#   terra::classify(., cbind(terra::minmax(.)[1], 0.01, NA))
+
 ## Stellwagen starting-ending lines
 start_end_lines <- sf::st_read(dsn = lines_dir,
                                layer = sf::st_layers(dsn = lines_dir)[[1]][[grep(pattern = "lines",

@@ -99,7 +99,9 @@ grid <- sf::st_read(dsn = study_region_gpkg,
 
 # limit data to study region
 data_region <- data %>%
+  # apply setback distance to data
   sf::st_buffer(x = .,
+                # setback distance
                 dist = setback) %>%
   rmapshaper::ms_clip(target = .,
                       clip = region) %>%

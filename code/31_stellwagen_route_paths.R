@@ -75,6 +75,7 @@ lines_dir <- "data/c_analysis_data/wind.gpkg"
 
 ### output directory
 output_gpkg <- "data/c_analysis_data/stellwagen_lines.gpkg"
+output_dir <- "data/e_least_cost_path_data/stellwagen_route_options.gpkg"
 
 #####################################
 
@@ -311,6 +312,7 @@ hist(lines_costs$line_cost_avg)
 # export data
 ## lines data
 sf::st_write(obj = lines_costs, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_end_lines_costs"), append = F)
+sf::st_write(obj = lines_costs, dsn = output_dir, layer = stringr::str_glue("{region_name}_start_end_lines_costs"), append = F)
 
 # sf::st_write(obj = corridors_no_go, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_end_corridors_no_go"), append = F)
 # sf::st_write(obj = corridors_stellwagen, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_start_end_corridors_nms"), append = F)

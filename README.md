@@ -169,14 +169,14 @@ Model iterations:
 |---------------|---------------|---------------|---------------|---------------|
 | Iteration 1 | Eastern Points (77) | Western Points (92) | All | 7084 |
 | Iteration 2 | Eastern Points (77) | Western Points (92) | None in barriers, 1000m wide, inside sanctuary | 516 |
-| Iteration 3 | 0564 | Boston | Top 10 | XXX |
-| Iteration 4 | 0567 | Boston | Top 10 | XXX |
-| Iteration 5 | 0564 | Plymouth | Top 10 | XXX |
-| Iteration 6 | 0567 | Plymouth | Top 10 | XXX |
-| Iteration 7 | 0564 | Boston | Top 25 | XXX |
-| Iteration 8 | 0567 | Boston | Top 25 | XXX |
-| Iteration 9 | 0564 | Plymouth | Top 25 | XXX |
-| Iteration 10 | 0567 | Plymouth | Top 25 | XXX |
+| Iteration 3 | 0564 | Boston | Top 10 | 3 |
+| Iteration 4 | 0567 | Boston | Top 10 | 7 |
+| Iteration 5 | 0564 | Plymouth | Top 10 | 6 |
+| Iteration 6 | 0567 | Plymouth | Top 10 | 9 |
+| Iteration 7 | 0564 | Boston | Top 25 | 64 |
+| Iteration 8 | 0567 | Boston | Top 25 | 24 |
+| Iteration 9 | 0564 | Plymouth | Top 25 | 38 |
+| Iteration 10 | 0567 | Plymouth | Top 25 | 63 |
 
 
 ##### Documented issues

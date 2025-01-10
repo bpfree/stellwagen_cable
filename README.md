@@ -133,8 +133,12 @@ Four scenarios got investigated in this analysis for each starting option:
 4. TSS -- the normal scenario with both the northern and southern sections of Stellwagen National Marine Sanctuary (as defined by as parts of the marine sanctuary that fell north and south of the traffic separation schemes from the [shipping lanes dataset](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip))
 
 #### Third method
-The final iteration for determining possible routes from offshore wind areas to landing sites through the national marine sanctuary relied ["Least Cost Path" toolkit](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/creating-the-least-cost-path.htm) in Esri's ArcGIS Pro version 3.3 and original code. Since BOEM articulated a desire for cable routes to pass through the sanctuary, the methods forced lines from the wind energy areas's edges to the sanctuary's eastern boundary. Along the eastern boundary, points were created every 1000m -- some points were removed that went further west beyond the north and south limits of the boundary. Points also got separated
-by 1000m on the western boundary -- further cleaning removed a few points that existed further east than desired. The least cost path tool produced possible routes between the starting locations for the wind energy areas and the eastern boundary and from the landing sites in Boston and Plymouth to the western boundary points. This ensured that all routes passed through the Stellwagen National Marine Sanctuary. After arranging the routes by lowest distance cost (lowest values), the top 10 and 25 got considered. Only one route from wind energy area OCS-0564 got within 500m of a barrier outside of the sanctuary; this route did not produce a top option to cross the sanctuary, making it have zero impact. Similarly, the least cost path analysis for Boston and Plymouth to the western 
+The final iteration for determining possible routes from offshore wind areas to landing sites through the national marine sanctuary relied ["Least Cost Path" toolkit](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/creating-the-least-cost-path.htm) in Esri's ArcGIS Pro version 3.3 and original code. Since BOEM articulated a desire for cable routes to pass through the sanctuary, the methods forced lines from the wind energy areas's edges to the sanctuary's eastern boundary.
+
+Along the eastern boundary, points were created every 1000m -- some points were removed that went further west beyond the north and south limits of the boundary. Points also got separated by 1000m on the western boundary -- further cleaning removed a few points that existed further east than desired. The least cost path tool produced possible routes between the starting locations for the wind energy areas and the eastern boundary and from the landing sites in Boston and Plymouth to the western boundary points.
+This ensured that all routes passed through the Stellwagen National Marine Sanctuary. After arranging the routes by lowest distance cost (lowest values), the top 10 and 25 got considered.
+
+Only one route from wind energy area OCS-0564 got within 500m of a barrier outside of the sanctuary; this route did not produce a top option to cross the sanctuary, making it have zero impact. Similarly, the least cost path analysis for Boston and Plymouth to the western 
 boundary produced a few routes that approach barriers west of the sanctuary. None ended up as viable options due to other barriers in the area for the Boston routes and overlapping in the sanctuary in the case for the Plymouth routes. 
 
 *It should get noted that the leastcostpath package in R had been investigated as a possible option, but it was ruled out as a viable option till more work can get done ([GitHub repository](https://github.com/josephlewis/leastcostpath), [CRAN](https://cran.r-project.org/web/packages/leastcostpath/index.html), [reference manual](https://cran.r-project.org/web/packages/leastcostpath/leastcostpath.pdf)).*
@@ -177,7 +181,6 @@ Model iterations:
 | Iteration 8 | 0567 | Boston | Top 25 | 24 |
 | Iteration 9 | 0564 | Plymouth | Top 25 | 38 |
 | Iteration 10 | 0567 | Plymouth | Top 25 | 63 |
-
 
 ##### Documented issues
 *7 August 2024*

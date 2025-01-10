@@ -153,6 +153,9 @@ lines_buffered <- start_end_lines %>%
 corridors_no_go <- as.vector(as.data.frame(sf::st_intersects(x = barriers,
                                                              y = lines_buffered))$col.id)
 
+# number of lines not possible due to crossing barriers
+length(corridors_no_go)
+
 # # create lines fully contained within Stellwagen
 # corridors_stellwagen <- as.vector(as.data.frame(sf::st_contains(x = stellwagen,
 #                                                                 y = start_end_lines))$col.id)

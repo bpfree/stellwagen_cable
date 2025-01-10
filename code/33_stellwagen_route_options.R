@@ -16,7 +16,7 @@ start <- Sys.time()
 region_name <- "stellwagen"
 
 ## top routes (by overall least cost)
-top_n <- 10
+top_n <- 25
 
 ## coordinate reference system
 ### set the coordinate reference system that data should become (NAD83 UTM 19N: https://epsg.io/26919)
@@ -71,7 +71,7 @@ routes_dir <- "data/e_least_cost_path_data/stellwagen_lcp_options.gpkg"
 lines_dir <- "data/c_analysis_data/stellwagen_lines.gpkg"
 
 ### output directory
-output_dir <- "data/e_least_cost_path_data/stellwagen_route_options.gpkg"
+output_gpkg <- "data/e_least_cost_path_data/stellwagen_route_options.gpkg"
 
 #####################################
 
@@ -169,8 +169,14 @@ plot(route_0567_plymouth$geom)
 #####################################
 
 # export data
-sf::st_write(obj = route_0564_boston, dsn = output_dir, layer = stringr::str_glue("{region_name}_top{top_n}_routes_0564_boston", sep = "_"), append = F)
-sf::st_write(obj = route_0567_boston, dsn = output_dir, layer = stringr::str_glue("{region_name}_top{top_n}_routes_0567_boston", sep = "_"), append = F)
-sf::st_write(obj = route_0564_plymouth, dsn = output_dir, layer = stringr::str_glue("{region_name}_top{top_n}_routes_0564_plymouth", sep = "_"), append = F)
-sf::st_write(obj = route_0567_plymouth, dsn = output_dir, layer = stringr::str_glue("{region_name}_top{top_n}_routes_0567_plymouth", sep = "_"), append = F)
+## routes through sanctuary
+sf::st_write(obj = route_0564_boston, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_top{top_n}_routes_0564_boston", sep = "_"), append = F)
+sf::st_write(obj = route_0567_boston, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_top{top_n}_routes_0567_boston", sep = "_"), append = F)
+sf::st_write(obj = route_0564_plymouth, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_top{top_n}_routes_0564_plymouth", sep = "_"), append = F)
+sf::st_write(obj = route_0567_plymouth, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_top{top_n}_routes_0567_plymouth", sep = "_"), append = F)
 
+## routes to sanctuary
+sf::st_write(obj = route_0564_east, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_top{top_n}_routes_0564_east", sep = "_"), append = F)
+sf::st_write(obj = route_0567_east, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_top{top_n}_routes_0567_east", sep = "_"), append = F)
+sf::st_write(obj = boston_west, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_top{top_n}_routes_boston_west", sep = "_"), append = F)
+sf::st_write(obj = plymouth_west, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_top{top_n}_routes_plymouth_west", sep = "_"), append = F)

@@ -118,7 +118,7 @@ To determine the route to connect the offshore wind energy areas to landing site
 
 The first method leveraged the ["Least Cost Path" toolkit](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/creating-the-least-cost-path.htm) in Esri's ArcGIS Pro version 3.3. The tool works by summing all the "costs" moving from some identified starting point(s) to other identified ending (points). The costs are the sum of data layers overlapping in a predefined study region to create the cost surface -- think of this as a board where moving a piece is more challenging if certain areas are a forest, mountain, or sand, so going a slightly longer way on an easier path or a short way through a challenging part will be the take less effort.
 
-#### Second method
+##### Second method
 After consultation with BOEM, this first option got deemed insufficient. Cabling will require a 1000m-wide corridor to meet the required needs. 
 
 Thus, when a path with a set width was chosen as the desired output, the analysis used the ["optimal corridor connections" toolkit](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/optimal-corridor-connections.htm) in ArcGIS Pro version 3.3. Its output is a corridor of a pre-determined width (500m around the points to create a 1000m-wide corridor). For the tool to work, two actions had to get taken. First, a new feature class (a geodatabase got created and populated with template features for the four paths (each lease to Boston or Plymouth)) got [created](https://pro.arcgis.com/en/pro-app/latest/help/data/feature-classes/create-a-feature-class.htm).
@@ -132,17 +132,17 @@ Four scenarios got investigated in this analysis for each starting option:
 3. South barrier -- the normal scenario with an additional area removed that was the northern section of Stellwagen National Marine Sanctuary (as defined by as part of the marine sanctuary that fell north of the traffic separation schemes from the [shipping lanes dataset](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip))
 4. TSS -- the normal scenario with both the northern and southern sections of Stellwagen National Marine Sanctuary (as defined by as parts of the marine sanctuary that fell north and south of the traffic separation schemes from the [shipping lanes dataset](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip))
 
-#### Third method
-##### *Least cost path*
+##### Third method
+###### *Least cost path*
 The final iteration for determining possible routes from offshore wind areas to landing sites through the national marine sanctuary relied ["Least Cost Path" toolkit](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/creating-the-least-cost-path.htm) in Esri's ArcGIS Pro version 3.3 and original code. Since BOEM articulated a desire for cable routes to pass through the sanctuary, the methods forced lines from the wind energy areas's edges to the sanctuary's eastern boundary.
 
-##### *Sanctuary points and routes to wind energy areas and landing sites*
+###### *Sanctuary points and routes to wind energy areas and landing sites*
 Along the eastern boundary, a point got spaced every 1000 meters. To create the best straight path results some points got removed that went further west beyond the north and south limits of the boundary. The same process got conducted for the western boundary as well. For the eastern boundary, 77 points remained while 92 points existed as possible western boundary sites. The least cost path tool produced possible routes between the starting locations for the wind energy areas and the eastern boundary
 and from the landing sites in Boston and Plymouth to the western boundary points. This ensured that all routes passed through the Stellwagen National Marine Sanctuary. After arranging the routes by lowest distance cost (lowest values), the top 10 and 25 got considered.
 
 Only one route from wind energy area OCS-0564 got within 500m of a barrier outside of the sanctuary; this route did not produce a top option to cross the sanctuary, so it was not considered for further analysis. Similarly, the least cost path analysis for Boston and Plymouth to the western boundary produced a few routes that approach barriers west of the sanctuary. None ended up as viable options due to other barriers in the area for the Boston routes and overlapping in the sanctuary in the case for the Plymouth routes.
 
-##### *Straight routes*
+###### *Straight routes*
 Constructing cables for connection between the wind energy areas and landing sites have a preference for straight trajectories. These routes had to have a 1000m width. In total 7084 straight corridors connected the 77 eastern boundary sites to the 92 western boundary sites.
 
 ###### *Removing routes: barriers*
@@ -157,7 +157,7 @@ value. With a 500m buffer, the area for any route would be approximately 785,398
 
 After factoring in the potential for additional areas, the maximum area outside the sanctuary was 1,178,097 m^2. With applying this as the maximum area limit, only 516 routes remained for considering between the eastern boundary and western boundary.
 
-##### *Top routes*
+###### *Top routes*
 The top least costly routes from the wind energy areas to the eastern boundary and from the landing sites to the western boundary limits the possible route options within the sanctuary. A route could only exist between the top eastern boundaries and top western boundaries. Filtering the 516 straight routes to ones only starting from top eastern boundaries and ending at top western boundaries resulted in the top routes through the sanctuary.
 
 *It should get noted that the leastcostpath package in R had been investigated as a possible option, but it was ruled out as a viable option till more work can get done ([GitHub repository](https://github.com/josephlewis/leastcostpath), [CRAN](https://cran.r-project.org/web/packages/leastcostpath/index.html), [reference manual](https://cran.r-project.org/web/packages/leastcostpath/leastcostpath.pdf)).*

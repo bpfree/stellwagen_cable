@@ -53,6 +53,7 @@ stellwagen_dir <- "data/a_raw_data/sbnms_py2"
 
 ### output directory
 output_gpkg <- "data/c_analysis_data/wind.gpkg"
+output_dir <- "data/e_least_cost_path_data/stellwagen_route_options.gpkg"
 csv_dir <- "data/c_analysis_data"
 
 #####################################
@@ -317,12 +318,21 @@ sf::st_write(end_point, dsn = output_gpkg, layer = stringr::str_glue("{region_na
 sf::st_write(plymouth, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_plymouth_end_point"), append = FALSE)
 sf::st_write(boston, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_boston_end_point"), append = FALSE)
 
-sf::st_write(end_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_end_points_1000m"), append = FALSE)
+# sf::st_write(end_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_end_points_1000m"), append = FALSE)
 
 sf::st_write(plymouth_0564, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_plymouth_0564"), append = FALSE)
 sf::st_write(plymouth_0567, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_plymouth_0567"), append = FALSE)
 sf::st_write(boston_0564, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_boston_0564"), append = FALSE)
 sf::st_write(boston_0567, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_boston_0567"), append = FALSE)
+
+## final geopackage
+sf::st_write(lease_0564_edge_point, dsn = output_dir, layer = stringr::str_glue("{region_name}_0564_edge_start"), append = FALSE)
+sf::st_write(lease_0567_edge_point, dsn = output_dir, layer = stringr::str_glue("{region_name}_0567_edge_start"), append = FALSE)
+
+sf::st_write(stellwagen_start, dsn = output_dir, layer = stringr::str_glue("{region_name}_stellwagen_east"), append = FALSE)
+sf::st_write(stellwagen_end, dsn = output_dir, layer = stringr::str_glue("{region_name}_stellwagen_west"), append = FALSE)
+
+sf::st_write(end_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_landing_sites"), append = FALSE)
 
 #####################################
 #####################################

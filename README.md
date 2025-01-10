@@ -155,7 +155,7 @@ have more than two. Any corridor consisting of three or more polygons got remove
 The second filtering action considered the aggregated area outside the sanctuary. A buffer applied to points should make a circle, making the area outside of the sanctuary about the area of a circle with each side equal to around one half circle. To account for the sanctuary's orientation (a slight northwest to southeast path), the area considered was 50% greater than a full circle. On average each side might get 25% more than the expected
 value. With a 500m buffer, the area for any route would be approximately 785,398 meters squared (circle area = pi * r^2 = pi * 500^2 = pi * 250000).
 
-After factoring in the potential for additional areas, the maximum area outside the sanctuary was 1,178,097 m^2. With applying this as the maximum area limit, only 516 routes remained for considering between the eastern boundary and western boundary.
+After factoring in the potential for additional areas, the maximum area outside the sanctuary was 1,178,097 m^2 (785398 * 1.5). With applying this as the maximum area limit, only 516 routes remained for considering between the eastern boundary and western boundary.
 
 ###### *Top routes*
 The top least costly routes from the wind energy areas to the eastern boundary and from the landing sites to the western boundary limits the possible route options within the sanctuary. A route could only exist between the top eastern boundaries and top western boundaries. Filtering the 516 straight routes to ones only starting from top eastern boundaries and ending at top western boundaries resulted in the top routes through the sanctuary.

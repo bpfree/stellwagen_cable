@@ -112,9 +112,16 @@ This analysis used the same ending points for all cable routing scenarios. Start
 Stellwagen National Marine Sanctuary ([data](https://sanctuaries.noaa.gov/library/imast/sbnms_py2.zip) and [map](https://sanctuaries.noaa.gov/visit/images/sb_map_big.jpg)) got split into two sections to determine how cable routing would get affected if limited to a northern or a southern route. The regions got split around the "traffic separation schemes" that influence vessel traffic into and out of Boston Harbor. [Three separation schemes](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip) split were removed from the study area and left north and southern sections. Each section became barriers to the cable routing analysis; thus each got separately removed from the Stellwagen National Marine Sanctuary to create two new cost rasters.
 
 #### Least cost path
-This analysis first leveraged the ["Least Cost Path" toolkit](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/creating-the-least-cost-path.htm) in Esri's ArcGIS Pro version 3.3. The tool works by summing all the "costs" moving from some identified starting point(s) to other identified ending (points). The costs are the sum of data layers overlapping in a predefined study region to create the cost surface -- think of this as a board where moving a piece is more challenging if certain areas are a forest, mountain, or sand, so going a slightly longer way on an easier path or a short way through a challenging part will be the take less effort.
 
-When a path with a set width was chosen as the desired output, the analysis used the ["optimal corridor connections" toolkit](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/optimal-corridor-connections.htm) in ArcGIS Pro version 3.3. Its output is a corridor of a pre-determined width (500m around the points to create a 1000m-wide corridor). For the tool to work, two actions had to get taken. First, a new feature class (a geodatabase got created and populated with template features for the four paths (each lease to Boston or Plymouth)) got [created](https://pro.arcgis.com/en/pro-app/latest/help/data/feature-classes/create-a-feature-class.htm).
+##### First method
+To determine the route to connect the offshore wind energy areas to landing sites, the analysis pursued three different options. Each built on the limitations or desires of changes in the analysis's objectives.
+
+The first method leveraged the ["Least Cost Path" toolkit](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/creating-the-least-cost-path.htm) in Esri's ArcGIS Pro version 3.3. The tool works by summing all the "costs" moving from some identified starting point(s) to other identified ending (points). The costs are the sum of data layers overlapping in a predefined study region to create the cost surface -- think of this as a board where moving a piece is more challenging if certain areas are a forest, mountain, or sand, so going a slightly longer way on an easier path or a short way through a challenging part will be the take less effort.
+
+#### Second method
+After consultation with BOEM, this first option got deemed insufficient. Cabling will require a 1000m-wide corridor to meet the required needs. 
+
+Thus, when a path with a set width was chosen as the desired output, the analysis used the ["optimal corridor connections" toolkit](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/optimal-corridor-connections.htm) in ArcGIS Pro version 3.3. Its output is a corridor of a pre-determined width (500m around the points to create a 1000m-wide corridor). For the tool to work, two actions had to get taken. First, a new feature class (a geodatabase got created and populated with template features for the four paths (each lease to Boston or Plymouth)) got [created](https://pro.arcgis.com/en/pro-app/latest/help/data/feature-classes/create-a-feature-class.htm).
 Geopackages in QGIS have the ability to exist in 64-bit, but ArcGIS cannot handle 64-bit data. So new features classes got created to exist in 32-bit (set OIDType to equal 32-bit and keep the coordinate reference system the same as the original data (NAD83 19N)). The original data can then get [appended](https://pro.arcgis.com/en/pro-app/latest/tool-reference/data-management/append.htm) the start-end points for each path to their respective newly created feature class within the geodatabase. Each path had its own corridor run, as the tool when multiple starting and ending points are given, creates corridors in a particular order instead of the desired one starting location
 to the two end locations and then for the next lease starting location.
 
@@ -125,7 +132,12 @@ Four scenarios got investigated in this analysis for each starting option:
 3. South barrier -- the normal scenario with an additional area removed that was the northern section of Stellwagen National Marine Sanctuary (as defined by as part of the marine sanctuary that fell north of the traffic separation schemes from the [shipping lanes dataset](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip))
 4. TSS -- the normal scenario with both the northern and southern sections of Stellwagen National Marine Sanctuary (as defined by as parts of the marine sanctuary that fell north and south of the traffic separation schemes from the [shipping lanes dataset](http://encdirect.noaa.gov/theme_layers/data/shipping_lanes/shippinglanes.zip))
 
-It should get noted that the leastcostpath package in R had been investigated as a possible option, but it was ruled out as a viable option till more work can get done ([GitHub repository](https://github.com/josephlewis/leastcostpath), [CRAN](https://cran.r-project.org/web/packages/leastcostpath/index.html), [reference manual](https://cran.r-project.org/web/packages/leastcostpath/leastcostpath.pdf)).
+#### Third method
+The final iteration for determining possible routes from offshore wind areas to landing sites through the national marine sanctuary relied ["Least Cost Path" toolkit](https://pro.arcgis.com/en/pro-app/latest/tool-reference/spatial-analyst/creating-the-least-cost-path.htm) in Esri's ArcGIS Pro version 3.3 and original code. Since BOEM articulated a desire for cable routes to pass through the sanctuary, the methods forced lines from the wind energy areas's edges to the sanctuary's eastern boundary. Along the eastern boundary, points were created every 1000m -- some points were removed that went further west beyond the north and south limits of the boundary. Points also got separated
+by 1000m on the western boundary -- further cleaning removed a few points that existed further east than desired. The least cost path tool produced possible routes between the starting locations for the wind energy areas and the eastern boundary and from the landing sites in Boston and Plymouth to the western boundary points. This ensured that all routes passed through the Stellwagen National Marine Sanctuary. After arranging the routes by lowest distance cost (lowest values), the top 10 and 25 got considered. Only one route from wind energy area OCS-0564 got within 500m of a barrier outside of the sanctuary; this route did not produce a top option to cross the sanctuary, making it have zero impact. Similarly, the least cost path analysis for Boston and Plymouth to the western 
+boundary produced a few routes that approach barriers west of the sanctuary. None ended up as viable options due to other barriers in the area for the Boston routes and overlapping in the sanctuary in the case for the Plymouth routes. 
+
+*It should get noted that the leastcostpath package in R had been investigated as a possible option, but it was ruled out as a viable option till more work can get done ([GitHub repository](https://github.com/josephlewis/leastcostpath), [CRAN](https://cran.r-project.org/web/packages/leastcostpath/index.html), [reference manual](https://cran.r-project.org/web/packages/leastcostpath/leastcostpath.pdf)).*
 
 #### Least cost path
 Model iterations:
@@ -145,6 +157,27 @@ Model iterations:
 | Iteration 2 | 0564 & 0567 (edges) | Boston & Plymouth (1000m separation) | Sediment updates | No coral points nor boulder ridges | North |
 | Iteration 3 | 0564 & 0567 (edges) | Boston & Plymouth (1000m separation) | Sediment updates | No coral points nor boulder ridges | South |
 | Iteration 4 | 0564 & 0567 (edges) | Boston & Plymouth (1000m separation) | Sediment updates | No coral points nor boulder ridges | TSS |
+
+*9 January 2024*
+| **Iteration** | **Starting Point** | **Ending Point** | **Costs** | **Barriers** | **Routes** |
+|---------------|---------------|---------------|---------------|---------------|---------------|
+| Iteration 1 | 0564 & 0567 (edges) | Boston & Plymouth (1000m separation) | Sediment updates | No coral points nor boulder ridges | Top 10 |
+| Iteration 2 | 0564 & 0567 (edges) | Boston & Plymouth (1000m separation) | Sediment updates | No coral points nor boulder ridges | Top 25 |
+
+##### Results
+| **Iteration** | **Starting Point** | **Ending Point** | **Considered** | **Possible Routes** |
+|---------------|---------------|---------------|---------------|---------------|
+| Iteration 1 | Eastern Points (77) | Western Points (92) | All | 7084 |
+| Iteration 2 | Eastern Points (77) | Western Points (92) | None in barriers, 1000m wide, inside sanctuary | 516 |
+| Iteration 3 | 0564 | Boston | Top 10 | XXX |
+| Iteration 4 | 0567 | Boston | Top 10 | XXX |
+| Iteration 5 | 0564 | Plymouth | Top 10 | XXX |
+| Iteration 6 | 0567 | Plymouth | Top 10 | XXX |
+| Iteration 7 | 0564 | Boston | Top 25 | XXX |
+| Iteration 8 | 0567 | Boston | Top 25 | XXX |
+| Iteration 9 | 0564 | Plymouth | Top 25 | XXX |
+| Iteration 10 | 0567 | Plymouth | Top 25 | XXX |
+
 
 ##### Documented issues
 *7 August 2024*

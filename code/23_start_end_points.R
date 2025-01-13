@@ -244,8 +244,8 @@ g <- ggplot2::ggplot() +
 
 g
 
-write.csv(x = pairs, file = file.path(csv_dir, "stellwagen_points.csv"))
-sf::st_write(obj = out_df, dsn = output_gpkg, layer = "stellwagen_lines", append = F)
+write.csv(x = pairs, file = file.path(csv_dir, stringr::str_glue("{region_name}_points.csv")))
+sf::st_write(obj = out_df, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_lines", append = F))
 
 #####################################
 #####################################
@@ -331,8 +331,9 @@ sf::st_write(lease_0567_edge_point, dsn = output_dir, layer = stringr::str_glue(
 
 sf::st_write(stellwagen_start, dsn = output_dir, layer = stringr::str_glue("{region_name}_stellwagen_east"), append = FALSE)
 sf::st_write(stellwagen_end, dsn = output_dir, layer = stringr::str_glue("{region_name}_stellwagen_west"), append = FALSE)
+sf::st_write(obj = out_df, dsn = output_dir, layer = stringr::str_glue("{region_name}_lines"), append = FALSE)
 
-sf::st_write(end_point, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_landing_sites"), append = FALSE)
+sf::st_write(end_point, dsn = output_dir, layer = stringr::str_glue("{region_name}_landing_sites"), append = FALSE)
 
 #####################################
 #####################################

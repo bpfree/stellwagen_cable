@@ -245,7 +245,7 @@ g <- ggplot2::ggplot() +
 g
 
 write.csv(x = pairs, file = file.path(csv_dir, stringr::str_glue("{region_name}_points.csv")))
-sf::st_write(obj = out_df, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_lines", append = F))
+sf::st_write(obj = out_df, dsn = output_gpkg, layer = stringr::str_glue("{region_name}_lines"), append = F)
 
 #####################################
 #####################################

@@ -118,8 +118,8 @@ stellwagen_tss <- stellwagen %>%
               to = "POLYGON") %>%
   dplyr::mutate(index = row_number())
 
-stellwagen_south2 <- stellwagen_tss %>%
-  s
+# stellwagen_south2 <- stellwagen_tss %>%
+#   s
 
 plot(stellwagen_tss$geometry)
 

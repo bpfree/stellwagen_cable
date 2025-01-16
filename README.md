@@ -76,7 +76,7 @@ values possible within the study area.
 | Anchorage Areas | 600 | 0.8 | --------------- |
 | Eelgrass Meadows | 675 | 0.4 | --------------- |
 | Cable and Pipeline Areas | 675 | 0.4 | --------------- |
-| Submarine Cables | 675 | 0.4 | --------------- |
+| Submarine Cables | 675 | 0.4 | An old cable got removed in later analyses |
 | LNG Pipelines | 675 | 0.4 | --------------- |
 | Mud | -------------- | 0.4 | In the third iteration, this dataset got added |
 | Sand | -------------- | 0.6 | In the third iteration, this dataset got added |

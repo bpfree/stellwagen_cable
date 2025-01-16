@@ -83,7 +83,7 @@ values possible within the study area.
 | Gravel | -------------- | 0.5 | --------------- |
 | Boulder | -------------- | 0.6 | In the third iteration, this dataset got added |
 | Boulder Ridges | 100 | 0.9 | Moved from barrier to cost in last two iterations |
-| Slope | -------------- | Linear regression | --------------- |
+| Slope | -------------- | Linear regression | Maximum slope got returned |
 
 The CONMAPSG sediment data had the Stellwagen National Marine Sanctuary boundary removed; thus no data existed for the entirety of the national marine sanctuary.
 

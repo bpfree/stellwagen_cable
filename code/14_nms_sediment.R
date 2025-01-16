@@ -123,10 +123,10 @@ plot(data_region)
 
 # calculate the sediment that is the majority of grid cell and populate with that sediment value
 data_region_grid <- exactextractr::exact_extract(x = data_region,
-                                            # grid for Stellwagen Bank National Marine Sanctuary
-                                            y = grid_stellwagen,
-                                            # populate with the sediment value that covers the majority of the grid
-                                            fun = 'majority') %>%
+                                                 # grid for Stellwagen Bank National Marine Sanctuary
+                                                 y = grid_stellwagen,
+                                                 # populate with the sediment value that covers the majority of the grid
+                                                 fun = 'majority') %>%
   # convert to a data frame
   as.data.frame() %>%
   # rename the field to be sediment

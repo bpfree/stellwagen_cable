@@ -24,7 +24,7 @@ layer_name <- "EelgrassMeadows"
 crs <- "EPSG:26919"
 
 ## setback distance
-setback <- 600
+setback <- 675
 
 ## designate date
 date <- format(Sys.Date(), "%Y%m%d")

@@ -19,13 +19,14 @@ region_name <- "stellwagen"
 lease <- "0567"
 
 ## designate section
-section <- "tss"
+section <- "full"
 
 ## cell size (in meters)
 cell_size <- 50
 
 ## neighbors
 neighbors <- c(4, 8, 16, 32, 48)
+# neighbors <- c(4)
 
 ## coordinate reference system
 ### set the coordinate reference system that data should become (NAD83 UTM 19N: https://epsg.io/26919)
@@ -68,6 +69,8 @@ library(leastcostpath)
 points_dir <- "data/c_analysis_data/wind.gpkg"
 raster_dir <- "data/d_raster_data"
 
+route_dir <- "data/e_least_cost_path_data/stellwagen_route_options.gpkg"
+
 ### output directory
 output_gpkg <- "data/e_least_cost_path_data/lcp_r.gpkg"
 
@@ -88,27 +91,33 @@ sf::st_delete(dsn = output_gpkg,
 
 # load data
 ## starting point
-start_point <- sf::st_read(dsn = points_dir, layer = stringr::str_glue("{region_name}_{lease}_edge_start"))
+start_0564 <- sf::st_read(dsn = route_dir, layer = stringr::str_glue("{region_name}_0564_edge_start"))
+start_0567 <- sf::st_read(dsn = route_dir, layer = stringr::str_glue("{region_name}_0567_edge_start"))
+
+snms_east <- sf::st_read(dsn = route_dir, layer = stringr::str_glue("{region_name}_stellwagen_east"))
+snms_west <- sf::st_read(dsn = route_dir, layer = stringr::str_glue("{region_name}_stellwagen_east"))
+
+# start_point <- sf::st_read(dsn = points_dir, layer = stringr::str_glue("{region_name}_{lease}_edge_start"))
 
 ## ending points
 ending_points <- sf::st_read(dsn = points_dir, layer = stringr::str_glue("{region_name}_end_points_1000m"))
 
 ## cost raster
-costs_full <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_costs_sediment_updates_rm_barriers_without_coral_boulder_{cell_size}m.grd"))) %>%
+costs_full <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_sediment_update_costs_rm_barriers_without_coral_boulder_{cell_size}m.grd"))) %>%
   # reclassify the values to have values only between minimum and maximum
   terra::classify(., cbind(terra::minmax(.)[1], 0.01, NA))
 
-costs_north <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_costs_sediment_updates_barriers_coral_boulder_rm_south_{cell_size}m.grd"))) %>%
-  # reclassify the values to have values only between minimum and maximum
-  terra::classify(., cbind(terra::minmax(.)[1], 0.01, NA))
-
-costs_south <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_costs_sediment_updates_barriers_coral_boulder_rm_north_{cell_size}m.grd"))) %>%
-  # reclassify the values to have values only between minimum and maximum
-  terra::classify(., cbind(terra::minmax(.)[1], 0.01, NA))
-
-costs_tss <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_costs_sediment_updates_barriers_coral_boulder_tss_{cell_size}m.grd"))) %>%
-  # reclassify the values to have values only between minimum and maximum
-  terra::classify(., cbind(terra::minmax(.)[1], 0.01, NA))
+# costs_north <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_costs_sediment_updates_barriers_coral_boulder_rm_south_{cell_size}m.grd"))) %>%
+#   # reclassify the values to have values only between minimum and maximum
+#   terra::classify(., cbind(terra::minmax(.)[1], 0.01, NA))
+# 
+# costs_south <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_costs_sediment_updates_barriers_coral_boulder_rm_north_{cell_size}m.grd"))) %>%
+#   # reclassify the values to have values only between minimum and maximum
+#   terra::classify(., cbind(terra::minmax(.)[1], 0.01, NA))
+# 
+# costs_tss <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_costs_sediment_updates_barriers_coral_boulder_tss_{cell_size}m.grd"))) %>%
+#   # reclassify the values to have values only between minimum and maximum
+#   terra::classify(., cbind(terra::minmax(.)[1], 0.01, NA))
 
 # terra::minmax(costs_full)
 # plot(costs_full)
@@ -117,9 +126,9 @@ costs_tss <- terra::rast(file.path(raster_dir, stringr::str_glue("{region_name}_
 #####################################
 
 lcp_function <- function(costs, neighbors, start_point, ending_points, section, lease){
-  max <- terra::minmax(costs)[2,]
+  # max <- terra::minmax(costs)[2,]
   
-  new_value <- max - costs
+  new_value <- 1 / costs
   
   # terra::minmax(new_value)
   # plot(new_value)
@@ -138,7 +147,7 @@ lcp_function <- function(costs, neighbors, start_point, ending_points, section, 
     # tile_raster <- costs %>%
     #   as.data.frame(xy=T) %>%
     #   setNames(c("longitude", "latitude", "cost"))
-    # 
+
     # g <- ggplot() +
     #   geom_tile(data = tile_raster, aes(x = longitude, y = latitude, fill = cost)) +
     #   geom_sf(data = start_point, color = "red", size = 2) +
@@ -161,7 +170,7 @@ lcp_function <- function(costs, neighbors, start_point, ending_points, section, 
 
 lcp <- lcp_function(costs = get(stringr::str_glue("costs_{section}")),
                     neighbors = neighbors,
-                    start_point = start_point,
-                    ending_points = ending_points,
+                    start_point = start_0564,
+                    ending_points = snms_east,
                     section = section,
                     lease = lease)

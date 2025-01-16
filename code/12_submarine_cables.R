@@ -125,7 +125,7 @@ data_region <- data %>%
   sf::st_cast(x = .,
               to = "POLYGON")
 
-# ***note: inspect geometries to find cable to remove
+# ***note: inspect geometries to find cable to remove (per conversation on January 16 2025)
 plot(data_region$geometry[3, ])
 
 data_region <- data_region %>%

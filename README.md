@@ -236,4 +236,8 @@ Put simply, the previously shared data lack some of the deep-sea coral dataset p
 1. Should there exist two submarine cable datasets or get different values? [**Update 21 October 2024:** per [Brooke Hodge](mailto:brooke.hodge@mass.gov) and [Michael Thompson](mailto:michael.a.thompson@noaa.gov) only a single dataset gets integrated; Sanctuaries did not have dataset, so keeping value as requested by Massachusetts, which is 0.4]
 
 *23 October 2024*
-1. [Alice Stratton](alice.stratton@noaa.gov) and National Marine Sanctuary requested that boulder ridge setback distance get reduced from 500m to 100m and the setback for sites to avoid get reduced from 1000m to 500m. How a 1000m distance was previously chosen remains unclear.
+1. [Alice Stratton](mailto:alice.stratton@noaa.gov) and National Marine Sanctuary requested that boulder ridge setback distance get reduced from 500m to 100m and the setback for sites to avoid get reduced from 1000m to 500m. How a 1000m distance was previously chosen remains unclear.
+
+*16 January 2025*
+1. [Pete Decola](mailto:pete.decola@noaa.gov) and others desired a cost surface that did not have a submarine cable that goes through the southern portion of the national marine sanctuary. Thus it was removed.
+2. During review of the code, it appeared that the eelgrass meadows had a 600m buffer instead of the desired 675m. This got corrected for the cost surface.

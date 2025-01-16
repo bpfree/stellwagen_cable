@@ -121,7 +121,18 @@ data_region <- data %>%
   # group all objects using new field
   dplyr::group_by(layer) %>%
   # reduce to single object
-  dplyr::summarise()
+  dplyr::summarise() %>%
+  sf::st_cast(x = .,
+              to = "POLYGON")
+
+# ***note: inspect geometries to find cable to remove
+plot(data_region$geometry[3, ])
+
+data_region <- data_region %>%
+  # remove cable that is not of interest -- for being too out of date
+  filter(!row_number() == 3)
+
+plot(data_region$geometry)
 
 #####################################
 #####################################

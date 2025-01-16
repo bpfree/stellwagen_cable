@@ -170,7 +170,7 @@ lcp_function <- function(costs, neighbors, start_point, ending_points, section, 
 
 lcp <- lcp_function(costs = get(stringr::str_glue("costs_{section}")),
                     neighbors = neighbors,
-                    start_point = start_0564,
+                    start_point = start_0567,
                     ending_points = snms_east,
                     section = section,
                     lease = lease)
